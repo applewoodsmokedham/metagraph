@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PAGE_TITLE}} - Alkanes Explorer</title>
+  <link rel="stylesheet" href="../css/minimal.css">
+  <style>
+    /* Common styling */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+    pre {
+      background: #f8f8f8;
+      padding: 10px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+      margin: 10px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f8f8f8;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+    }
+    button {
+      background-color: #000;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background-color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .method-info {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-left: 4px solid #000;
+      margin-bottom: 20px;
+    }
+    .result-container {
+      margin-top: 20px;
+    }
+    .error-message {
+      color: #721c24;
+      background-color: #f8d7da;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #f5c6cb;
+    }
+    section {
+      margin-bottom: 30px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+    }
+    .header-info {
+      float: right;
+      font-size: 14px;
+    }
+    .block-height-indicator {
+      margin-left: 15px;
+      padding: 4px 8px;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    /* Add your custom page-specific styles below */
+  </style>
+  <!-- CUSTOM_STYLES_PLACEHOLDER - Replace this comment with your custom styles if needed -->
+</head>
+<body>
+  <header>
+    <h1>Alkanes Explorer - {{PAGE_TITLE}}</h1>
+    <div class="header-info">
+      <span class="block-height-indicator">Current Block: <span id="current-block-height">Loading...</span></span>
+    </div>
+    <nav>
+      <a href="../index.html">Home</a> |
+      <a href="../block-transactions.html">Block Explorer</a> |
+      <a href="../transaction-search.html">Transaction Search</a> |
+      <a href="../trace.html">Transaction Tracer</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="method-info">
+      <h2>Method: {{METHOD_NAME}}</h2>
+      <p>JSON-RPC Method: <code>metashrew_view</code></p>
+      <p>View Function: <code>{{VIEW_FUNCTION}}</code></p>
+      <p>{{METHOD_DESCRIPTION}}</p>
+    </section>
+
+    <section class="input-section">
+      <h2>Input Parameters</h2>
+      <!-- Replace this with the form for your specific method -->
+      {{INPUT_FORM}}
+    </section>
+
+    <section class="result-container" id="result-section" style="display: none;">
+      <h2>Results</h2>
+      <div id="result-display"></div>
+    </section>
+
+    <section class="error-container" id="error-messages">
+      <!-- Error messages will be displayed here -->
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Function to add an error message
+      function addErrorMessage(message) {
+        const errorMessagesContainer = document.getElementById('error-messages');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        errorMessagesContainer.appendChild(errorDiv);
+      }
+
+      // Fetch and display current block height
+      async function fetchBlockHeight() {
+        try {
+          const response = await fetch('/api/block/latest');
+          if (!response.ok) {
+            throw new Error('Failed to fetch latest block');
+          }
+          const data = await response.json();
+          document.getElementById('current-block-height').textContent = data.height;
+        } catch (error) {
+          console.error('Error fetching block height:', error);
+          document.getElementById('current-block-height').textContent = 'Unavailable';
+        }
+      }
+      
+      // Fetch block height on page load
+      fetchBlockHeight();
+
+      // Function to display results
+      function displayResults(data) {
+        const resultSection = document.getElementById('result-section');
+        const resultDisplay = document.getElementById('result-display');
+        
+        resultSection.style.display = 'block';
+        resultDisplay.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+      }
+
+      // Method-specific code
+      {{CUSTOM_SCRIPT}}
+    });
+  </script>
+</body>
+</html>

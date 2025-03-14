@@ -1,0 +1,42 @@
+
+
+====== NEW TRACE SESSION: 2025-03-11T23:36:48.197Z ======
+[2025-03-11T23:36:48.197Z] Starting Alkanes Transaction Tracer
+[2025-03-11T23:36:48.198Z] API URL: https://mainnet.sandshrew.io/v2/subfrost
+[2025-03-11T23:36:48.198Z] Processing 2 transactions
+[2025-03-11T23:36:48.198Z] Processing transaction 9a222f0e9e176e5a70c95dbbe59afce6607bb5a50c7ef96ea91fa49f8f14525e:1
+[2025-03-11T23:36:48.198Z] Tracing transaction 9a222f0e9e176e5a70c95dbbe59afce6607bb5a50c7ef96ea91fa49f8f14525e:1 with alkanes_trace
+[2025-03-11T23:36:48.198Z] Calling Metashrew API method "alkanes_trace"
+Data: [
+  {
+    "txid": "9a222f0e9e176e5a70c95dbbe59afce6607bb5a50c7ef96ea91fa49f8f14525e",
+    "vout": 1
+  }
+]
+[2025-03-11T23:36:48.396Z] Response received from alkanes_trace
+Data: {
+  "success": true,
+  "size": 2
+}
+[2025-03-11T23:36:48.396Z] No trace data available for transaction 9a222f0e9e176e5a70c95dbbe59afce6607bb5a50c7ef96ea91fa49f8f14525e:1
+[2025-03-11T23:36:48.396Z] Transaction 9a222f0e9e176e5a70c95dbbe59afce6607bb5a50c7ef96ea91fa49f8f14525e:1 processed: unknown
+[2025-03-11T23:36:48.396Z] Processing transaction 2cf4a155572450d6595e31b62645e50c8b5fa82d91c8e0e586f394d2f4b1ca7c:0
+[2025-03-11T23:36:48.396Z] Tracing transaction 2cf4a155572450d6595e31b62645e50c8b5fa82d91c8e0e586f394d2f4b1ca7c:0 with alkanes_trace
+[2025-03-11T23:36:48.396Z] Calling Metashrew API method "alkanes_trace"
+Data: [
+  {
+    "txid": "2cf4a155572450d6595e31b62645e50c8b5fa82d91c8e0e586f394d2f4b1ca7c",
+    "vout": 0
+  }
+]
+[2025-03-11T23:36:48.442Z] Response received from alkanes_trace
+Data: {
+  "success": true,
+  "size": 2
+}
+[2025-03-11T23:36:48.443Z] No trace data available for transaction 2cf4a155572450d6595e31b62645e50c8b5fa82d91c8e0e586f394d2f4b1ca7c:0
+[2025-03-11T23:36:48.443Z] Transaction 2cf4a155572450d6595e31b62645e50c8b5fa82d91c8e0e586f394d2f4b1ca7c:0 processed: unknown
+[2025-03-11T23:36:48.443Z] Processing complete. Results saved to alkanes-traces-1741736208443.json
+[2025-03-11T23:36:48.443Z] Summary of results:
+[2025-03-11T23:36:48.443Z] - 9a222f0e9e176e5a70c95dbbe59afce6607bb5a50c7ef96ea91fa49f8f14525e:1 - Status: unknown
+[2025-03-11T23:36:48.443Z] - 2cf4a155572450d6595e31b62645e50c8b5fa82d91c8e0e586f394d2f4b1ca7c:0 - Status: unknown

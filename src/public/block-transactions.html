@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Block Transactions - Alkanes Explorer</title>
+  <link rel="stylesheet" href="css/minimal.css">
+  <style>
+    .block-info {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+    }
+    .transaction-list {
+      margin-top: 20px;
+    }
+    .transaction-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .search-container {
+      margin-bottom: 30px;
+    }
+    .search-input {
+      padding: 8px;
+      border: 1px solid #ddd;
+      width: 200px;
+    }
+    button {
+      padding: 8px 16px;
+      background: #000;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #333;
+    }
+    .pagination {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .pagination button {
+      margin: 0 5px;
+    }
+    .error-message {
+      color: #721c24;
+      background-color: #f8d7da;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #f5c6cb;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f8f8f8;
+    }
+    .header-info {
+      float: right;
+      font-size: 14px;
+    }
+    .block-height-indicator {
+      margin-left: 15px;
+      padding: 4px 8px;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .info-panel {
+      margin-bottom: 20px;
+    }
+    .endpoint-toggle {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Block Transactions - Alkanes Explorer</h1>
+    
+    <div class="info-panel">
+      <p>Current Block Height: <span id="current-height">Loading...</span></p>
+      <p>Endpoint: <span id="current-endpoint">Loading...</span></p>
+    </div>
+    
+    <div id="endpoint-toggle-container" class="endpoint-toggle"></div>
+    
+    <div class="search-container">
+      <input type="number" id="block-height-input" class="search-input" placeholder="Enter block height">
+      <button id="search-button" class="search-button">Search</button>
+    </div>
+    
+    <div id="error-container"></div>
+    
+    <div id="block-details" style="display: none;">
+      <div class="block-info">
+        <h2>Block Information</h2>
+        <div id="block-info-content"></div>
+      </div>
+      
+      <div class="filter-options">
+        <label>
+          <input type="radio" name="tx-filter" value="all" checked> All Transactions
+        </label>
+        <label>
+          <input type="radio" name="tx-filter" value="alkanes"> Alkanes Transactions Only
+        </label>
+      </div>
+      
+      <div class="transaction-list">
+        <h2>Transactions</h2>
+        <div id="transactions-container"></div>
+        
+        <div class="pagination">
+          <button id="prev-page" disabled>Previous</button>
+          <span id="page-info">Page 1</span>
+          <button id="next-page">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Include core scripts -->
+  <script src="js/api-config.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/alkanes-rpc.js"></script>
+  <script src="js/endpoint-toggle.js"></script>
+  
+  <script>
+    // Function to clear any displayed error messages
+    function clearErrors() {
+      document.getElementById('error-container').innerHTML = '';
+    }
+    
+    // Function to add an error message
+    function addErrorMessage(message) {
+      const errorContainer = document.getElementById('error-container');
+      const errorElement = document.createElement('div');
+      errorElement.className = 'error-message';
+      errorElement.textContent = message;
+      errorContainer.appendChild(errorElement);
+    }
+    
+    // Function to search for block transactions
+    async function searchBlock() {
+      clearErrors();
+      
+      const blockHeight = parseInt(document.getElementById('block-height-input').value, 10);
+      
+      if (isNaN(blockHeight) || blockHeight < 0) {
+        addErrorMessage('Please enter a valid block height');
+        return;
+      }
+      
+      document.getElementById('block-details').style.display = 'none';
+      
+      try {
+        // Show loading state
+        document.getElementById('block-info-content').innerHTML = '<p>Loading block data...</p>';
+        document.getElementById('transactions-container').innerHTML = '<p>Loading transactions...</p>';
+        document.getElementById('block-details').style.display = 'block';
+        
+        // Initialize API client if needed
+        const apiClient = window.apiClient || new MetashrewApiClient();
+        console.log('[Block Explorer] Using endpoint:', apiClient.baseUrl);
+        
+        // Get the block hash first
+        const blockHash = await apiClient.call('btc_getblockhash', [blockHeight]);
+        console.log('[Block Explorer] Block hash:', blockHash);
+        
+        if (!blockHash) {
+          throw new Error('Block not found');
+        }
+        
+        // Get detailed block info
+        const blockData = await apiClient.call('btc_getblock', [blockHash, 2]);
+        console.log('[Block Explorer] Block data:', blockData);
+        
+        if (!blockData) {
+          throw new Error('Failed to fetch block data');
+        }
+        
+        // Display the block info
+        const blockInfo = document.getElementById('block-info-content');
+        blockInfo.innerHTML = `
+          <table>
+            <tr>
+              <th>Height</th>
+              <td>${blockData.height}</td>
+            </tr>
+            <tr>
+              <th>Hash</th>
+              <td>${blockData.hash}</td>
+            </tr>
+            <tr>
+              <th>Time</th>
+              <td>${new Date(blockData.time * 1000).toLocaleString()}</td>
+            </tr>
+            <tr>
+              <th>Transactions</th>
+              <td>${blockData.tx.length}</td>
+            </tr>
+            <tr>
+              <th>Size</th>
+              <td>${blockData.size.toLocaleString()} bytes</td>
+            </tr>
+            <tr>
+              <th>Endpoint</th>
+              <td>${apiClient.baseUrl}</td>
+            </tr>
+          </table>
+        `;
+        
+        // Store transactions and display them
+        window.currentBlockTxs = blockData.tx || [];
+        window.currentPage = 1;
+        window.itemsPerPage = 25;
+        
+        // Apply any active filter
+        const activeFilter = document.querySelector('input[name="tx-filter"]:checked').value;
+        filterTransactions(activeFilter);
+        
+      } catch (error) {
+        console.error('[Block Explorer] Error fetching block data:', error);
+        
+        document.getElementById('block-details').style.display = 'none';
+        addErrorMessage(`Error fetching block data: ${error.message}`);
+      }
+    }
+    
+    // Function to filter transactions
+    function filterTransactions(filter) {
+      const transactions = window.currentBlockTxs || [];
+      const startIndex = (window.currentPage - 1) * window.itemsPerPage;
+      const endIndex = startIndex + window.itemsPerPage;
+      
+      const filteredTxs = filter === 'alkanes' 
+        ? transactions.filter(tx => tx.isAlkane) // In a real implementation, you would determine if it's an alkane tx
+        : transactions;
+      
+      const pageTransactions = filteredTxs.slice(startIndex, endIndex);
+      
+      // Update pagination controls
+      document.getElementById('prev-page').disabled = window.currentPage === 1;
+      document.getElementById('next-page').disabled = endIndex >= filteredTxs.length;
+      document.getElementById('page-info').textContent = `Page ${window.currentPage} of ${Math.ceil(filteredTxs.length / window.itemsPerPage)}`;
+      
+      // Display transactions
+      const txContainer = document.getElementById('transactions-container');
+      
+      if (pageTransactions.length === 0) {
+        txContainer.innerHTML = '<p>No transactions found matching the selected criteria.</p>';
+        return;
+      }
+      
+      let txHTML = '';
+      pageTransactions.forEach((tx, index) => {
+        txHTML += `
+          <div class="transaction-item">
+            <strong>Tx ${startIndex + index + 1}:</strong> 
+            <a href="transaction-search.html?txid=${tx.txid}" class="tx-link">${tx.txid}</a>
+            <br>
+            <small>Size: ${tx.size} bytes</small>
+          </div>
+        `;
+      });
+      
+      txContainer.innerHTML = txHTML;
+    }
+    
+    // Fetch and display current block height
+    async function fetchBlockHeight() {
+      try {
+        const apiClient = window.apiClient || new MetashrewApiClient();
+        const heightStr = await apiClient.call('metashrew_height', []);
+        const height = parseInt(heightStr, 10);
+        
+        document.getElementById('current-height').textContent = height.toLocaleString();
+        document.getElementById('current-endpoint').textContent = API_CONFIG.getActiveEndpointType();
+        
+        console.log('[Block Explorer] Current height:', height);
+      } catch (error) {
+        console.error('[Block Explorer] Error fetching block height:', error);
+        document.getElementById('current-height').textContent = 'Error';
+      }
+    }
+    
+    // Listen for endpoint changes to update the UI
+    document.addEventListener('endpoint-changed', (event) => {
+      console.log('[Block Explorer] Endpoint changed:', event.detail);
+      document.getElementById('current-endpoint').textContent = event.detail.type;
+      fetchBlockHeight();
+    });
+    
+    // Fetch block height on page load
+    fetchBlockHeight();
+    
+    // Set up event listeners
+    document.getElementById('search-button').addEventListener('click', searchBlock);
+    
+    // Enable search on Enter key
+    document.getElementById('block-height-input').addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        searchBlock();
+      }
+    });
+    
+    // Set up filter listeners
+    document.querySelectorAll('input[name="tx-filter"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        filterTransactions(this.value);
+      });
+    });
+    
+    // Set up pagination listeners
+    document.getElementById('prev-page').addEventListener('click', function() {
+      if (window.currentPage > 1) {
+        window.currentPage--;
+        const activeFilter = document.querySelector('input[name="tx-filter"]:checked').value;
+        filterTransactions(activeFilter);
+      }
+    });
+    
+    document.getElementById('next-page').addEventListener('click', function() {
+      window.currentPage++;
+      const activeFilter = document.querySelector('input[name="tx-filter"]:checked').value;
+      filterTransactions(activeFilter);
+    });
+  </script>
+</body>
+</html>

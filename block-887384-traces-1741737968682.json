@@ -1,0 +1,388 @@
+{
+  "blockHeight": 887384,
+  "blockHash": "00000000000000000001738251ec8f63f557c0543c490e36046a84f82477a8a8",
+  "totalTransactions": 1155,
+  "alkanesCandidates": 29,
+  "tracedTransactions": [
+    {
+      "txid": "dc222246c435c5dcc64affc63eefe5a81233781a446d4195aa27c715efc5b280",
+      "reversedTxid": "80b2c5ef15c727aa95416d441a783312a8e5ef3ec6ff4ac6dcc535c4462222dc",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 2,
+          "type": "nulldata",
+          "hasTrace": false,
+          "trace": {
+            "error": {
+              "stack": "TypeError: req.body.method.split is not a function\n    at executeRPC (/home/ubuntu/sandshrew-proxy/lib/execute.js:22:45)\n    at executeRPC (/home/ubuntu/sandshrew-proxy/lib/execute.js:116:35)\n    at /home/ubuntu/sandshrew-proxy/lib/server.js:36:44\n    at /home/ubuntu/sandshrew-proxy/lib/server.js:37:11\n    at Layer.handle [as handle_request] (/home/ubuntu/sandshrew-proxy/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/ubuntu/sandshrew-proxy/node_modules/express/lib/router/route.js:149:13)\n    at Route.dispatch (/home/ubuntu/sandshrew-proxy/node_modules/express/lib/router/route.js:119:3)\n    at Layer.handle [as handle_request] (/home/ubuntu/sandshrew-proxy/node_modules/express/lib/router/layer.js:95:5)\n    at /home/ubuntu/sandshrew-proxy/node_modules/express/lib/router/index.js:284:15\n    at param (/home/ubuntu/sandshrew-proxy/node_modules/express/lib/router/index.js:365:14)",
+              "message": "req.body.method.split is not a function"
+            }
+          }
+        },
+        {
+          "vout": 3,
+          "type": "nulldata",
+          "hasTrace": false
+        },
+        {
+          "vout": 4,
+          "type": "nulldata",
+          "hasTrace": false
+        },
+        {
+          "vout": 5,
+          "type": "nulldata",
+          "hasTrace": false
+        },
+        {
+          "vout": 6,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "30ede8cd8ee18e7f575b8edbaf9e0cf2c4e226784f0e8949ef94095dfa534d11",
+      "reversedTxid": "114d53fa5d0994ef49890e4f7826e2c4f20c9eafdb8e5b577f8ee18ecde8ed30",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "1d73c5317f52e3da5962732fbf918097298e6154d637548fdf0c797e7cdd1c52",
+      "reversedTxid": "521cdd7c7e790cdf8f5437d654618e29978091bf2f736259dae3527f31c5731d",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 2,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "4d688f94e871e6a66dc8781c01aad2b34b9e522c5114c77f234906861d64f053",
+      "reversedTxid": "53f0641d860649237fc714512c529e4bb3d2aa011c78c86da6e671e8948f684d",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 2,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "9d3f55b7a1932b8e4203e4bb547e58f01302570c0611ec3bdd44fa1ec3bf688f",
+      "reversedTxid": "8f68bfc31efa44dd3bec11060c570213f0587e54bbe403428e2b93a1b7553f9d",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 2,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "3ad6ca819eb960663706db51e84343b6aaadb282e1d48326264bc9fd6d6c3d31",
+      "reversedTxid": "313d6c6dfdc94b262683d4e182b2adaab64343e851db06376660b99e81cad63a",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 3,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "7ba7919dd71eae2cdc0716e18398033e1fddca00d9a8e62438ea9b2b1b45af34",
+      "reversedTxid": "34af451b2b9bea3824e6a8d900cadd1f3e039883e11607dc2cae1ed79d91a77b",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "cf998a3ad82f9853398e31a3ebb1a4ba50cbfdea962367ded886ec914a3c011e",
+      "reversedTxid": "1e013c4a91ec86d8de672396eafdcb50baa4b1eba3318e3953982fd83a8a99cf",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "432e54f2376c23487bdddb5e0e16e98a6797c8d926a712b28de1dd0a716b4ec6",
+      "reversedTxid": "c64e6b710adde18db212a726d9c897678ae9160e5edbdd7b48236c37f2542e43",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "24268ca4590aa4927a10edc80d5bb887bbb8771057ded70723bf00158b5451a5",
+      "reversedTxid": "a551548b1500bf2307d7de571077b8bb87b85b0dc8ed107a92a40a59a48c2624",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "659d74e189aad0ee6507d6ec7d869ac75475eb9e5effdac44b3050b81b2f4e1d",
+      "reversedTxid": "1d4e2f1bb850304bc4daff5e9eeb7554c79a867decd60765eed0aa89e1749d65",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "4744a9ac9362e8b56bcac5f37d6c1141f98cbcc557d3055026e7f6065f42c7d9",
+      "reversedTxid": "d9c7425f06f6e7265005d357c5bc8cf941116c7df3c5ca6bb5e86293aca94447",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 1,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "4b1289cea784698914ab87511182b2a978a8a67c1c651cf0e0ba2372d7705979",
+      "reversedTxid": "795970d77223bae0f01c651c7ca6a878a9b282115187ab14896984a7ce89124b",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "bae3f72a069675cc83f3239663c695166427be0783cb68a577656ec5c7d684a7",
+      "reversedTxid": "a784d6c7c56e6577a568cb8307be27641695c6639623f383cc7596062af7e3ba",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "069b110278627c6c8e07a024062d6268ede4efdebed5da2c3b0e04c4b1d609eb",
+      "reversedTxid": "eb09d6b1c4040e3b2cdad5bedeefe4ed68622d0624a0078e6c7c627802119b06",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "ba83c12a1fbe18ef0c228ce83259d8e926e2acf0f83afa4154aa15ae60516020",
+      "reversedTxid": "20605160ae15aa5441fa3af8f0ace226e9d85932e88c220cef18be1f2ac183ba",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 2,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "2dd0d7270407a97ce487d497dcfb12fb780fe59866eb79791f878d4a2557f237",
+      "reversedTxid": "37f257254a8d871f7979eb6698e50f78fb12fbdc97d487e47ca9070427d7d02d",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 2,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "55bda4f3028e3b1f7a8f62f189db6fea8fca74fbbbdb075ad3d1076f7e8649f0",
+      "reversedTxid": "f049867e6f07d1d35a07dbbbfb74ca8fea6fdb89f1628f7a1f3b8e02f3a4bd55",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "d3707ad6d71064f2b28fd275fe38ee0810eca1aa308874d6977fc2338885736a",
+      "reversedTxid": "6a73858833c27f97d6748830aaa1ec1008ee38fe75d28fb2f26410d7d67a70d3",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "02f9bf6accb0b8772238436b9a25c6a255cf6c1ebc3822fcbbd53eae9408c0e4",
+      "reversedTxid": "e4c00894ae3ed5bbfc2238bc1e6ccf55a2c6259a6b43382277b8b0cc6abff902",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 2,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "ee70cd0e40cb9e94d655f5ff982bbe217f9a947748979590423259490d91c3b2",
+      "reversedTxid": "b2c3910d495932429095974877949a7f21be2b98fff555d6949ecb400ecd70ee",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "9cd3461ba6136b72c7e4b3ba96667aba6ef056f82f20e3a28e1ec1dabd3607db",
+      "reversedTxid": "db0736bddac11e8ea2e3202ff856f06eba7a6696bab3e4c7726b13a61b46d39c",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 2,
+          "type": "nulldata",
+          "hasTrace": false
+        },
+        {
+          "vout": 4,
+          "type": "trace_data",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "108aaf9ac13032b4aeb6f5222e708668beda54c8e40d85012020e8b396dfc5ba",
+      "reversedTxid": "bac5df96b3e8202001850de4c854dabe6886702e22f5b6aeb43230c19aaf8a10",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "83fe893582a9550a26f3aa270c4611f67b4df5cc92d9e44f7506aec414845ac5",
+      "reversedTxid": "c55a8414c4ae06754fe4d992ccf54d7bf611460c27aaf3260a55a9823589fe83",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "7a570d8d60934d00ad9789fa964cba0f4f2e23cf224550db26e068b4af640e89",
+      "reversedTxid": "890e64afb468e026db504522cf232e4f0fba4c96fa8997ad004d93608d0d577a",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 1,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "91fb2b1ae8a1db5aad08b39958b0f4a03c5b2d9f136fbd8fbcf9f2d80f28594a",
+      "reversedTxid": "4a59280fd8f2f9bc8fbd6f139f2d5b3ca0f4b05899b308ad5adba1e81a2bfb91",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 0,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "3f7ef7f7fc4bcb4a9a348eb10781b08022e21f2fc7e79b105bc37d010c188f69",
+      "reversedTxid": "698f180c017dc35b109be7c72f1fe22280b08107b18e349a4acb4bfcf7f77e3f",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 1,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "cc464964ad6295a9aeb64a1fc0fc7cc9714fe0c74e48dc1696dedebc9021519f",
+      "reversedTxid": "9f512190bcdede9616dc484ec7e04f71c97cfcc01f4ab6aea99562ad644946cc",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 1,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    },
+    {
+      "txid": "66d3c3fc5621b039cdf1e5a5c273442fa210d92a9c6689f350e769da101288f4",
+      "reversedTxid": "f4881210da69e750f389669c2ad910a22f4473c2a5e5f1cd39b02156fcc3d366",
+      "isAlkanes": false,
+      "voutTraces": [
+        {
+          "vout": 1,
+          "type": "nulldata",
+          "hasTrace": false
+        }
+      ]
+    }
+  ],
+  "timestamp": "2025-03-12T00:06:08.682Z"
+}

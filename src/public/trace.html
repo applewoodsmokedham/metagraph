@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alkanes Transaction Tracer</title>
+  <link rel="stylesheet" href="css/minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/examples/js/controls/OrbitControls.js"></script>
+  <style>
+    #traceDataContainer {
+      max-height: 500px;
+      overflow-y: auto;
+      font-family: monospace;
+    }
+    #visualizationContainer {
+      width: 100%;
+      height: 400px;
+      position: relative;
+      border: 1px solid #ccc;
+      margin: 20px 0;
+    }
+    #webglCanvas {
+      width: 100%;
+      height: 100%;
+      background-color: #222;
+    }
+    .controls-info {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      color: white;
+      background-color: rgba(0,0,0,0.6);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      pointer-events: none;
+    }
+    .trace-success {
+      border-left: 4px solid #090;
+      padding-left: 10px;
+    }
+    .trace-failure {
+      border-left: 4px solid #900;
+      padding-left: 10px;
+    }
+    pre {
+      white-space: pre-wrap;
+      background-color: #f8f8f8;
+      padding: 10px;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #000;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #333;
+    }
+    section {
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+    }
+    .header-info {
+      float: right;
+      font-size: 14px;
+    }
+    .block-height-indicator {
+      margin-left: 15px;
+      padding: 4px 8px;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .info-panel {
+      margin-bottom: 20px;
+    }
+    .endpoint-toggle {
+      margin-bottom: 20px;
+    }
+  </style>
+  
+  <!-- API Configuration and Client Scripts -->
+  <script src="js/api-config.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/alkanes-rpc.js"></script>
+  <script src="js/endpoint-toggle.js"></script>
+  <script src="js/endpoint-switcher.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Alkanes Explorer - Transaction Tracer</h1>
+    <div class="info-panel">
+      <p>Current Block Height: <span id="current-block-height">Loading...</span></p>
+      <p>Endpoint: <span id="current-endpoint">Loading...</span></p>
+    </div>
+    <div id="endpoint-toggle-container" class="endpoint-toggle"></div>
+    <nav>
+      <a href="index.html">Home</a> |
+      <a href="block-transactions.html">Block Explorer</a> |
+      <a href="transaction-search.html">Transaction Search</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Single Transaction Trace</h2>
+      <form id="singleTraceForm">
+        <label for="txid">Transaction ID</label>
+        <input type="text" id="txid" placeholder="Enter transaction ID">
+        
+        <label for="vout">Vout Index (Default: 4)</label>
+        <input type="number" id="vout" value="4" min="0">
+        <p>The index of the transaction output to trace. Alkanes traces are typically at vout 4.</p>
+        
+        <button type="submit">Trace Transaction</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Batch Transaction Trace</h2>
+      <form id="batchTraceForm">
+        <label for="batchTxids">Transaction IDs (one per line)</label>
+        <textarea id="batchTxids" rows="4" placeholder="Enter transaction IDs, one per line"></textarea>
+        
+        <label>
+          <input type="checkbox" id="useDefaultVout" checked>
+          Use default vout 4 for all transactions
+        </label>
+        
+        <button type="submit">Trace Batch</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Trace Results</h2>
+      <div id="resultsContainer">
+        <p>No trace results yet. Submit a transaction ID above to trace.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>WebGL Visualization</h2>
+      <div id="visualizationContainer">
+        <canvas id="webglCanvas"></canvas>
+        <div class="controls-info">
+          <p>Controls: Left-click drag to rotate | Right-click drag to pan | Scroll to zoom</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Trace Data</h2>
+      <div id="traceDataContainer">
+        <p>No trace data available. Successful traces will display data here.</p>
+      </div>
+    </section>
+    
+    <section class="error-container" id="error-messages">
+      <h2>Error Messages</h2>
+      <!-- Error messages will be displayed here -->
+    </section>
+  </main>
+
+  <script>
+    // WebGL visualization using Three.js
+    class TraceVisualizer {
+      constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.scene = null;
+        this.camera = null;
+        this.renderer = null;
+        this.controls = null;
+        this.objects = [];
+        
+        this.init();
+        this.animate();
+      }
+      
+      init() {
+        // Create scene
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x222222);
+        
+        // Create camera
+        this.camera = new THREE.PerspectiveCamera(75, this.canvas.clientWidth / this.canvas.clientHeight, 0.1, 1000);
+        this.camera.position.z = 5;
+        
+        // Create renderer
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true });
+        this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+        
+        // Add orbit controls
+        this.controls = new THREE.OrbitControls(this.camera, this.canvas);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.1;
+        
+        // Add ambient light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        this.scene.add(ambientLight);
+        
+        // Add directional light
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        this.scene.add(directionalLight);
+        
+        // Add grid
+        const gridHelper = new THREE.GridHelper(10, 10);
+        this.scene.add(gridHelper);
+        
+        // Add axes helper
+        const axesHelper = new THREE.AxesHelper(5);
+        this.scene.add(axesHelper);
+        
+        // Handle window resize
+        window.addEventListener('resize', () => this.onWindowResize());
+      }
+      
+      onWindowResize() {
+        this.camera.aspect = this.canvas.clientWidth / this.canvas.clientHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+      }
+      
+      animate() {
+        requestAnimationFrame(() => this.animate());
+        
+        this.controls.update();
+        this.renderer.render(this.scene, this.camera);
+      }
+      
+      clearObjects() {
+        // Remove all objects from the scene
+        this.objects.forEach(obj => {
+          this.scene.remove(obj);
+        });
+        this.objects = [];
+      }
+      
+      visualizeTraceData(traceData) {
+        this.clearObjects();
+        
+        if (!traceData || !traceData.length) {
+          console.warn('No trace data to visualize');
+          return;
+        }
+        
+        try {
+          // Define colors for different operations
+          const colors = {
+            'LOAD': 0x00ff00,   // Green
+            'STORE': 0xff0000,  // Red
+            'CALL': 0x0000ff,   // Blue
+            'RET': 0xff00ff,    // Magenta
+            'PUSH': 0xffff00,   // Yellow
+            'POP': 0x00ffff,    // Cyan
+            'DEFAULT': 0xffffff // White
+          };
+          
+          // Create material for cube
+          const createMaterial = (type) => {
+            const color = colors[type] || colors.DEFAULT;
+            return new THREE.MeshLambertMaterial({ color: color });
+          };
+          
+          // Create geometry for operations
+          const cubeGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+          
+          // Track positions to avoid overlap
+          const positions = new Map();
+          
+          // Create objects for each trace entry
+          traceData.forEach((entry, index) => {
+            if (!entry.operation) return;
+            
+            const x = (index % 10) - 5;
+            const y = Math.floor((index % 100) / 10) - 5;
+            const z = Math.floor(index / 100) - 5;
+            
+            const key = `${x},${y},${z}`;
+            
+            if (!positions.has(key)) {
+              const material = createMaterial(entry.operation);
+              const cube = new THREE.Mesh(cubeGeometry, material);
+              
+              cube.position.set(x, y, z);
+              cube.userData = { 
+                index: index,
+                operation: entry.operation,
+                data: entry.data 
+              };
+              
+              this.scene.add(cube);
+              this.objects.push(cube);
+              
+              positions.set(key, true);
+            }
+          });
+          
+          // Focus camera on the center of the visualization
+          this.camera.position.set(10, 10, 10);
+          this.controls.target.set(0, 0, 0);
+          this.controls.update();
+          
+        } catch (error) {
+          console.error('Error in trace visualization:', error);
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize the WebGL visualizer
+      const visualizer = new TraceVisualizer('webglCanvas');
+      
+      // Function to add an error message
+      function addErrorMessage(message) {
+        const errorMessagesContainer = document.getElementById('error-messages');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        errorMessagesContainer.appendChild(errorDiv);
+      }
+      
+      // Fetch and display current block height
+      async function fetchBlockHeight() {
+        try {
+          const apiClient = window.apiClient || new MetashrewApiClient();
+          const heightStr = await apiClient.call('metashrew_height', []);
+          const height = parseInt(heightStr, 10);
+          
+          document.getElementById('current-block-height').textContent = height.toLocaleString();
+          document.getElementById('current-endpoint').textContent = API_CONFIG.getActiveEndpointType();
+          
+          console.log('[Trace Visualizer] Current height:', height);
+        } catch (error) {
+          console.error('[Trace Visualizer] Error fetching block height:', error);
+          document.getElementById('current-block-height').textContent = 'Error';
+        }
+      }
+      
+      // Listen for endpoint changes to update the UI
+      document.addEventListener('endpoint-changed', (event) => {
+        console.log('[Trace Visualizer] Endpoint changed:', event.detail);
+        document.getElementById('current-endpoint').textContent = event.detail.type;
+        fetchBlockHeight();
+      });
+      
+      // Fetch block height on page load
+      fetchBlockHeight();
+      
+      // Set up single transaction trace form
+      document.getElementById('singleTraceForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const txid = document.getElementById('txid').value.trim();
+        const vout = parseInt(document.getElementById('vout').value.trim(), 10);
+        
+        if (!txid) {
+          addErrorMessage('Please enter a transaction ID');
+          return;
+        }
+        
+        showLoading('Tracing transaction...');
+        
+        try {
+          const response = await fetch('/api/trace', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              txid: txid,
+              vout: vout
+            }),
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to trace transaction');
+          }
+          
+          const data = await response.json();
+          displaySingleTraceResult(data);
+          
+          // Visualize if data is available
+          if (data.traceData) {
+            visualizer.visualizeTraceData(data.traceData);
+          }
+        } catch (error) {
+          showError('Error tracing transaction', error);
+        }
+      });
+      
+      // Set up batch transaction trace form
+      document.getElementById('batchTraceForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const batchTxids = document.getElementById('batchTxids').value.trim().split('\n').filter(line => line.trim().length > 0);
+        const useDefaultVout = document.getElementById('useDefaultVout').checked;
+        
+        if (batchTxids.length === 0) {
+          addErrorMessage('Please enter at least one transaction ID');
+          return;
+        }
+        
+        showLoading(`Tracing ${batchTxids.length} transactions...`);
+        
+        try {
+          const response = await fetch('/api/trace/batch', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              txids: batchTxids,
+              defaultVout: useDefaultVout ? 4 : null
+            }),
+          });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to trace transactions');
+          }
+          
+          const data = await response.json();
+          displayBatchTraceResults(data);
+        } catch (error) {
+          showError('Error tracing batch transactions', error);
+        }
+      });
+      
+      // Helper functions
+      function displaySingleTraceResult(data) {
+        const resultsContainer = document.getElementById('resultsContainer');
+        const traceDataContainer = document.getElementById('traceDataContainer');
+        
+        resultsContainer.innerHTML = '';
+        
+        const resultElement = document.createElement('div');
+        resultElement.className = data.success ? 'trace-success' : 'trace-failure';
+        
+        let resultHTML = `
+          <h3>Trace Result for ${data.txid}</h3>
+          <p>Status: ${data.success ? 'Success' : 'Failed'}</p>
+        `;
+        
+        if (data.gasUsed !== undefined) {
+          resultHTML += `<p>Gas Used: ${data.gasUsed}</p>`;
+        }
+        
+        resultElement.innerHTML = resultHTML;
+        resultsContainer.appendChild(resultElement);
+        
+        // Display trace data if available
+        if (data.traceData && data.traceData.length > 0) {
+          traceDataContainer.innerHTML = `<pre>${JSON.stringify(data.traceData, null, 2)}</pre>`;
+        } else {
+          traceDataContainer.innerHTML = '<p>No trace data available for this transaction.</p>';
+        }
+      }
+      
+      function displayBatchTraceResults(data) {
+        const resultsContainer = document.getElementById('resultsContainer');
+        resultsContainer.innerHTML = '';
+        
+        const summaryElement = document.createElement('div');
+        summaryElement.innerHTML = `
+          <h3>Batch Trace Results</h3>
+          <p>Processed ${data.results.length} transactions</p>
+          <p>Successful: ${data.results.filter(r => r.success).length}</p>
+          <p>Failed: ${data.results.filter(r => !r.success).length}</p>
+        `;
+        resultsContainer.appendChild(summaryElement);
+        
+        // Display individual results
+        data.results.forEach(result => {
+          const resultElement = document.createElement('div');
+          resultElement.className = result.success ? 'trace-success' : 'trace-failure';
+          
+          let resultHTML = `
+            <h4>Transaction ${result.txid}</h4>
+            <p>Status: ${result.success ? 'Success' : 'Failed'}</p>
+          `;
+          
+          if (result.gasUsed !== undefined) {
+            resultHTML += `<p>Gas Used: ${result.gasUsed}</p>`;
+          }
+          
+          if (result.error) {
+            resultHTML += `<p>Error: ${result.error}</p>`;
+          }
+          
+          resultElement.innerHTML = resultHTML;
+          resultsContainer.appendChild(resultElement);
+        });
+      }
+      
+      function showLoading(message) {
+        const resultsContainer = document.getElementById('resultsContainer');
+        resultsContainer.innerHTML = `
+          <div>
+            <h3>Processing...</h3>
+            <p>${message}</p>
+          </div>
+        `;
+        
+        // Clear trace data
+        document.getElementById('traceDataContainer').innerHTML = 
+          '<p>Processing trace data...</p>';
+      }
+      
+      function showError(message, error) {
+        const resultsContainer = document.getElementById('resultsContainer');
+        resultsContainer.innerHTML = `
+          <div class="trace-failure">
+            <h3>Error</h3>
+            <p>${message}: ${error.message}</p>
+          </div>
+        `;
+        
+        addErrorMessage(`${message}: ${error.message}`);
+      }
+    });
+  </script>
+</body>
+</html>

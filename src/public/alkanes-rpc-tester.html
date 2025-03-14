@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alkanes RPC Method Tester</title>
+    <link rel="stylesheet" href="css/minimal.css">
+    <style>
+        body {
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .test-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .method-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .method-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .input-group {
+            margin-bottom: 12px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .button-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .primary-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .primary-btn:hover {
+            background-color: #0069d9;
+        }
+        .secondary-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+        .secondary-btn:hover {
+            background-color: #5a6268;
+        }
+        .result-panel {
+            min-height: 300px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        .endpoint-indicator {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 10px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .loading {
+            color: #6c757d;
+            font-style: italic;
+        }
+        .status-circle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .status-running {
+            background-color: #28a745;
+        }
+        .status-error {
+            background-color: #dc3545;
+        }
+        .param-description {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 4px;
+        }
+        .tab-buttons {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 15px;
+        }
+        .tab-button {
+            padding: 8px 16px;
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+        }
+        .tab-button.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 15px;
+            background-color: #fff;
+            border-top: 3px solid #007bff;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .sync-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .sync-progress {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .sync-progress-bar {
+            height: 100%;
+            background-color: #28a745;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Alkanes RPC Method Tester
+                <span id="endpoint-indicator" class="endpoint-indicator">
+                    <span id="status-circle" class="status-circle"></span>
+                    <span>Endpoint: <span id="endpoint-type">LOADING</span></span>
+                </span>
+            </h1>
+            <div class="sync-status">
+                <div>Sync Status: <span id="sync-percent">-</span>%</div>
+                <div>Index Height: <span id="sync-height">-</span></div>
+                <div>Node Height: <span id="node-height">-</span></div>
+                <button id="check-connection" class="action-button">Check Connection</button>
+                <button id="switch-endpoint" class="action-button">Switch Endpoint</button>
+            </div>
+        </div>
+
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="address-tab">Address Methods</button>
+            <button class="tab-button" data-tab="block-tab">Block Methods</button>
+            <button class="tab-button" data-tab="transaction-tab">Transaction Methods</button>
+            <button class="tab-button" data-tab="trace-tab">Trace Methods</button>
+        </div>
+
+        <div class="tab-content active" id="address-tab">
+            <div class="test-panel">
+                <div>
+                    <div class="method-section">
+                        <div class="method-header">
+                            <h3>protorunesbyaddress</h3>
+                        </div>
+                        <div class="input-group">
+                            <label for="proto-address-input">Bitcoin Address</label>
+                            <input type="text" id="proto-address-input" placeholder="Enter Bitcoin address" value="bc1p3cyx5e2hgh53w7kpxcvm8s4kkega9gv5wfw7c4qxsvxl0u8x834qf0u2dp">
+                            <div class="param-description">Bitcoin address to query for Alkanes tokens</div>
+                        </div>
+                        <div class="input-group">
+                            <label for="proto-tag-input">Protocol Tag</label>
+                            <input type="text" id="proto-tag-input" placeholder="Protocol tag (e.g., 1337)" value="1337">
+                            <div class="param-description">Protocol tag for filtering (e.g., 1337 for Alkanes)</div>
+                        </div>
+                        <div class="button-group">
+                            <button id="test-protorunesbyaddress" class="primary-btn">Test Method</button>
+                        </div>
+                    </div>
+                    
+                    <div class="method-section">
+                        <div class="method-header">
+                            <h3>runesbyaddress</h3>
+                        </div>
+                        <div class="input-group">
+                            <label for="runes-address-input">Bitcoin Address</label>
+                            <input type="text" id="runes-address-input" placeholder="Enter Bitcoin address" value="bc1p3cyx5e2hgh53w7kpxcvm8s4kkega9gv5wfw7c4qxsvxl0u8x834qf0u2dp">
+                            <div class="param-description">Bitcoin address to query for Runes tokens</div>
+                        </div>
+                        <div class="button-group">
+                            <button id="test-runesbyaddress" class="primary-btn">Test Method</button>
+                        </div>
+                    </div>
+
+                    <div class="method-section">
+                        <div class="method-header">
+                            <h3>spendablesbyaddress</h3>
+                        </div>
+                        <div class="input-group">
+                            <label for="spendables-address-input">Bitcoin Address</label>
+                            <input type="text" id="spendables-address-input" placeholder="Enter Bitcoin address" value="bc1p3cyx5e2hgh53w7kpxcvm8s4kkega9gv5wfw7c4qxsvxl0u8x834qf0u2dp">
+                            <div class="param-description">Bitcoin address to query for spendable outputs</div>
+                        </div>
+                        <div class="input-group">
+                            <label for="spendables-tag-input">Protocol Tag</label>
+                            <input type="text" id="spendables-tag-input" placeholder="Protocol tag (e.g., 1337)" value="1337">
+                            <div class="param-description">Protocol tag for filtering (e.g., 1337 for Alkanes)</div>
+                        </div>
+                        <div class="button-group">
+                            <button id="test-spendablesbyaddress" class="primary-btn">Test Method</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-panel" id="address-result">
+                    <div class="loading">Run a test to see results here...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="block-tab">
+            <div class="test-panel">
+                <div>
+                    <div class="method-section">
+                        <div class="method-header">
+                            <h3>protorunesbyheight</h3>
+                        </div>
+                        <div class="input-group">
+                            <label for="height-input">Block Height</label>
+                            <input type="number" id="height-input" placeholder="Enter block height" value="880050">
+                            <div class="param-description">Block height to query (e.g., 880050 for an Alkanes block)</div>
+                        </div>
+                        <div class="input-group">
+                            <label for="proto-height-tag-input">Protocol Tag</label>
+                            <input type="text" id="proto-height-tag-input" placeholder="Protocol tag (e.g., 1337)" value="1337">
+                            <div class="param-description">Protocol tag for filtering (e.g., 1337 for Alkanes)</div>
+                        </div>
+                        <div class="button-group">
+                            <button id="test-protorunesbyheight" class="primary-btn">Test Method</button>
+                        </div>
+                    </div>
+                    
+                    <div class="method-section">
+                        <div class="method-header">
+                            <h3>runesbyheight</h3>
+                        </div>
+                        <div class="input-group">
+                            <label for="runes-height-input">Block Height</label>
+                            <input type="number" id="runes-height-input" placeholder="Enter block height" value="880050">
+                            <div class="param-description">Block height to query (e.g., 880050 for a Runes block)</div>
+                        </div>
+                        <div class="button-group">
+                            <button id="test-runesbyheight" class="primary-btn">Test Method</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-panel" id="block-result">
+                    <div class="loading">Run a test to see results here...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="transaction-tab">
+            <div class="test-panel">
+                <div>
+                    <div class="method-section">
+                        <div class="method-header">
+                            <h3>transactionbyid</h3>
+                        </div>
+                        <div class="input-group">
+                            <label for="txid-input">Transaction ID</label>
+                            <input type="text" id="txid-input" placeholder="Enter transaction ID" value="b9d35ea4abff5d2c0823c3fc3d9c3e1397bd31c280c15732a05c3c9ecbf4ebbe">
+                            <div class="param-description">Transaction ID to retrieve details for</div>
+                        </div>
+                        <div class="button-group">
+                            <button id="test-transactionbyid" class="primary-btn">Test Method</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-panel" id="transaction-result">
+                    <div class="loading">Run a test to see results here...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="trace-tab">
+            <div class="test-panel">
+                <div>
+                    <div class="method-section">
+                        <div class="method-header">
+                            <h3>traceblock</h3>
+                        </div>
+                        <div class="input-group">
+                            <label for="trace-block-input">Block Height</label>
+                            <input type="number" id="trace-block-input" placeholder="Enter block height" value="880050">
+                            <div class="param-description">Block height to trace execution for</div>
+                        </div>
+                        <div class="button-group">
+                            <button id="test-traceblock" class="primary-btn">Test Method</button>
+                        </div>
+                    </div>
+                    
+                    <div class="method-section">
+                        <div class="method-header">
+                            <h3>trace</h3>
+                        </div>
+                        <div class="input-group">
+                            <label for="trace-txid-input">Transaction ID</label>
+                            <input type="text" id="trace-txid-input" placeholder="Enter transaction ID" value="b9d35ea4abff5d2c0823c3fc3d9c3e1397bd31c280c15732a05c3c9ecbf4ebbe">
+                            <div class="param-description">Transaction ID to trace</div>
+                        </div>
+                        <div class="input-group">
+                            <label for="trace-vout-input">Output Index (vout)</label>
+                            <input type="number" id="trace-vout-input" placeholder="Enter output index" value="0">
+                            <div class="param-description">Output index within the transaction</div>
+                        </div>
+                        <div class="button-group">
+                            <button id="test-trace" class="primary-btn">Test Method</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-panel" id="trace-result">
+                    <div class="loading">Run a test to see results here...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load scripts -->
+    <script src="js/api-config.js"></script>
+    <script src="js/api-client.js"></script>
+    <script src="js/alkanes-rpc.js"></script>
+    <script src="js/endpoint-toggle.js"></script>
+    <script>
+        // Global API client instance
+        let apiClient;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize a fresh API client
+            apiClient = new MetashrewApiClient({
+                timeout: 10000,
+                retries: 2
+            });
+            
+            // Initialize the AlkanesRpc instance
+            const rpc = alkanesRpc;
+            
+            // Update endpoint display
+            function updateEndpointDisplay() {
+                const endpoint = API_CONFIG.getActiveEndpoint();
+                const endpointType = API_CONFIG.getActiveEndpointType();
+                
+                document.getElementById('endpoint-type').textContent = endpointType;
+                
+                const statusCircle = document.getElementById('status-circle');
+                const indicator = document.getElementById('endpoint-indicator');
+                
+                if (endpointType === 'LOCAL') {
+                    statusCircle.className = 'status-circle';
+                    indicator.style.backgroundColor = '#e8f5e9';
+                    indicator.style.color = '#2e7d32';
+                } else {
+                    statusCircle.className = 'status-circle';
+                    indicator.style.backgroundColor = '#fff3e0';
+                    indicator.style.color = '#ef6c00';
+                }
+            }
+            
+            updateEndpointDisplay();
+            
+            // Switch endpoint button
+            document.getElementById('switch-endpoint').addEventListener('click', () => {
+                console.log('Switch endpoint button clicked');
+                // Clear any previous results
+                document.getElementById('address-result').textContent = '';
+                document.getElementById('block-result').textContent = '';
+                document.getElementById('trace-result').textContent = '';
+                
+                // Toggle the API endpoint
+                const newEndpoint = API_CONFIG.toggleEndpoint();
+                console.log('New endpoint:', newEndpoint);
+                
+                // Create a new API client with the updated endpoint
+                apiClient = new MetashrewApiClient();
+                
+                // Update the UI
+                updateEndpointDisplay();
+                
+                // Reset any error states
+                const statusCircle = document.getElementById('status-circle');
+                statusCircle.className = 'status-circle status-running';
+                
+                // Check connection with the new endpoint
+                setTimeout(() => {
+                    updateSyncStatus();
+                }, 500); // Short delay to allow endpoint change to propagate
+            });
+            
+            // Check connection button
+            document.getElementById('check-connection').addEventListener('click', () => {
+                updateSyncStatus();
+            });
+            
+            // Update sync status
+            async function updateSyncStatus() {
+                try {
+                    console.log('Checking sync status...');
+                    const statusCircle = document.getElementById('status-circle');
+                    statusCircle.className = 'status-circle status-running';
+                    
+                    const syncStatus = await apiClient.checkSync();
+                    console.log('Sync status:', syncStatus);
+                    
+                    document.getElementById('sync-height').textContent = syncStatus.height.toLocaleString();
+                    document.getElementById('node-height').textContent = syncStatus.nodeHeight.toLocaleString();
+                    document.getElementById('sync-percent').textContent = syncStatus.syncPercentage;
+                    
+                    statusCircle.className = 'status-circle status-synced';
+                    console.log('Sync status updated successfully');
+                } catch (error) {
+                    console.error('Error checking sync status:', error);
+                    
+                    const statusCircle = document.getElementById('status-circle');
+                    statusCircle.className = 'status-circle status-error';
+                    
+                    document.getElementById('sync-height').textContent = 'ERROR';
+                    document.getElementById('node-height').textContent = 'ERROR';
+                    document.getElementById('sync-percent').textContent = 'ERROR';
+                }
+            }
+            
+            // Update sync status on load
+            updateSyncStatus();
+            
+            // Tab switching
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    button.classList.add('active');
+                    const tabId = button.dataset.tab;
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Helper function to display results
+            function displayResult(resultId, content, isError = false) {
+                const resultPanel = document.getElementById(resultId);
+                
+                if (isError) {
+                    resultPanel.innerHTML = `<div class="error">${content}</div>`;
+                } else {
+                    if (typeof content === 'object') {
+                        resultPanel.innerHTML = `<pre>${JSON.stringify(content, null, 2)}</pre>`;
+                    } else {
+                        resultPanel.innerHTML = `<pre>${content}</pre>`;
+                    }
+                }
+            }
+            
+            // Helper function to show loading
+            function showLoading(resultId) {
+                const resultPanel = document.getElementById(resultId);
+                resultPanel.innerHTML = `<div class="loading">Loading...</div>`;
+            }
+            
+            // Address Tab Methods
+            document.getElementById('test-protorunesbyaddress').addEventListener('click', async () => {
+                const address = document.getElementById('proto-address-input').value;
+                const protocolTag = document.getElementById('proto-tag-input').value;
+                
+                if (!address) {
+                    displayResult('address-result', 'Please enter a Bitcoin address', true);
+                    return;
+                }
+                
+                showLoading('address-result');
+                
+                try {
+                    // Parse the protocol tag as a BigInt
+                    const parsedTag = protocolTag ? BigInt(protocolTag) : 1n;
+                    
+                    const result = await rpc.protorunesbyaddress({ 
+                        address,
+                        protocolTag: parsedTag
+                    });
+                    
+                    displayResult('address-result', result);
+                } catch (error) {
+                    displayResult('address-result', `Error: ${error.message}`, true);
+                    console.error('API call error:', error);
+                }
+            });
+            
+            document.getElementById('test-runesbyaddress').addEventListener('click', async () => {
+                const address = document.getElementById('runes-address-input').value;
+                
+                if (!address) {
+                    displayResult('address-result', 'Please enter a Bitcoin address', true);
+                    return;
+                }
+                
+                showLoading('address-result');
+                
+                try {
+                    const result = await rpc.runesbyaddress({ address });
+                    displayResult('address-result', result);
+                } catch (error) {
+                    displayResult('address-result', `Error: ${error.message}`, true);
+                    console.error('API call error:', error);
+                }
+            });
+            
+            document.getElementById('test-spendablesbyaddress').addEventListener('click', async () => {
+                const address = document.getElementById('spendables-address-input').value;
+                const protocolTag = document.getElementById('spendables-tag-input').value;
+                
+                if (!address) {
+                    displayResult('address-result', 'Please enter a Bitcoin address', true);
+                    return;
+                }
+                
+                showLoading('address-result');
+                
+                try {
+                    // Parse the protocol tag as a BigInt
+                    const parsedTag = protocolTag ? BigInt(protocolTag) : 1n;
+                    
+                    const result = await rpc.spendablesbyaddress({
+                        address,
+                        protocolTag: parsedTag
+                    });
+                    
+                    displayResult('address-result', result);
+                } catch (error) {
+                    displayResult('address-result', `Error: ${error.message}`, true);
+                    console.error('API call error:', error);
+                }
+            });
+            
+            // Block Tab Methods
+            document.getElementById('test-protorunesbyheight').addEventListener('click', async () => {
+                const height = document.getElementById('height-input').value;
+                const protocolTag = document.getElementById('proto-height-tag-input').value;
+                
+                if (!height) {
+                    displayResult('block-result', 'Please enter a block height', true);
+                    return;
+                }
+                
+                showLoading('block-result');
+                
+                try {
+                    // Parse the protocol tag as a BigInt
+                    const parsedTag = protocolTag ? BigInt(protocolTag) : 1n;
+                    
+                    const result = await rpc.protorunesbyheight({
+                        height: parseInt(height),
+                        protocolTag: parsedTag
+                    });
+                    
+                    displayResult('block-result', result);
+                } catch (error) {
+                    displayResult('block-result', `Error: ${error.message}`, true);
+                    console.error('API call error:', error);
+                }
+            });
+            
+            document.getElementById('test-runesbyheight').addEventListener('click', async () => {
+                const height = document.getElementById('runes-height-input').value;
+                
+                if (!height) {
+                    displayResult('block-result', 'Please enter a block height', true);
+                    return;
+                }
+                
+                showLoading('block-result');
+                
+                try {
+                    const result = await rpc.runesbyheight({
+                        height: parseInt(height)
+                    });
+                    
+                    displayResult('block-result', result);
+                } catch (error) {
+                    displayResult('block-result', `Error: ${error.message}`, true);
+                    console.error('API call error:', error);
+                }
+            });
+            
+            // Transaction Tab Methods
+            document.getElementById('test-transactionbyid').addEventListener('click', async () => {
+                const txid = document.getElementById('txid-input').value;
+                
+                if (!txid) {
+                    displayResult('transaction-result', 'Please enter a transaction ID', true);
+                    return;
+                }
+                
+                showLoading('transaction-result');
+                
+                try {
+                    const result = await rpc.transactionbyid({ txid });
+                    displayResult('transaction-result', result);
+                } catch (error) {
+                    displayResult('transaction-result', `Error: ${error.message}`, true);
+                    console.error('API call error:', error);
+                }
+            });
+            
+            // Trace Tab Methods
+            document.getElementById('test-traceblock').addEventListener('click', async () => {
+                const block = document.getElementById('trace-block-input').value;
+                
+                if (!block) {
+                    displayResult('trace-result', 'Please enter a block height', true);
+                    return;
+                }
+                
+                showLoading('trace-result');
+                
+                try {
+                    const result = await rpc.traceblock({
+                        block: parseInt(block)
+                    });
+                    
+                    displayResult('trace-result', result);
+                } catch (error) {
+                    displayResult('trace-result', `Error: ${error.message}`, true);
+                    console.error('API call error:', error);
+                }
+            });
+            
+            document.getElementById('test-trace').addEventListener('click', async () => {
+                const txid = document.getElementById('trace-txid-input').value;
+                const vout = document.getElementById('trace-vout-input').value;
+                
+                if (!txid) {
+                    displayResult('trace-result', 'Please enter a transaction ID', true);
+                    return;
+                }
+                
+                showLoading('trace-result');
+                
+                try {
+                    const result = await rpc.trace({
+                        txid,
+                        vout: parseInt(vout || '0')
+                    });
+                    
+                    displayResult('trace-result', result);
+                } catch (error) {
+                    displayResult('trace-result', `Error: ${error.message}`, true);
+                    console.error('API call error:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

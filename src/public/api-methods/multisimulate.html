@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>multisimulate | Alkanes Explorer</title>
+  <link rel="stylesheet" href="../css/minimal.css">
+  <link rel="stylesheet" href="../css/api-methods.css">
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <h2>API Methods</h2>
+    
+    <!-- Core Alkanes Functions -->
+    <h3>Core Alkanes Functions</h3>
+    <ul>
+      <li><a href="simulate.html">simulate</a></li>
+      <li><a href="trace-method.html">trace</a></li>
+      <li><a href="traceblock.html">traceblock</a></li>
+      <li><a href="multisimulate.html">multisimulate</a></li>
+    </ul>
+    
+    <!-- Protorune Functions -->
+    <h3>Protorune Functions</h3>
+    <ul>
+      <li><a href="protorunesbyaddress.html">protorunesbyaddress</a></li>
+      <li><a href="protorunesbyoutpoint.html">protorunesbyoutpoint</a></li>
+      <li><a href="protorunesbyheight.html">protorunesbyheight</a></li>
+      <li><a href="spendablesbyaddress.html">spendablesbyaddress</a></li>
+    </ul>
+    
+    <!-- Runes Compatibility -->
+    <h3>Runes Compatibility</h3>
+    <ul>
+      <li><a href="runesbyaddress.html">runesbyaddress</a></li>
+      <li><a href="runesbyoutpoint.html">runesbyoutpoint</a></li>
+      <li><a href="runesbyheight.html">runesbyheight</a></li>
+    </ul>
+    
+    <!-- JSON-RPC Methods -->
+    <h3>JSON-RPC Methods</h3>
+    <ul>
+      <li><a href="metashrew-height.html">metashrew_height</a></li>
+      <li><a href="sandshrew-multicall.html">sandshrew_multicall</a></li>
+      <li><a href="btc-getblockcount.html">btc_getblockcount</a></li>
+    </ul>
+    
+    <!-- Indexer Functions -->
+    <h3>Indexer Functions</h3>
+    <ul>
+      <li><a href="alkane-inventory.html">alkane_inventory</a></li>
+      <li><a href="call-view.html">call_view</a></li>
+      <li><a href="call-multiview.html">call_multiview</a></li>
+    </ul>
+    
+    <div class="sidebar-footer">
+      <a href="../index.html">← Back to Homepage</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Method Header -->
+    <div class="method-header">
+      <div class="method-title">
+        <h1>multisimulate</h1>
+        <span class="method-badge badge-view">View Function</span>
+      </div>
+      <p class="method-description">Simulates multiple contract executions in a single call, allowing batch simulation for efficiency.</p>
+    </div>
+    
+    <!-- Method Metadata -->
+    <div class="method-metadata">
+      <div class="metadata-item">
+        <div class="metadata-label">Method Type:</div>
+        <div class="metadata-value">View Function</div>
+      </div>
+      <div class="metadata-item">
+        <div class="metadata-label">JSON-RPC Method:</div>
+        <div class="metadata-value">metashrew_view</div>
+      </div>
+      <div class="metadata-item">
+        <div class="metadata-label">View Function:</div>
+        <div class="metadata-value">multisimulate</div>
+      </div>
+      <div class="metadata-item">
+        <div class="metadata-label">Required Parameters:</div>
+        <div class="metadata-value">Array of MessageContextParcels, Block Tag (optional)</div>
+      </div>
+    </div>
+    
+    <!-- Examples Section -->
+    <div class="example-container">
+      <h2>Examples</h2>
+      
+      <div class="example-tabs">
+        <div class="example-tab active" data-target="request-example">Request</div>
+        <div class="example-tab" data-target="response-example">Response</div>
+        <div class="example-tab" data-target="curl-example">cURL</div>
+      </div>
+      
+      <div id="request-example" class="example-content">
+        <h3>Example Request</h3>
+        <div class="code-block">{
+  "method": "metashrew_view",
+  "params": [
+    "multisimulate",
+    "[
+      {
+        \"from\": \"bc1p3cyx5e2hgh53w7kpxcvm8s4kkega9gv5wfw7c4xvhmf0h4x5wd8qfz5dkn\",
+        \"to\": \"bc1ppz8pf35uuqj2y2d3rd7azdestxh2rgn9qwc9auvq9jj6vx842w4q6wz90h\",
+        \"value\": \"1000\",
+        \"data\": \"636865636b6964\",
+        \"signature\": null
+      },
+      {
+        \"from\": \"bc1ppz8pf35uuqj2y2d3rd7azdestxh2rgn9qwc9auvq9jj6vx842w4q6wz90h\",
+        \"to\": \"bc1p3cyx5e2hgh53w7kpxcvm8s4kkega9gv5wfw7c4xvhmf0h4x5wd8qfz5dkn\",
+        \"value\": \"500\",
+        \"data\": \"6765744e616d65\",
+        \"signature\": null
+      }
+    ]",
+    "latest"
+  ],
+  "id": 0,
+  "jsonrpc": "2.0"
+}</div>
+      </div>
+      
+      <div id="response-example" class="example-content" style="display: none;">
+        <h3>Example Response</h3>
+        <div class="code-block">{
+  "jsonrpc": "2.0",
+  "result": [
+    {
+      "exitCode": 0,
+      "returnValue": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "gasUsed": 765,
+      "logs": [
+        {
+          "address": "0x0000000000000000000000000000000000000000",
+          "topics": [
+            "0x3232323232323232323232323232323232323232323232323232323232323232"
+          ],
+          "data": "0x6368656b2069642072657475726e20737461747573"
+        }
+      ]
+    },
+    {
+      "exitCode": 0,
+      "returnValue": "0x4164616d73416c6b616e650000000000000000000000000000000000000000",
+      "gasUsed": 425,
+      "logs": []
+    }
+  ],
+  "id": 0
+}</div>
+      </div>
+      
+      <div id="curl-example" class="example-content" style="display: none;">
+        <h3>cURL Command</h3>
+        <div class="code-block">curl -vvv https://mainnet.sandshrew.io/v2/lasereyes -X POST -d '{"method":"metashrew_view","params":["multisimulate","[{\"from\":\"bc1p3cyx5e2hgh53w7kpxcvm8s4kkega9gv5wfw7c4xvhmf0h4x5wd8qfz5dkn\",\"to\":\"bc1ppz8pf35uuqj2y2d3rd7azdestxh2rgn9qwc9auvq9jj6vx842w4q6wz90h\",\"value\":\"1000\",\"data\":\"636865636b6964\",\"signature\":null},{\"from\":\"bc1ppz8pf35uuqj2y2d3rd7azdestxh2rgn9qwc9auvq9jj6vx842w4q6wz90h\",\"to\":\"bc1p3cyx5e2hgh53w7kpxcvm8s4kkega9gv5wfw7c4xvhmf0h4x5wd8qfz5dkn\",\"value\":\"500\",\"data\":\"6765744e616d65\",\"signature\":null}]","latest"],"id":0,"jsonrpc":"2.0"}' -H 'Content-Type: application/json'</div>
+      </div>
+    </div>
+    
+    <!-- Form Section -->
+    <div class="form-section">
+      <h2>Try It</h2>
+      <p>Use the form below to simulate multiple contract executions:</p>
+      
+      <div class="form-group">
+        <label for="message-parcels">Message Parcels (JSON Array):</label>
+        <textarea id="message-parcels" rows="10" placeholder='[
+  {
+    "from": "bc1p3cyx5e2hgh53w7kpxcvm8s4kkega9gv5wfw7c4xvhmf0h4x5wd8qfz5dkn",
+    "to": "bc1ppz8pf35uuqj2y2d3rd7azdestxh2rgn9qwc9auvq9jj6vx842w4q6wz90h",
+    "value": "1000",
+    "data": "636865636b6964",
+    "signature": null
+  },
+  {
+    "from": "bc1ppz8pf35uuqj2y2d3rd7azdestxh2rgn9qwc9auvq9jj6vx842w4q6wz90h",
+    "to": "bc1p3cyx5e2hgh53w7kpxcvm8s4kkega9gv5wfw7c4xvhmf0h4x5wd8qfz5dkn",
+    "value": "500",
+    "data": "6765744e616d65",
+    "signature": null
+  }
+]'></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="block-tag">Block Tag (optional):</label>
+        <input type="text" id="block-tag" value="latest" placeholder="Block tag (e.g., latest, 0xABCDEF...)">
+      </div>
+      
+      <button type="button" id="execute-btn">Execute Multisimulate</button>
+      
+      <div class="results-container" id="result-section" style="display: none;">
+        <div class="result-header">
+          <h3><span class="status-indicator status-success"></span> Result</h3>
+        </div>
+        <div class="code-block" id="result-content"></div>
+        
+        <details class="raw-response">
+          <summary>Raw Response</summary>
+          <div class="details-content">
+            <div class="code-block" id="raw-response-content"></div>
+          </div>
+        </details>
+      </div>
+    </div>
+    
+    <!-- Notes Section -->
+    <div class="notes-section">
+      <h2>Notes</h2>
+      <ul>
+        <li><strong>MessageContextParcel Structure:</strong> Each parcel requires <code>from</code>, <code>to</code>, <code>value</code>, and <code>data</code> fields. The <code>signature</code> field can be null for simulation purposes.</li>
+        <li><strong>Data Format:</strong> The <code>data</code> field should be hex-encoded function calls.</li>
+        <li><strong>Block Tag:</strong> Using <code>latest</code> will simulate against the most recent indexed state, but you can specify a block height in hex format.</li>
+        <li><strong>Return Format:</strong> Results are returned in the same order as the input parcels, with each containing <code>exitCode</code>, <code>returnValue</code>, <code>gasUsed</code>, and <code>logs</code>.</li>
+        <li><strong>Error Handling:</strong> If a single execution fails, that specific result will contain the error details but other executions will still complete.</li>
+        <li><strong>Efficiency:</strong> This method is significantly more efficient than making multiple individual <code>simulate</code> calls when you need to perform a batch of simulations.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/api-methods.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Handle execute button click
+      document.getElementById('execute-btn').addEventListener('click', async function() {
+        // Clear previous results
+        document.getElementById('result-section').style.display = 'none';
+        
+        try {
+          // Get input values
+          const messageParcels = document.getElementById('message-parcels').value.trim();
+          const blockTag = document.getElementById('block-tag').value.trim() || 'latest';
+          
+          // Validate JSON input
+          let parsedParcels;
+          try {
+            parsedParcels = JSON.parse(messageParcels);
+            if (!Array.isArray(parsedParcels)) {
+              throw new Error('Message parcels must be a JSON array');
+            }
+          } catch (parseError) {
+            throw new Error('Invalid JSON format for message parcels: ' + parseError.message);
+          }
+          
+          // Make the request
+          const response = await fetch('/api/rpc', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              method: 'metashrew_view',
+              params: ['multisimulate', messageParcels, blockTag],
+              id: 0,
+              jsonrpc: '2.0'
+            })
+          });
+          
+          const data = await response.json();
+          
+          // Show result section
+          document.getElementById('result-section').style.display = 'block';
+          
+          if (data.error) {
+            document.getElementById('result-content').textContent = 'Error: ' + data.error.message;
+          } else {
+            // Format the result for better readability
+            document.getElementById('result-content').textContent = 
+              JSON.stringify(data.result, null, 2);
+          }
+          
+          // Show raw response
+          document.getElementById('raw-response-content').textContent = 
+            JSON.stringify(data, null, 2);
+          
+        } catch (error) {
+          document.getElementById('result-section').style.display = 'block';
+          document.getElementById('result-content').textContent = 'Error: ' + error.message;
+          document.getElementById('raw-response-content').textContent = 
+            JSON.stringify({ error: error.message }, null, 2);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

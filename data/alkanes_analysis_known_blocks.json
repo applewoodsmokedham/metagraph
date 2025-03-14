@@ -1,0 +1,134 @@
+[
+  {
+    "blockHeight": 880000,
+    "blockHash": "000000000000000000010b17283c3c400507969a9c2afd1dcf2082ec5cca2880",
+    "blockTime": 1737337343,
+    "txCount": 562,
+    "alkanesCount": 0,
+    "alkanesTransactions": []
+  },
+  {
+    "blockHeight": 887380,
+    "blockHash": "000000000000000000024d909d7de40c536e730e766c7687e32baac2a9f9133d",
+    "blockTime": 1741734715,
+    "txCount": 3353,
+    "alkanesCount": 5,
+    "alkanesTransactions": [
+      {
+        "txid": "9a222f0e9e176e5a70c95dbbe59afce6607bb5a50c7ef96ea91fa49f8f14525e",
+        "vout": 1,
+        "hex": "6a5d0eff7f818cec82d08bc0a88281d215",
+        "asm": "OP_RETURN 13 ff7f818cec82d08bc0a88281d215",
+        "decoded": {
+          "type": "protostone",
+          "data": {
+            "prefix": "",
+            "protocolField": {
+              "tag": "0x7fff",
+              "values": [
+                "3270248179674326792603137"
+              ]
+            },
+            "protocolName": "Alkanes",
+            "protostones": []
+          }
+        },
+        "trace": null,
+        "traceStatus": "error",
+        "traceError": "All trace approaches failed for 9a222f0e9e176e5a70c95dbbe59afce6607bb5a50c7ef96ea91fa49f8f14525e:1"
+      },
+      {
+        "txid": "520f01e06e65d87adeff9bdaca2355cbd46dcb362f63b4724626e7a3e386eaf2",
+        "vout": 1,
+        "hex": "6a5d0eff7f818cec82d08bc0a88281d215",
+        "asm": "OP_RETURN 13 ff7f818cec82d08bc0a88281d215",
+        "decoded": {
+          "type": "protostone",
+          "data": {
+            "prefix": "",
+            "protocolField": {
+              "tag": "0x7fff",
+              "values": [
+                "3270248179674326792603137"
+              ]
+            },
+            "protocolName": "Alkanes",
+            "protostones": []
+          }
+        },
+        "trace": null,
+        "traceStatus": "error",
+        "traceError": "All trace approaches failed for 520f01e06e65d87adeff9bdaca2355cbd46dcb362f63b4724626e7a3e386eaf2:1"
+      },
+      {
+        "txid": "935ca12ace26adf49cc74bb3f3d028479a71956fcafc059db0bbe5ef3d3a633d",
+        "vout": 1,
+        "hex": "6a5d0eff7f818cec82d08bc0a8828dd215",
+        "asm": "OP_RETURN 13 ff7f818cec82d08bc0a8828dd215",
+        "decoded": {
+          "type": "protostone",
+          "data": {
+            "prefix": "",
+            "protocolField": {
+              "tag": "0x7fff",
+              "values": [
+                "3270358860138769049912833"
+              ]
+            },
+            "protocolName": "Alkanes",
+            "protostones": []
+          }
+        },
+        "trace": null,
+        "traceStatus": "error",
+        "traceError": "All trace approaches failed for 935ca12ace26adf49cc74bb3f3d028479a71956fcafc059db0bbe5ef3d3a633d:1"
+      },
+      {
+        "txid": "17e057dee6af463c7b2a368e76c653f4d1c78a6e34f8ff9596a3312a0e57bb70",
+        "vout": 1,
+        "hex": "6a5d0eff7f818cec82d08bc0a8828dd215",
+        "asm": "OP_RETURN 13 ff7f818cec82d08bc0a8828dd215",
+        "decoded": {
+          "type": "protostone",
+          "data": {
+            "prefix": "",
+            "protocolField": {
+              "tag": "0x7fff",
+              "values": [
+                "3270358860138769049912833"
+              ]
+            },
+            "protocolName": "Alkanes",
+            "protostones": []
+          }
+        },
+        "trace": null,
+        "traceStatus": "error",
+        "traceError": "All trace approaches failed for 17e057dee6af463c7b2a368e76c653f4d1c78a6e34f8ff9596a3312a0e57bb70:1"
+      },
+      {
+        "txid": "31d7f95993b66ff138fcc9ae0d6106296ed5719a4b6ca19183204f5b287fa2d2",
+        "vout": 1,
+        "hex": "6a5d0eff7f818cec82d08bc0a8828dd215",
+        "asm": "OP_RETURN 13 ff7f818cec82d08bc0a8828dd215",
+        "decoded": {
+          "type": "protostone",
+          "data": {
+            "prefix": "",
+            "protocolField": {
+              "tag": "0x7fff",
+              "values": [
+                "3270358860138769049912833"
+              ]
+            },
+            "protocolName": "Alkanes",
+            "protostones": []
+          }
+        },
+        "trace": null,
+        "traceStatus": "error",
+        "traceError": "All trace approaches failed for 31d7f95993b66ff138fcc9ae0d6106296ed5719a4b6ca19183204f5b287fa2d2:1"
+      }
+    ]
+  }
+]
