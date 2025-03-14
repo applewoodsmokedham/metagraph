@@ -22,6 +22,7 @@
    - Comprehensive guides for contributors, users, and developers
    - Troubleshooting and quickstart guides complete
    - Security policy established
+   - **Product Requirements Document (PRD)** created for standardizing API method pages
 
 3. **CI/CD Pipeline**
    - GitHub Actions workflow created for automated testing
@@ -31,20 +32,23 @@
 1. Test all API methods with the new endpoint toggle
 2. Gather initial feedback from community
 3. Plan next phase of development, including GraphQL integration
+4. **Implement PRD requirements** for standardized API method pages
 
 ### Recent Decisions
 - Removed reliance on X-Sandshrew-Project-ID header due to connection issues
 - Standardized JSON-RPC request format across all method examples
 - Added GitHub CI workflow for automated testing
 - Renamed project to METHANE for better project identity
+- **Created comprehensive PRD** to guide method page standardization
 
-## Next Steps
+### Next Steps
 Our focus is now on preparing for the next phase of development:
 
 1. **API Method Testing**
    - Test all API method pages with both local and production endpoints
    - Verify the endpoint toggle works correctly across all pages
    - Ensure all curl examples follow best practices
+   - **Implement standardized components** as defined in the PRD
 
 2. **Community Engagement**
    - Create discussion forums or Discord channel
