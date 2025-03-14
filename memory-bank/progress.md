@@ -1,7 +1,7 @@
 # Progress
 
 ## Project Status Overview
-As of March 14, 2025, the Alkanes Explorer project is ready for open-source release. We have successfully implemented all core functionality including the API Explorer interface, method documentation with interactive testing, and comprehensive documentation for contributors. The project now includes all necessary open-source components and follows best practices for community engagement.
+As of March 14, 2025, the Alkanes Explorer project has been renamed to METHANE and is now ready for open-source release. We have successfully implemented all core functionality including the API Explorer interface, method documentation with interactive testing, and comprehensive documentation for contributors. The project now includes all necessary open-source components and follows best practices for community engagement.
 
 ## What Works
 ### Core Functionality
@@ -57,29 +57,98 @@ As of March 14, 2025, the Alkanes Explorer project is ready for open-source rele
 - 🔲 Advanced usage examples for complex scenarios
 - 🔲 Video tutorials for setup and usage
 
-## Current Status: Ready for Open Source
-The project is now ready for open-source release with all essential components in place. The core API Explorer functionality is working correctly with both local and production endpoints. The endpoint toggle has been implemented across the API method pages, and a standardized template has been created for future method additions.
+## Current Status: Version 1.0.0 Released (March 14, 2025)
 
-### Major Achievements
-1. **API Integration Improvements**
-   - Removed dependence on `X-Sandshrew-Project-ID` header for better reliability
-   - Standardized JSON-RPC request format with proper field order
-   - Implemented comprehensive error handling with fallbacks
+### ✅ Completed
 
-2. **Documentation Standardization**
-   - Created unified API method documentation template
-   - Standardized curl examples following best practices
-   - Added clear parameter descriptions and return value documentation
+#### Core Framework
+- [x] Project structure established
+- [x] Basic server functionality
+- [x] Express API endpoints for serving HTML/JS/CSS
+- [x] Static file serving
+- [x] TypeScript configuration
+- [x] Build pipeline
 
-3. **Open Source Essentials**
-   - Added all required legal and contribution documents
-   - Created comprehensive developer guides
-   - Implemented security disclosure process
+#### API Integration
+- [x] Metashrew API client
+- [x] API method testing interface
+- [x] Endpoint toggle component
+- [x] Status display for API health
+- [x] Standardized method documentation format
+- [x] CORS handling for API requests
+- [x] Error handling and retry logic
+- [x] Optimized JSON-RPC requests
 
-4. **Code Improvements**
-   - Enhanced endpoint toggle component with status display
-   - Improved API client with better error handling
-   - Updated package.json with proper metadata and dependencies
+#### Documentation
+- [x] README.md
+- [x] CONTRIBUTING.md
+- [x] LICENSE (MIT)
+- [x] SECURITY.md
+- [x] Troubleshooting guide
+- [x] Quickstart guide
+- [x] API method documentation
+- [x] Memory Bank documents
+
+#### Open Source Infrastructure
+- [x] GitHub repository created and initialized
+- [x] GitHub Actions workflow for CI
+- [x] Issue templates
+- [x] PR templates
+- [x] Initial v1.0.0 release tagged
+- [x] Package.json metadata updated
+- [x] Project renamed to METHANE
+
+### 🔄 In Progress
+
+- [ ] Testing all API methods with endpoint toggle
+- [ ] Creating additional API method documentation pages
+- [ ] Enhancing visualization capabilities
+- [ ] Performance optimization
+
+### 📅 Planned
+
+#### Next Phase (v1.1.0)
+- [ ] GraphQL integration layer
+- [ ] Enhanced tracing visualization
+- [ ] Additional API methods documentation
+- [ ] Improved UI for method testing
+- [ ] Mobile responsiveness
+
+#### Future Enhancements (v2.0.0)
+- [ ] Advanced data visualization
+- [ ] Interactive blockchain explorer
+- [ ] Real-time updates via WebSockets
+- [ ] API method recommendation engine
+- [ ] Sample integration tutorials
+- [ ] Performance dashboard
+
+## Known Issues
+
+| Issue | Status | Notes |
+|-------|--------|-------|
+| Endpoint toggle sometimes requires multiple clicks | Open | Needs event listener refinement |
+| Large trace responses can cause UI lag | Open | Consider chunking large responses |
+| API request timeouts on slow connections | Mitigated | Added retry logic (3 attempts) |
+
+## Recent Milestones
+
+1. **Initial Development** (Completed February 2025)
+   - Basic framework established
+   - API client functionality
+
+2. **API Testing Interface** (Completed March 1, 2025)
+   - Method testing pages
+   - Request/response display
+
+3. **Open Source Release** (Completed March 14, 2025)
+   - All documentation
+   - GitHub repository
+   - Version 1.0.0 tagged
+
+## Next Milestone: Enhanced Visualization (Target: April 2025)
+- Advanced trace visualization
+- Block explorer improvements
+- GraphQL integration layer
 
 ## Timeline and Milestones
 
@@ -91,13 +160,6 @@ The project is now ready for open-source release with all essential components i
 | Public Release | March 21, 2025 | 🔲 Pending | Final testing and repository setup |
 | GraphQL API Layer | April 2025 | 🔲 Planned | Schema and resolvers for efficient data fetching |
 | Advanced Visualizations | May 2025 | 🔲 Planned | Enhanced trace and transaction visualizations |
-
-## Known Issues
-1. **API Request Timeouts**: In some cases, requests to the Metashrew API may time out, especially for complex calls like trace and traceblock. We've implemented retry logic, but this could be further improved.
-
-2. **Limited Test Coverage**: While the core functionality works, we still need comprehensive tests to ensure everything works as expected across different environments.
-
-3. **Missing Advanced Features**: Some advanced features like transaction trace visualization and contract call decoding are still in the planning phase.
 
 ## Next Steps for Release
 1. **Final Testing**

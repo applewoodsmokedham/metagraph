@@ -1,50 +1,60 @@
-# Active Context
+# Active Context - March 14, 2025
 
-## Current Work Focus
-As of March 14, 2025, we've completed significant improvements to prepare the Alkanes Explorer project for open-sourcing. We've standardized the API method documentation, implemented comprehensive project documentation, and addressed security considerations throughout the codebase.
+## Current Status: Open Source Release Complete
 
-## Recent Changes
-- Fixed the block height display issue in the Alkanes Explorer
-- Enhanced error handling in the API client to manage timeouts and retries more effectively
-- Improved the endpoint toggle component to properly update when switching between LOCAL and PRODUCTION
-- Cleaned up test files to remove `X-Sandshrew-Project-ID` headers for better API compatibility
-- Enhanced documentation format for API methods to follow the standardized format
-- Created a comprehensive memory bank for the runestone-visualizer project
-- Created project brief document outlining the Alkanes Explorer requirements
-- Established memory bank structure for maintaining project documentation
-- Created a standardized template for API method pages with endpoint toggle and status display
-- Added documentation for best practices when working with the Metashrew API
-- Implemented open-source project essentials:
-  - MIT LICENSE file
-  - Comprehensive CONTRIBUTING.md guide
-  - SECURITY.md policy document
-  - Troubleshooting guide
-  - Developer quickstart guide
-  - Updated package.json with proper metadata
-  - Improved .EXAMPLE.env with detailed comments
+### Project Renaming
+- The project has been renamed from "runestone-visualizer" to "METHANE" (Method Exploration, Testing, and Analysis eNvironment)
+- All references to the old name have been updated in code and documentation
+- This change better reflects the project's purpose and scope
+
+### Open Source Preparation (Completed)
+- The project has been published to GitHub: https://github.com/JinMaa/METHANE
+- Version 1.0.0 has been tagged and released
+- All documentation and templates have been standardized
+
+### Core Focus Areas
+1. **API Method Testing Interface**
+   - All Metashrew API methods documented with test interfaces
+   - Endpoint toggle component implemented for switching between local and production
+   - Status display for monitoring connection health
+
+2. **Documentation**
+   - Comprehensive guides for contributors, users, and developers
+   - Troubleshooting and quickstart guides complete
+   - Security policy established
+
+3. **CI/CD Pipeline**
+   - GitHub Actions workflow created for automated testing
+   - Issue and PR templates implemented for standardized contributions
+
+### Current Priorities
+1. Test all API methods with the new endpoint toggle
+2. Gather initial feedback from community
+3. Plan next phase of development, including GraphQL integration
+
+### Recent Decisions
+- Removed reliance on X-Sandshrew-Project-ID header due to connection issues
+- Standardized JSON-RPC request format across all method examples
+- Added GitHub CI workflow for automated testing
+- Renamed project to METHANE for better project identity
 
 ## Next Steps
-Our focus is now on preparing for the official open-source release:
+Our focus is now on preparing for the next phase of development:
 
-1. **Final Testing**
+1. **API Method Testing**
    - Test all API method pages with both local and production endpoints
    - Verify the endpoint toggle works correctly across all pages
    - Ensure all curl examples follow best practices
 
-2. **Documentation Review**
-   - Perform a final review of all documentation for accuracy
-   - Verify links between documentation files work correctly
-   - Ensure all memory bank files are up-to-date with latest information
-
-3. **Repository Preparation**
-   - Set up GitHub repository with appropriate template files
-   - Configure GitHub Actions for CI/CD
-   - Set up repository protection rules
-
-4. **Community Preparation**
+2. **Community Engagement**
    - Create discussion forums or Discord channel
    - Set up issue templates
    - Prepare initial release announcement
+
+3. **Repository Maintenance**
+   - Set up GitHub repository with appropriate template files
+   - Configure GitHub Actions for CI/CD
+   - Set up repository protection rules
 
 ## Open Source Preparation Status
 
@@ -126,4 +136,4 @@ We've implemented several security best practices:
 - **Core Scripts**: src/public/js/api-client.js, endpoint-toggle.js
 - **Example Config**: .EXAMPLE.env
 
-This document will be continuously updated as we progress toward the official open-source release.
+This document will be continuously updated as we progress toward the next phase of development.
