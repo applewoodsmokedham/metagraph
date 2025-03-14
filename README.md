@@ -1,4 +1,4 @@
-# Runestone Visualizer
+# METHANE
 
 A powerful tool for decoding, analyzing, and visualizing Runestones and Protostones found in Bitcoin OP_RETURN data, with a special focus on the protocol field (0x7fff) and parsing protostones as a list of u128 values.
 
