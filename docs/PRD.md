@@ -246,7 +246,7 @@ Each method page must include:
 
 | Method Name | Template | Real Example | Endpoint Toggle | Interactive Form | Status |
 |-------------|----------|--------------|-----------------|------------------|--------|
-| trace-method | ✅ | ✅ | ✅ | ✅ | Complete |
+| trace-method | ✅ | ✅ | ✅ | ✅ | Needs REVIEW AND TESTING, NOT FULLY FUNCTIONAL |
 | simulate | ✅ | ❌ | ❌ | ❌ | Needs implementation |
 | traceblock | ✅ | ❌ | ❌ | ❌ | Needs implementation |
 | alkane-inventory | ✅ | ❌ | ❌ | ❌ | Needs implementation |
