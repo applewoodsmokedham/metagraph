@@ -43,6 +43,7 @@ graph TD
     subgraph "Experimental"
         EventsStreamVisual["experimental/events-stream.html"]
         LiveBlockExplorer["experimental/live-block-explorer.html"]
+        ChainOfEvents["experimental/chain-of-events.html"]
     end
     
     HomePage --> APIDirectory
@@ -54,7 +55,23 @@ graph TD
     class APIDirectory directory;
 ```
 
-### 2.1 Homepage (index.html)
+### 2.1 Page Categories and Structure Guidelines
+
+#### API Method Pages
+- **Purpose**: Comprehensive documentation and testing interfaces for individual API methods
+- **Structure**: Must strictly follow the standard components outlined in Section 3.1
+- **Layout**: Consistent across all method pages for discoverability and usability
+- **Implementation**: 1:1 relationship with Metashrew API methods
+- **Example**: `/api-methods/protorunesbyaddress.html`
+
+#### Experimental Pages
+- **Purpose**: Showcase advanced features and experimental interfaces
+- **Structure**: Flexible layout with custom components as needed
+- **Layout**: Can deviate from standard API method layout
+- **Implementation**: May combine multiple API methods or provide alternative visualizations
+- **Example**: `/experimental/events-stream.html`
+
+### 2.2 Homepage (index.html)
 
 The homepage serves as the main entry point to the application and should include:
 
@@ -82,7 +99,7 @@ The homepage serves as the main entry point to the application and should includ
    - Brief description of experimental features
    - Visual indicator showing experimental status
 
-### 2.2 Experimental Pages
+### 2.3 Experimental Pages
 
 #### events-stream.html
 
@@ -109,6 +126,152 @@ This page provides a visual representation of Alkanes transactions across multip
    - Transaction counts by type
    - Gas usage metrics
    - Time between blocks
+
+#### Chain of Events Visualization (experimental/chain-of-events.html)
+
+This page will provide a detailed visualization of transaction event chains within blocks:
+
+1. **Header Section**
+   - Page title and description
+   - Block selector
+   - Experimental badge/indicator
+
+2. **Block Information**
+   - Block height and hash
+   - Timestamp and size
+   - Total transactions and gas used
+
+3. **Chain of Events Visualization**
+   - Hierarchical visualization of transaction execution flow
+   - Parent-child relationships between transactions
+   - Token transfers visualized with arrows
+   - Contract creations and interactions highlighted
+   - Color-coded event types with legend
+
+4. **Transaction Details Panel**
+   - Click-to-expand transaction details
+   - Full trace data in structured format
+   - Gas usage breakdown
+   - Token transfer details
+   - Contract execution results
+
+5. **Controls**
+   - Zoom and pan controls for the visualization
+   - Depth control for nested transactions
+   - Filter by transaction or event type
+   - Search by transaction ID or address
+
+```html
+<div class="chain-of-events-container">
+  <div class="block-selector">
+    <label for="block-height">Block Height:</label>
+    <input type="number" id="block-height" value="887384">
+    <button id="load-block" class="btn">Load Block</button>
+  </div>
+  
+  <div class="block-info">
+    <div class="info-item">
+      <span class="info-label">Block:</span>
+      <span class="info-value" id="block-height-display">887384</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Hash:</span>
+      <span class="info-value" id="block-hash">000000000000000000046e8b...</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Transactions:</span>
+      <span class="info-value" id="tx-count">42</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Total Gas:</span>
+      <span class="info-value" id="total-gas">1.24M</span>
+    </div>
+  </div>
+  
+  <div class="visualization-controls">
+    <div class="zoom-controls">
+      <button id="zoom-in" class="btn btn-sm">+</button>
+      <button id="zoom-reset" class="btn btn-sm">Reset</button>
+      <button id="zoom-out" class="btn btn-sm">-</button>
+    </div>
+    <div class="filter-controls">
+      <select id="event-type-filter">
+        <option value="all">All Events</option>
+        <option value="contract-creation">Contract Creation</option>
+        <option value="token-transfer">Token Transfer</option>
+        <option value="contract-call">Contract Call</option>
+      </select>
+    </div>
+    <div class="search-control">
+      <input type="text" id="tx-search" placeholder="Search by TxID or Address">
+      <button id="search-btn" class="btn btn-sm">Search</button>
+    </div>
+  </div>
+  
+  <div class="chain-visualization">
+    <!-- SVG-based visualization will be dynamically generated here -->
+    <svg id="chain-svg" width="100%" height="600">
+      <!-- Example transaction node -->
+      <g class="tx-node" transform="translate(100, 100)">
+        <rect width="200" height="50" rx="5" class="node-bg contract-creation"></rect>
+        <text x="10" y="20" class="node-title">Contract Creation</text>
+        <text x="10" y="40" class="node-id">2916ef626d...</text>
+      </g>
+      
+      <!-- Example token transfer connection -->
+      <path d="M200,150 C250,170 250,200 300,220" class="connection token-transfer"></path>
+      
+      <!-- More nodes and connections will be dynamically generated -->
+    </svg>
+  </div>
+  
+  <div class="transaction-details-panel">
+    <div class="panel-header">
+      <h3>Transaction Details</h3>
+      <button class="close-btn">×</button>
+    </div>
+    <div class="panel-content">
+      <div class="tx-detail-item">
+        <span class="detail-label">Transaction ID:</span>
+        <span class="detail-value" id="detail-txid">2916ef626dec24de64a01e80582b2634096f939efce46dfa9d1b4699d67af8e5</span>
+      </div>
+      <div class="tx-detail-item">
+        <span class="detail-label">Type:</span>
+        <span class="detail-value" id="detail-type">Contract Creation</span>
+      </div>
+      <div class="tx-detail-item">
+        <span class="detail-label">Gas Used:</span>
+        <span class="detail-value" id="detail-gas">123,456</span>
+      </div>
+      
+      <div class="events-list">
+        <h4>Events</h4>
+        <div class="event-item">
+          <div class="event-header">
+            <span class="event-type">Contract Creation</span>
+            <span class="event-gas">56,789 gas</span>
+          </div>
+          <div class="event-details">
+            <pre class="event-data">{ "alkane_id": "abc123...", "code_size": 1024 }</pre>
+          </div>
+        </div>
+        
+        <div class="event-item">
+          <div class="event-header">
+            <span class="event-type">Token Minting</span>
+            <span class="event-gas">34,567 gas</span>
+          </div>
+          <div class="event-details">
+            <pre class="event-data">{ "amount": 1000, "recipient": "bc1..." }</pre>
+          </div>
+        </div>
+        
+        <!-- More events... -->
+      </div>
+    </div>
+  </div>
+</div>
+```
 
 ## 3. Page Components
 
@@ -613,6 +776,33 @@ Each method page must include:
 - Verify all examples work as expected
 - Complete all documentation sections
 - Review for consistency and completeness
+
+### 8.5 Implementation Notes and References
+
+#### API Documentation References
+- **Sandshrew Documentation**: Use [Sandshrew Documentation](https://docs.sandshrew.io/) as reference for API structure
+- **Esplora Block Explorer APIs**: Reference [Esplora APIs](https://docs.sandshrew.io/sandshrew-namespaces/esplora-block-explorer-apis) for block/transaction data
+- **Version Upgrade**: All references to v1 endpoints in documentation should be upgraded to v2 in implementation
+  - Example: Change `https://mainnet.sandshrew.io/v1/...` to `https://mainnet.sandshrew.io/v2/lasereyes`
+
+#### Alkanes-Specific Implementation
+- **Source Code Reference**: Analyze `alkanes/src.ts/rpc.ts` for implementation details of Alkanes functions
+- **Protocol Buffer Encoding**: Use methods in alkanes-rpc.js for proper encoding of input parameters
+- **Custom Analysis**: For methods not documented in Sandshrew docs (like traceblock), implement custom analysis of returned data
+- **Error Handling**: Implement robust error handling based on observed response patterns
+
+#### Experimental Features Implementation
+- **Chain of Events**: Create a visual representation of transaction chain of events within each block
+  - Parse traceblock data to extract execution sequence
+  - Visualize parent-child relationships between transactions
+  - Show token transfers and contract interactions
+  - Display execution flow with appropriate visual indicators
+
+- **Events Stream**: Implement real-time updates of blockchain activity
+  - Poll for new blocks at configurable intervals
+  - Maintain a cache of recent transaction data
+  - Implement efficient rendering of stream updates
+  - Provide filtering and search capabilities
 
 ## 9. Design Guidelines
 
