@@ -1,32 +1,3 @@
-I'll help you create an integration guide for the RPC calls in your SDK, focusing on Alkanes. Let me first explore the codebase to understand the available RPC calls and their implementations.
-
-Ran tool
-I'll help you create an integration guide for the RPC calls in the SDK, focusing on Alkanes. Let me explore the codebase to understand the available RPC operations.
-
-Ran tool
-I'll help you create an integration guide for the RPC calls in the SDK, focusing on Alkanes. Let me explore the codebase to understand the available RPC operations and their implementations.
-
-Ran tool
-I'll help you create an integration guide for the RPC calls in the SDK, focusing on Alkanes. Let me first explore the relevant parts of the codebase to understand the available RPC operations.
-
-Ran tool
-I'll help you create an integration guide for the RPC calls in the SDK, focusing on Alkanes. Let me examine the relevant files to understand the available RPC operations.
-
-Read file: src/alkanes/index.ts
-I'll create an integration guide for the RPC calls in the SDK, focusing on Alkanes. Let me examine the implementation details to provide accurate information.
-
-Read file: src/alkanes/alkanes.ts
-I'll create an integration guide for the RPC calls in the SDK, focusing on Alkanes. Let me examine more of the codebase to understand the provider implementation and RPC methods.
-
-Read file: src/provider/provider.ts
-I'll create an integration guide for the RPC calls in the SDK, focusing on Alkanes. Let me examine the AlkanesRpc implementation to understand the available methods.
-
-Ran tool
-I'll create an integration guide for the RPC calls in the SDK, focusing on Alkanes. Let me examine the AlkanesRpc implementation to understand the available methods.
-
-Read file: src/rpclient/alkanes.ts
-# Alkanes SDK Integration Guide
-
 This guide provides a comprehensive overview of the RPC operations available in the Oyl SDK, focusing on Alkanes functionality. It covers the key methods, their parameters, and return values to help you integrate the SDK into your React application.
 
 ## Getting Started
