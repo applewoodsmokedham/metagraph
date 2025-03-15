@@ -299,19 +299,27 @@ Each API method page must include the following standard components:
    - Request example (with valid parameters)
    - Response example (complete and accurate)
    - cURL command example (functional)
+   - Downloadable test script (ready-to-use bash script)
 
-5. **Interactive Testing Form**
+5. **Testing Scripts**
+   - Each API method must have a corresponding bash script in `/src/public/scripts/`
+   - Scripts should follow the naming convention: `{method-name}.sh`
+   - Scripts must include parameter handling with defaults
+   - Scripts should support both local and production endpoints
+   - Scripts must correctly encode parameters as expected by the API
+
+6. **Interactive Testing Form**
    - Input fields for all required parameters
    - Submit button to execute the API call
    - Response display area
    - Error handling and validation
 
-6. **Real Mainnet Examples**
+7. **Real Mainnet Examples**
    - At least one fully documented example with transaction ID
    - Valid input parameters that produce meaningful output
    - Links to block explorer for context (where applicable)
 
-7. **Protobuf Utility Section**
+8. **Protobuf Utility Section**
    - For methods that use Protocol Buffers as input (like protorunesbyaddress)
    - Input form to generate Protocol Buffer encoding
    - Copy button for encoded output
@@ -342,6 +350,7 @@ Each API method page must include the following standard components:
     <button class="example-tab active" data-target="request-example">Request</button>
     <button class="example-tab" data-target="response-example">Response</button>
     <button class="example-tab" data-target="curl-example">cURL</button>
+    <button class="example-tab" data-target="script-example">Script</button>
   </div>
   
   <div class="example-content active" id="request-example">
@@ -354,6 +363,11 @@ Each API method page must include the following standard components:
   
   <div class="example-content" id="curl-example">
     <!-- cURL command example -->
+  </div>
+  
+  <div class="example-content" id="script-example">
+    <!-- Downloadable test script -->
+    <a href="/scripts/{method-name}.sh" class="btn btn-sm">Download Script</a>
   </div>
 </div>
 ```

@@ -268,6 +268,292 @@ button:hover {
   color: #ff8f00;
 }
 
+/* Endpoint Toggle & Status Indicators */
+.endpoint-toggle-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.endpoint-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 200px;
+  height: 34px;
+}
+
+.toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-label {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #f0f0f0;
+  border-radius: 34px;
+  transition: .4s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.toggle-option {
+  z-index: 1;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.toggle-option.local {
+  margin-right: auto;
+}
+
+.toggle-option.production {
+  margin-left: auto;
+}
+
+.toggle-label:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 96px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 34px;
+  transition: .4s;
+  z-index: 0;
+}
+
+.toggle-input:checked + .toggle-label:before {
+  transform: translateX(96px);
+  background-color: #fff;
+}
+
+.toggle-input:checked + .toggle-label {
+  background-color: #007bff;
+  color: white;
+}
+
+.toggle-input:not(:checked) + .toggle-label .toggle-option.local {
+  color: #333;
+}
+
+.toggle-input:checked + .toggle-label .toggle-option.production {
+  color: white;
+}
+
+.toggle-input:not(:checked) + .toggle-label .toggle-option.production {
+  color: #999;
+}
+
+.toggle-input:checked + .toggle-label .toggle-option.local {
+  color: #999;
+}
+
+/* Status Indicator */
+.endpoint-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-connected {
+  background-color: #28a745;
+}
+
+.status-pending {
+  background-color: #ffc107;
+  animation: pulse 1.5s infinite;
+}
+
+.status-error {
+  background-color: #dc3545;
+}
+
+.status-text {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.connection-details {
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.connection-item {
+  display: flex;
+  align-items: center;
+}
+
+.connection-label {
+  font-weight: bold;
+  margin-right: 8px;
+  min-width: 120px;
+}
+
+.connection-value {
+  color: #333;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* Documentation Styles */
+.method-documentation {
+  margin-bottom: 30px;
+}
+
+.doc-section {
+  margin-bottom: 20px;
+}
+
+.doc-section h3 {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+}
+
+.params-table, .errors-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+}
+
+.params-table th, .params-table td,
+.errors-table th, .errors-table td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.params-table th, .errors-table th {
+  background-color: #f5f5f5;
+}
+
+.return-structure {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+.return-schema {
+  background-color: #2d2d2d;
+  color: #f8f8f2;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+/* Form Parameters */
+.form-parameters {
+  margin-bottom: 20px;
+}
+
+.param-control {
+  margin-bottom: 15px;
+}
+
+.param-control label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.param-control input, 
+.param-control select,
+.param-control textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.param-optional {
+  font-size: 12px;
+  color: #666;
+  margin-left: 5px;
+}
+
+/* Experimental Badge */
+.experimental-badge {
+  background-color: #6f42c1;
+  color: white;
+  font-size: 0.8em;
+  padding: 3px 8px;
+  border-radius: 10px;
+  margin-left: 10px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.badge-protorune {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.badge-alkanes {
+  background-color: #fd7e14;
+  color: white;
+}
+
+.badge-runes {
+  background-color: #6f42c1;
+  color: white;
+}
+
+.sidebar-footer {
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   body {
