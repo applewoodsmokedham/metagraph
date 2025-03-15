@@ -29,10 +29,50 @@ flowchart TD
 
 ### Backend Patterns
 1. **GraphQL Schema-First Design**: Defining data requirements before implementation
-2. **Data Transformation Layer**: Converting indexer data to explorer-friendly formats
-3. **Caching Strategy**: Multi-level caching with appropriate invalidation
-4. **Rate Limiting**: Protection against excessive API usage
-5. **Query Optimization**: Efficient database access patterns
+2. **Efficient API Communications**: Optimized queries to the alkanes-rs backend
+3. **Error Boundary Pattern**: Comprehensive error handling with fallbacks
+4. **Batch Processing**: Using multicall for efficient data retrieval
+5. **Comprehensive Logging**: For monitoring and debugging
+
+## Testing Methodology
+
+### API Testing Scripts
+1. **Template-Based Testing**: All API methods follow a standardized template for testing
+   ```mermaid
+   flowchart TD
+       BaseTemplate[template-method.sh] --> ViewTemplate[protorunesbyaddress.sh]
+       BaseTemplate --> DirectTemplate[metashrew_height.sh]
+       ViewTemplate --> MoreViewMethods[Other View Methods]
+       DirectTemplate --> MoreDirectMethods[Other Direct Methods]
+   ```
+
+2. **Script Structure Pattern**:
+   ```
+   ├── Configuration Section
+   │   ├── Method configuration
+   │   └── Default parameter values
+   ├── Help Function
+   │   └── Command-line options documentation
+   ├── Parameter Parsing
+   │   └── Command-line argument handling
+   ├── Parameter Encoding
+   │   └── Method-specific encoding logic
+   ├── Request Building
+   │   └── JSON-RPC request construction
+   ├── Display Information
+   │   └── User-friendly output
+   └── Request Execution
+       └── API call and response handling
+   ```
+
+3. **Endpoint Configuration**: All scripts support both local and production endpoints:
+   - Production: https://mainnet.sandshrew.io/v2/lasereyes
+   - Local: http://localhost:8080
+
+### Testing Strategy
+1. **Unit Testing**: Individual components tested in isolation
+2. **Integration Testing**: Component interactions verified
+3. **End-to-End Testing**: Full user flows tested
 
 ## Component Relationships
 

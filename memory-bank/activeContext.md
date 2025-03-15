@@ -29,10 +29,23 @@
    - Issue and PR templates implemented for standardized contributions
 
 ### Current Priorities
-1. Test all API methods with the new endpoint toggle
-2. Gather initial feedback from community
-3. Plan next phase of development, including GraphQL integration
-4. **Implement PRD requirements** for standardized API method pages
+1. **Standardizing API Method Pages (Phase 1 - In Progress)**
+   - Creating a unified template for all API method pages
+   - Implementing endpoint toggle functionality on all pages
+   - Adding status indicators for API connections
+   - **Latest Update (March 14)**: Added downloadable test scripts to each API method page with implementation examples
+   - Creating shell scripts for testing all API methods directly from the command line
+   - Updated PRD to require test scripts with each API method page
+
+2. **Implementation of Experimental Features (Phase 2 - Upcoming)**
+   - Designing chain of events visualization page
+   - Developing transaction detail views
+   - Preparing for implementation of block visualization tools
+
+3. **Documentation Improvements**
+   - Updating guides with more comprehensive examples
+   - Including the latest API method changes
+   - Adding troubleshooting guides for common issues
 
 ### Recent Decisions
 - Removed reliance on X-Sandshrew-Project-ID header due to connection issues
@@ -40,6 +53,41 @@
 - Added GitHub CI workflow for automated testing
 - Renamed project to METHANE for better project identity
 - **Created comprehensive PRD** to guide method page standardization
+
+### Recent Changes and Decisions
+1. **Test Script Implementation**
+   - Created template-based approach for standardized API testing
+   - All API method pages will include downloadable .sh scripts
+   - Scripts support both local and production endpoints with proper parameter handling
+   - Scripts follow consistent error handling and output format
+
+2. **Endpoint Toggle Implementation**
+   - Production endpoint: https://mainnet.sandshrew.io/v2/lasereyes
+   - Local endpoint: http://localhost:8080
+   - Visual indicators for connection status
+   - Real-time height information from both endpoints
+
+3. **API Correctness**
+   - Following the exact JSON-RPC protocol required by Metashrew
+   - Proper field ordering: method, params, id, jsonrpc
+   - Using fixed IDs instead of timestamps
+   - Only including Content-Type: application/json header
+
+### Blockers and Known Issues
+1. **API Connectivity**
+   - Some API methods may temporarily return errors from the Metashrew API
+   - Test scripts still function correctly, showing the error handling capabilities
+
+2. **Protobuf Encoding**
+   - Complex encoding requirements for some methods
+   - Current implementation is a simplified version for demonstration
+   - Will need more robust encoding for production use
+
+### Next Actions
+1. Create test scripts for remaining API methods
+2. Update all existing API method pages to use the new standardized template
+3. Test the API connectivity with different parameters and endpoints
+4. Prepare for Phase 2 implementation of experimental features
 
 ### Next Steps
 Our focus is now on preparing for the next phase of development:

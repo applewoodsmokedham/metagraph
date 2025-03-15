@@ -23,6 +23,9 @@ As of March 14, 2025, the Alkanes Explorer project has been renamed to METHANE a
 - ✅ Optimized error handling with progressive fallbacks
 - ✅ Improved connection reliability by removing Project ID header
 - ✅ Comprehensive curl examples following best practices
+- ✅ Standardized test scripts for API methods
+- ✅ Template-based approach for script generation
+- ✅ Support for both local and production endpoints in scripts
 
 ### Open Source Preparation
 - ✅ MIT LICENSE file
@@ -115,28 +118,15 @@ As of March 14, 2025, the Alkanes Explorer project has been renamed to METHANE a
 - [x] Project renamed to METHANE
 
 ### 🔄 In Progress
-
-- [ ] Testing all API methods with endpoint toggle
-- [ ] Creating additional API method documentation pages
-- [ ] Enhancing visualization capabilities
-- [ ] Performance optimization
-
-### 📅 Planned
-
-#### Next Phase (v1.1.0)
-- [ ] GraphQL integration layer
-- [ ] Enhanced tracing visualization
-- [ ] Additional API methods documentation
-- [ ] Improved UI for method testing
-- [ ] Mobile responsiveness
-
-#### Future Enhancements (v2.0.0)
-- [ ] Advanced data visualization
-- [ ] Interactive blockchain explorer
-- [ ] Real-time updates via WebSockets
-- [ ] API method recommendation engine
-- [ ] Sample integration tutorials
-- [ ] Performance dashboard
+### Feature Development - Phase 1
+- ✅ Basic API Explorer interface
+- ✅ Method documentation with interactive testing
+- ✅ API status display with sync percentage
+- ✅ Standardized method page template
+- ✅ Template for API test scripts
+- ✅ Implementation of test scripts for all methods (8/8 complete)
+- 🔄 Standardization of all method pages according to PRD
+- ❌ Initial user feedback gathering and analysis
 
 ## Known Issues
 
