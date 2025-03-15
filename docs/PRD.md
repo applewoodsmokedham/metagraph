@@ -86,6 +86,13 @@ Each API method page must include the following standard components:
    - Valid input parameters that produce meaningful output
    - Links to block explorer for context (where applicable)
 
+7. **Protobuf Utility Section**
+   - For methods that use Protocol Buffers as input (like protorunesbyaddress)
+   - Input form to generate Protocol Buffer encoding
+   - Copy button for encoded output
+   - Clear explanation of how to use the encoded output in API calls
+   - Visual representation of the Protocol Buffer message structure
+
 ### 3.2 Component Details
 
 #### Endpoint Toggle Component
@@ -126,6 +133,126 @@ Each API method page must include the following standard components:
 </div>
 ```
 
+#### Events Stream Visual Structure
+```html
+<div class="events-stream-container">
+  <h3>Block Transactions Stream</h3>
+  
+  <div class="stream-controls">
+    <div class="stream-filter">
+      <label for="transaction-type">Filter by type:</label>
+      <select id="transaction-type">
+        <option value="all">All Transactions</option>
+        <option value="contract-creation">Contract Creation</option>
+        <option value="token-transfer">Token Transfer</option>
+        <option value="contract-call">Contract Call</option>
+      </select>
+    </div>
+    
+    <div class="stream-stats">
+      <div class="stat-item">
+        <span class="stat-label">Total Transactions:</span>
+        <span class="stat-value" id="total-tx-count">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Total Gas Used:</span>
+        <span class="stat-value" id="total-gas-used">0</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="events-timeline">
+    <div class="timeline-header">
+      <div class="header-cell">Time</div>
+      <div class="header-cell">Transaction</div>
+      <div class="header-cell">Type</div>
+      <div class="header-cell">Gas Used</div>
+      <div class="header-cell">Status</div>
+    </div>
+    
+    <div class="timeline-body">
+      <!-- Transaction events will be dynamically populated here -->
+      <!-- Example structure for a transaction event: -->
+      <div class="transaction-event" data-txid="2916ef626dec24de64a01e80582b2634096f939efce46dfa9d1b4699d67af8e5">
+        <div class="event-time">12:34:56</div>
+        <div class="event-txid">2916...f8e5</div>
+        <div class="event-type contract-creation">Contract Creation</div>
+        <div class="event-gas">123,456</div>
+        <div class="event-status success">Success</div>
+        
+        <div class="event-details">
+          <div class="event-chain">
+            <!-- Visual representation of the events chain -->
+            <div class="event-node">Contract Creation</div>
+            <div class="event-arrow">↓</div>
+            <div class="event-node">Token Minting</div>
+            <div class="event-arrow">↓</div>
+            <div class="event-node">Event Emission</div>
+          </div>
+          
+          <button class="view-trace-btn">View Full Trace</button>
+        </div>
+      </div>
+      <!-- More transaction events... -->
+    </div>
+  </div>
+  
+  <div class="timeline-pagination">
+    <button id="load-more-events">Load More</button>
+  </div>
+</div>
+```
+
+#### Protobuf Utility Section Structure
+```html
+<div class="protobuf-utility-container">
+  <h3>Protocol Buffer Utility</h3>
+  <div class="protobuf-description">
+    <p>This method requires Protocol Buffer encoded input. Use this utility to generate valid encoded input from your parameters.</p>
+  </div>
+  
+  <div class="protobuf-form">
+    <!-- Dynamically generated form based on the method's protobuf structure -->
+    <div class="form-group">
+      <label for="pb-address">Bitcoin Address:</label>
+      <input type="text" id="pb-address" placeholder="Enter Bitcoin address">
+    </div>
+    
+    <div class="form-group">
+      <label for="pb-protocol-tag">Protocol Tag (optional):</label>
+      <input type="number" id="pb-protocol-tag" placeholder="Default: 1">
+    </div>
+    
+    <button id="generate-protobuf" class="btn btn-primary">Generate Encoded Input</button>
+  </div>
+  
+  <div class="protobuf-output">
+    <h4>Encoded Output:</h4>
+    <div class="code-display">
+      <pre id="encoded-output">// Encoded output will appear here</pre>
+      <button id="copy-encoded" class="btn btn-sm">Copy</button>
+    </div>
+  </div>
+  
+  <div class="protobuf-usage">
+    <h4>How to Use This Encoded Output</h4>
+    <p>The encoded output can be used directly in the "params" array of your JSON-RPC call:</p>
+    <pre>
+{
+  "method": "metashrew_view",
+  "params": [
+    "protorunesbyaddress",
+    "<span class="highlight">YOUR_ENCODED_OUTPUT</span>",
+    "latest"
+  ],
+  "id": 0,
+  "jsonrpc": "2.0"
+}
+    </pre>
+  </div>
+</div>
+```
+
 ## 4. Method-Specific Requirements
 
 ### 4.1 Core Alkanes Methods
@@ -144,6 +271,14 @@ Each API method page must include the following standard components:
 - Real example: Block height 887384
 - Examples showing multiple transaction traces
 - Visual representation of block structure if possible
+- **Transactions Events Stream Visual**: 
+  - All Alkanes transactions in the block ordered chronologically
+  - Scrollable interface to navigate through multiple transactions
+  - Each transaction visually represented with its events chain
+  - Color-coded transaction types (contract creation, token transfer, etc.)
+  - Click/expand functionality to view detailed trace for individual transactions
+  - Filtering options to focus on specific transaction types
+  - Summary statistics showing total gas used, contract interactions count, etc.
 
 #### alkane-inventory.html
 - Real example: Address with known token holdings
@@ -188,6 +323,40 @@ Each API method page must include the following standard components:
 - Current blockchain height
 - Sync status information
 - Block progression context
+
+### 4.4 Protocol Buffer Methods
+
+The following methods use Protocol Buffers for their input format and should include the Protobuf Utility Section:
+
+#### protorunesbyaddress.html
+- Required Protocol Buffer fields: address (string), protocol_tag (optional uint64)
+- Utility should generate encoded hex output with both fields
+- Mapping to `encodeProtorunesWalletInput` function in alkanes-rpc.js
+- Example: Address "bc1p3cyx5e2hgh53w7kpxcvm8s4kkega9gv5wfw7c4qxsvxl0u8x834qf0u2dp" with protocol tag 1
+
+#### protorunesbyoutpoint.html
+- Required Protocol Buffer fields: txid (bytes), vout (uint32)
+- Utility should convert txid from hex to appropriate bytes format
+- Mapping to `encodeTraceRequest` function in alkanes-rpc.js
+- Example: txid "2916ef626dec24de64a01e80582b2634096f939efce46dfa9d1b4699d67af8e5" with vout 0
+
+#### runesbyaddress.html
+- Required Protocol Buffer fields: address (string)
+- Utility should generate encoded hex output with single field
+- Mapping to `encodeWalletInput` function in alkanes-rpc.js
+- Example: Address "bc1p3cyx5e2hgh53w7kpxcvm8s4kkega9gv5wfw7c4qxsvxl0u8x834qf0u2dp"
+
+#### spendablesbyaddress.html
+- Required Protocol Buffer fields: address (string)
+- Identical encoding to runesbyaddress
+- Utility should clearly explain the difference in purpose
+- Example: Address with known UTXO history
+
+#### trace-method.html
+- Required Protocol Buffer fields: txid (bytes), vout (uint32)
+- Identical encoding to protorunesbyoutpoint
+- Utility should convert txid from hex string to bytes
+- Example: txid "2916ef626dec24de64a01e80582b2634096f939efce46dfa9d1b4699d67af8e5" with vout 0
 
 ## 5. Real Example Requirements
 
