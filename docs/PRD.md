@@ -48,6 +48,36 @@ graph TD
     class APIDirectory directory;
 ```
 
+### 2.1 Homepage (index.html)
+
+The homepage serves as the main entry point to the application and should include:
+
+1. **Header Section**
+   - Project title and description
+   - Main navigation links
+   - Quick access to API Method Directory
+
+2. **Latest Block Information**
+   - Current block height
+   - Sync status
+   - Last update timestamp
+
+3. **Events Stream Visual**
+   - Horizontal stream of the latest Alkanes transactions
+   - Transactions ordered by their index within blocks
+   - Compact representation showing only essential information
+   - Interactive elements to expand for more details
+   - Links to detailed transaction/block pages
+
+4. **Quick Start Guide**
+   - Brief instructions for using the platform
+   - Links to example pages and tutorials
+
+5. **API Category Sections**
+   - Grouped method links by functionality
+   - Brief descriptions of each category
+   - Visual indicators for commonly used methods
+
 ## 3. Page Components
 
 Each API method page must include the following standard components:
@@ -133,11 +163,75 @@ Each API method page must include the following standard components:
 </div>
 ```
 
-#### Events Stream Visual Structure
+#### Events Stream Visual Structure (Homepage)
+```html
+<div class="events-stream-container horizontal">
+  <div class="stream-header">
+    <h3>Latest Alkanes Transactions</h3>
+    <div class="stream-controls">
+      <div class="stream-filter">
+        <select id="transaction-type" class="compact-select">
+          <option value="all">All Types</option>
+          <option value="contract-creation">Contract Creation</option>
+          <option value="token-transfer">Token Transfer</option>
+          <option value="contract-call">Contract Call</option>
+        </select>
+      </div>
+      <a href="block-transactions.html" class="view-all-link">View All</a>
+    </div>
+  </div>
+  
+  <div class="horizontal-timeline">
+    <!-- Transaction events displayed horizontally -->
+    <div class="scroll-container">
+      <div class="events-row">
+        <!-- Example event cards -->
+        <div class="event-card" data-txid="2916ef626dec24de64a01e80582b2634096f939efce46dfa9d1b4699d67af8e5" data-block="887300" data-index="12">
+          <div class="card-header">
+            <span class="event-type-badge contract-creation">Contract</span>
+            <span class="event-block">Block 887300</span>
+          </div>
+          <div class="card-body">
+            <div class="txid-container">2916...f8e5</div>
+            <div class="event-stats">
+              <span class="stat-item"><i class="icon-gas"></i> 123k</span>
+              <span class="stat-item"><i class="icon-index"></i> #12</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a href="trace-method.html?txid=2916ef626dec24de64a01e80582b2634096f939efce46dfa9d1b4699d67af8e5" class="details-link">View Details</a>
+          </div>
+        </div>
+        
+        <!-- More event cards... -->
+        <div class="event-card" data-txid="8a71ef122ac24de64a01e80582b2634096f939efce46dfa9d1b4699d67a1234" data-block="887301" data-index="3">
+          <div class="card-header">
+            <span class="event-type-badge token-transfer">Transfer</span>
+            <span class="event-block">Block 887301</span>
+          </div>
+          <div class="card-body">
+            <div class="txid-container">8a71...1234</div>
+            <div class="event-stats">
+              <span class="stat-item"><i class="icon-gas"></i> 45k</span>
+              <span class="stat-item"><i class="icon-index"></i> #3</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a href="trace-method.html?txid=8a71ef122ac24de64a01e80582b2634096f939efce46dfa9d1b4699d67a1234" class="details-link">View Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="scroll-button left"><i class="icon-left"></i></button>
+    <button class="scroll-button right"><i class="icon-right"></i></button>
+  </div>
+</div>
+```
+
+#### Events Stream Visual Structure (Detailed View)
 ```html
 <div class="events-stream-container">
   <h3>Block Transactions Stream</h3>
-  
   <div class="stream-controls">
     <div class="stream-filter">
       <label for="transaction-type">Filter by type:</label>
@@ -272,14 +366,10 @@ Each API method page must include the following standard components:
 - Examples showing multiple transaction traces
 - Visual representation of block structure if possible
 - **Transactions Events Stream Visual**: 
-  - All Alkanes transactions in the block ordered by their index within the block, not chronologically
-  - Clearly display transaction index number for each transaction
-  - Scrollable interface to navigate through multiple transactions
-  - Each transaction visually represented with its events chain
-  - Color-coded transaction types (contract creation, token transfer, etc.)
-  - Click/expand functionality to view detailed trace for individual transactions
-  - Filtering options to focus on specific transaction types
-  - Summary statistics showing total gas used, contract interactions count, etc.
+  - Reference to the main Events Stream Visual on the homepage
+  - Option to view all transactions from this specific block
+  - More detailed transaction information than the homepage view
+  - All other features from the detailed Events Stream Visual structure
 
 #### alkane-inventory.html
 - Real example: Address with known token holdings
