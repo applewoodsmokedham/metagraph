@@ -4,14 +4,14 @@ import { traceBlock } from '../../sdk';
 
 /**
  * TraceBlockForm Component
- * 
+ *
  * Form specific to the traceblock API method.
  * Traces all transactions in a block with Alkanes execution.
- * 
+ *
  * @param {Object} props
- * @param {string} props.endpoint - Current endpoint (local, production, oylnet)
+ * @param {string} props.endpoint - Current endpoint (regtest, mainnet, oylnet)
  */
-const TraceBlockForm = ({ endpoint = 'local' }) => {
+const TraceBlockForm = ({ endpoint = 'regtest' }) => {
   // Define method details
   const methodDetails = {
     'Method Type': 'Alkanes View Function',

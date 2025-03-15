@@ -1,3 +1,6 @@
+// Import Node.js shims first to ensure they're loaded before any other imports
+import './sdk/node-shims.js';
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 /**
  * BlockHeight Component
- * 
+ *
  * Displays the current block height for the selected network
  * Updates automatically at a configured interval
  * Uses a failsafe implementation to prevent app crashes
- * 
+ *
  * @param {Object} props
  * @param {string} props.network - Current network (mainnet, regtest, oylnet)
  * @param {number} props.refreshInterval - Refresh interval in milliseconds
@@ -16,13 +16,14 @@ const BlockHeight = ({ network = 'regtest', refreshInterval = 30000 }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 3;
 
   const fetchBlockHeight = async () => {
     if (!loading) setLoading(true);
     
     try {
       // Import the provider module using the proper package path
-      // This will use the @oyl/sdk package reference from package.json
       const getProvider = (await import('../../sdk/provider')).default;
       
       if (typeof getProvider !== 'function') {
@@ -39,9 +40,13 @@ const BlockHeight = ({ network = 'regtest', refreshInterval = 30000 }) => {
       setBlockHeight(height);
       setLastUpdated(new Date());
       setError(null);
+      setRetryCount(0); // Reset retry count on success
     } catch (err) {
       console.error('Error fetching block height:', err);
       setError(err.message || 'Failed to fetch');
+      
+      // Increment retry count
+      setRetryCount(prev => prev + 1);
     } finally {
       setLoading(false);
     }
@@ -52,11 +57,19 @@ const BlockHeight = ({ network = 'regtest', refreshInterval = 30000 }) => {
     try {
       console.log(`BlockHeight mounted for network: ${network}`);
       
+      // Reset retry count when network changes
+      setRetryCount(0);
+      
       // Fetch immediately on mount or network change
       fetchBlockHeight();
       
       // Set up interval for periodic updates
-      const intervalId = setInterval(fetchBlockHeight, refreshInterval);
+      const intervalId = setInterval(() => {
+        // Only retry if we haven't exceeded the maximum retry count
+        if (retryCount < maxRetries) {
+          fetchBlockHeight();
+        }
+      }, refreshInterval);
       
       // Clean up interval on unmount or network change
       return () => {
@@ -78,7 +91,11 @@ const BlockHeight = ({ network = 'regtest', refreshInterval = 30000 }) => {
           {loading ? (
             <span className="loading">Loading...</span>
           ) : error ? (
-            <span className="error">{error}</span>
+            <span className="error">
+              {retryCount >= maxRetries ?
+                `Connection failed: ${error}` :
+                `Connecting... (${retryCount}/${maxRetries})`}
+            </span>
           ) : (
             <span>{blockHeight?.toLocaleString() || 'Unknown'}</span>
           )}

@@ -4,14 +4,14 @@ import { traceTransaction } from '../../sdk';
 
 /**
  * TraceForm Component
- * 
+ *
  * Form specific to the trace API method.
  * Gets a detailed execution trace of a transaction.
- * 
+ *
  * @param {Object} props
- * @param {string} props.endpoint - Current endpoint (local, production, oylnet)
+ * @param {string} props.endpoint - Current endpoint (regtest, mainnet, oylnet)
  */
-const TraceForm = ({ endpoint = 'local' }) => {
+const TraceForm = ({ endpoint = 'regtest' }) => {
   // Define method details
   const methodDetails = {
     'Method Type': 'Alkanes View Function',

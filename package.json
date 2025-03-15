@@ -10,17 +10,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@oyl/sdk": "file:../../oyl-sdk",
+    "@oyl/sdk": "https://github.com/Oyl-Wallet/oyl-sdk",
     "assert": "^2.1.0",
     "bitcoinjs-lib": "^6.1.7",
+    "browserify-fs": "^1.0.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.1",
     "dotenv": "^16.4.7",
+    "events": "^3.3.0",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
     "process": "^0.11.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0",
-    "stream-browserify": "^3.0.0"
+    "stream-browserify": "^3.0.0",
+    "util": "^0.12.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
