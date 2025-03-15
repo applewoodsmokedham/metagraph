@@ -163,7 +163,7 @@ Each API method page must include the following standard components:
   
   <div class="events-timeline">
     <div class="timeline-header">
-      <div class="header-cell">Time</div>
+      <div class="header-cell">Index</div>
       <div class="header-cell">Transaction</div>
       <div class="header-cell">Type</div>
       <div class="header-cell">Gas Used</div>
@@ -173,8 +173,8 @@ Each API method page must include the following standard components:
     <div class="timeline-body">
       <!-- Transaction events will be dynamically populated here -->
       <!-- Example structure for a transaction event: -->
-      <div class="transaction-event" data-txid="2916ef626dec24de64a01e80582b2634096f939efce46dfa9d1b4699d67af8e5">
-        <div class="event-time">12:34:56</div>
+      <div class="transaction-event" data-txid="2916ef626dec24de64a01e80582b2634096f939efce46dfa9d1b4699d67af8e5" data-index="12">
+        <div class="event-index">12</div>
         <div class="event-txid">2916...f8e5</div>
         <div class="event-type contract-creation">Contract Creation</div>
         <div class="event-gas">123,456</div>
@@ -272,7 +272,8 @@ Each API method page must include the following standard components:
 - Examples showing multiple transaction traces
 - Visual representation of block structure if possible
 - **Transactions Events Stream Visual**: 
-  - All Alkanes transactions in the block ordered chronologically
+  - All Alkanes transactions in the block ordered by their index within the block, not chronologically
+  - Clearly display transaction index number for each transaction
   - Scrollable interface to navigate through multiple transactions
   - Each transaction visually represented with its events chain
   - Color-coded transaction types (contract creation, token transfer, etc.)
