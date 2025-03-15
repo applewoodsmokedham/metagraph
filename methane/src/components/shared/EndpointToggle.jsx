@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 /**
  * EndpointToggle Component
  * 
- * Provides a UI for toggling between different API endpoints (Local/Production/Oylnet)
+ * Provides a UI for toggling between different Bitcoin networks (mainnet/regtest/oylnet)
  * 
  * @param {Object} props
  * @param {Function} props.onChange - Callback when endpoint is changed
  * @param {string} props.initialEndpoint - Initial endpoint value
  */
-const EndpointToggle = ({ onChange, initialEndpoint = 'local' }) => {
+const EndpointToggle = ({ onChange, initialEndpoint = 'regtest' }) => {
   const [endpoint, setEndpoint] = useState(initialEndpoint);
 
   const handleToggle = (newEndpoint) => {
@@ -19,19 +19,19 @@ const EndpointToggle = ({ onChange, initialEndpoint = 'local' }) => {
 
   return (
     <div className="endpoint-toggle">
-      <h4>Endpoint:</h4>
+      <h4>Network:</h4>
       <div className="toggle-buttons">
         <button 
-          className={`toggle-button ${endpoint === 'local' ? 'active' : ''}`} 
-          onClick={() => handleToggle('local')}
+          className={`toggle-button ${endpoint === 'regtest' ? 'active' : ''}`} 
+          onClick={() => handleToggle('regtest')}
         >
-          LOCAL
+          REGTEST
         </button>
         <button 
-          className={`toggle-button ${endpoint === 'production' ? 'active' : ''}`} 
-          onClick={() => handleToggle('production')}
+          className={`toggle-button ${endpoint === 'mainnet' ? 'active' : ''}`} 
+          onClick={() => handleToggle('mainnet')}
         >
-          PRODUCTION
+          MAINNET
         </button>
         <button 
           className={`toggle-button ${endpoint === 'oylnet' ? 'active' : ''}`}

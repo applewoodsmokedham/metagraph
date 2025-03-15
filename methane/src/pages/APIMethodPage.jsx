@@ -1,69 +1,56 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
-import NavBar from '../components/layout/NavBar';
-import TraceForm from '../components/methods/TraceForm';
+import React from 'react';
+import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
+import TraceBlockStatusForm from '../components/methods/TraceBlockStatusForm';
 import SimulateForm from '../components/methods/SimulateForm';
-import TraceBlockForm from '../components/methods/TraceBlockForm';
 
 /**
  * APIMethodPage Component
  * 
  * Template page for all API method pages
- * Dynamically loads the correct form component based on the route
+ * Dynamically loads the correct form component based on the route parameter or props
  */
-const APIMethodPage = () => {
-  const { methodName } = useParams();
+const APIMethodPage = ({ methodComponent: ProvidedMethodComponent, methodName: providedMethodName }) => {
+  const { methodId } = useParams();
   const navigate = useNavigate();
-  const [endpoint, setEndpoint] = useState('local');
+  const { endpoint = 'local' } = useOutletContext() || {};
 
-  // Define method components map inside the component
+  // Define method components map
   const methodComponents = {
-    'trace': TraceForm,
     'simulate': SimulateForm,
-    'traceblock': TraceBlockForm,
+    'traceblockstatus': TraceBlockStatusForm,
     // Add other methods as they are implemented
   };
 
-  // Find the appropriate component for this method
-  const MethodComponent = methodComponents[methodName];
+  // Get method name from either route param or prop
+  const currentMethodId = methodId || providedMethodName?.toLowerCase();
+  
+  // Find the appropriate component - use provided component or look up by method ID
+  const MethodComponent = ProvidedMethodComponent || methodComponents[currentMethodId];
 
-  // If method doesn't exist, redirect to 404
-  if (!methodName || !MethodComponent) {
-    // We could navigate to a not found page, but for now just return directly
+  // If method doesn't exist, show error
+  if (!currentMethodId || !MethodComponent) {
     return (
-      <div className="app-container">
-        <Header endpoint={endpoint} onEndpointChange={setEndpoint} />
-        <main className="main-content">
-          <h2>Method Not Found</h2>
-          <p>The API method "{methodName}" does not exist or is not yet implemented.</p>
+      <div className="api-method-page">
+        <div className="method-header">
+          <h1>Method Not Found</h1>
+          <p>The API method "{currentMethodId}" does not exist or is not yet implemented.</p>
           <button onClick={() => navigate('/')} className="back-button">
             Back to Home
           </button>
-        </main>
-        <Footer />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="app-container">
-      <Header endpoint={endpoint} onEndpointChange={setEndpoint} />
-      
-      <div className="content-with-sidebar">
-        <aside className="sidebar">
-          <NavBar />
-        </aside>
-        
-        <main className="main-content">
-          <div className="api-method-container">
-            <MethodComponent endpoint={endpoint} />
-          </div>
-        </main>
+    <div className="api-method-page">
+      <div className="method-header">
+        <h1>{providedMethodName || currentMethodId.charAt(0).toUpperCase() + currentMethodId.slice(1)}</h1>
       </div>
       
-      <Footer />
+      <div className="method-content">
+        <MethodComponent endpoint={endpoint} />
+      </div>
     </div>
   );
 };

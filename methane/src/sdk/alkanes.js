@@ -13,7 +13,7 @@ export const traceTransaction = async (txid, blockHeight, vout = 0, endpoint = '
     const provider = getProvider(endpoint);
     console.log(`Tracing transaction ${txid} at height ${blockHeight} with ${endpoint} endpoint`);
     
-    // Use our mock provider to "trace" the transaction
+    // Use the oyl-sdk Provider to trace the transaction
     const result = await provider.alkanes.trace({ txid, vout });
     
     return {
@@ -45,7 +45,7 @@ export const simulateTransaction = async (params, endpoint = 'local') => {
     const provider = getProvider(endpoint);
     console.log(`Simulating transaction with ${endpoint} endpoint`, params);
     
-    // Use our mock provider to "simulate" the transaction
+    // Use the oyl-sdk Provider to simulate the transaction
     const result = await provider.alkanes.simulate(params);
     
     return {
@@ -74,23 +74,43 @@ export const traceBlock = async (blockHeight, endpoint = 'local') => {
     const provider = getProvider(endpoint);
     console.log(`Tracing block at height ${blockHeight} with ${endpoint} endpoint`);
     
-    // Mock implementation for traceblock (not directly in provider)
+    // First get all the transactions in the block
+    // We'll need to use the Sandshrew client to get block information
+    const blockHash = await provider.sandshrew.bitcoindRpc.getBlockHash(blockHeight);
+    const blockInfo = await provider.sandshrew.bitcoindRpc.getBlock(blockHash, 2); // Verbosity 2 gets full tx info
+    
+    if (!blockInfo || !blockInfo.tx) {
+      throw new Error(`Block information not available for height ${blockHeight}`);
+    }
+    
+    // For better performance, limit the number of transactions to process if needed
+    const transactions = blockInfo.tx.slice(0, 20); // Process up to 20 transactions for demo
+    
     return {
       status: "success",
       message: "Block trace completed",
       blockHeight,
+      blockHash: blockInfo.hash,
+      timestamp: blockInfo.time,
+      transactions: transactions.map(tx => ({
+        txid: tx.txid || tx.hash,
+        status: "pending" // Initial status before tracing
+      }))
+    };
+  } catch (error) {
+    console.error('Error tracing block:', error);
+    
+    // If the real API fails, return some mock data for demonstration
+    return {
+      status: "error",
+      message: error.message || "Unknown error",
+      blockHeight,
+      fallback: true,
       transactions: [
         { txid: "3a7e83462a4a94c9fc3d6b46dc6eba39c3d05cb16d2ce4f1670cdf02201", status: "success" },
         { txid: "4b8f94573b5b94d9fc4d6b46dc6eba39c3d05cb16d2ce4f1670cdf02345", status: "success" },
         { txid: "5c9fa5684c6ca5eafd5e7c57dc6eba39c3d05cb16d2ce4f1670cdf02789", status: "success" }
       ]
-    };
-  } catch (error) {
-    console.error('Error tracing block:', error);
-    return {
-      status: "error",
-      message: error.message || "Unknown error",
-      blockHeight
     };
   }
 };

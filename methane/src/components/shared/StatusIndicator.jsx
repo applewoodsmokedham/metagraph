@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getProvider } from '../../sdk';
+import getProvider from '../../sdk/provider';
 
 /**
  * StatusIndicator Component
@@ -24,34 +24,34 @@ const StatusIndicator = ({ endpoint = 'local' }) => {
       setStatus(prev => ({ ...prev, loading: true }));
       
       try {
-        // In a real implementation, we would use the provider to check connection status
-        // For example: const provider = getProvider(endpoint);
-        // const blockHeight = await provider.getBlockHeight();
+        // Get the provider for the current endpoint
+        const provider = getProvider(endpoint);
         
-        // This is a placeholder that simulates a successful connection
-        // with a random block height between 800000 and 900000
-        const mockBlockHeight = Math.floor(Math.random() * 100000) + 800000;
+        // Check the provider health
+        const isHealthy = await provider.checkHealth();
         
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Get the current block height if connected
+        const blockHeight = isHealthy ? await provider.getBlockHeight() : null;
         
         setStatus({
-          connected: true,
-          blockHeight: mockBlockHeight,
+          connected: isHealthy,
+          blockHeight,
           lastChecked: new Date(),
           loading: false
         });
       } catch (error) {
-        console.error('Error checking endpoint status:', error);
+        console.error(`Error checking ${endpoint} endpoint status:`, error);
         setStatus({
           connected: false,
           blockHeight: null,
           lastChecked: new Date(),
-          loading: false
+          loading: false,
+          error: error.message
         });
       }
     };
 
+    // Check status immediately and then set up interval
     checkStatus();
     
     // Set up a periodic check every 30 seconds
@@ -61,23 +61,29 @@ const StatusIndicator = ({ endpoint = 'local' }) => {
     return () => clearInterval(intervalId);
   }, [endpoint]);
 
+  // Format the network name for display
+  const getNetworkName = () => {
+    switch(endpoint) {
+      case 'production':
+        return 'MAINNET';
+      case 'oylnet':
+        return 'OYLNET';
+      case 'local':
+      default:
+        return 'LOCAL';
+    }
+  };
+
   return (
     <div className="status-indicator">
       <div 
-        className={`status-light ${status.loading ? 'loading' : status.connected ? 'connected' : 'disconnected'}`}
+        className={`status-dot ${status.loading ? 'loading' : status.connected ? 'connected' : 'error'}`}
         title={status.connected ? 'Connected' : 'Disconnected'}
       ></div>
-      <div className="endpoint-info">
-        <div className="endpoint-name">
-          Endpoint: <span className="endpoint-value">{endpoint.toUpperCase()}</span>
-        </div>
-        <div className="connection-status">
-          Status: {status.loading ? 'CHECKING...' : status.connected ? 'CONNECTED' : 'DISCONNECTED'}
-        </div>
+      <div className="status-text">
+        {getNetworkName()}: {status.loading ? 'Checking...' : status.connected ? 'Connected' : 'Disconnected'}
         {status.blockHeight && (
-          <div className="block-height">
-            Height: <span className="height-value">{status.blockHeight.toLocaleString()}</span>
-          </div>
+          <span className="block-height"> (Block: {status.blockHeight.toLocaleString()})</span>
         )}
       </div>
     </div>

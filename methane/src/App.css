@@ -1,3 +1,438 @@
+/* App.css - METHANE Application Style Guide */
+
+/* 
+ * Color Palette - Minimalist Industrial
+ * ----------------------------------
+ * Primary text: #333333
+ * Background: #f4f4f4
+ * Borders: #cccccc
+ * Accent: #ff6600 (use sparingly, only for important actions/statuses)
+ * Success: #006600
+ * Error: #cc0000
+ * Warning: #cc6600
+ * Links: #0066cc
+ */
+
+:root {
+  --color-text: #333333;
+  --color-text-light: #666666;
+  --color-bg-primary: #f4f4f4;
+  --color-bg-secondary: #ffffff;
+  --color-border: #cccccc;
+  --color-accent: #ff6600;
+  --color-success: #006600;
+  --color-error: #cc0000;
+  --color-warning: #cc6600;
+  --color-link: #0066cc;
+  
+  --font-mono: 'Courier New', Courier, monospace;
+  --font-sans: 'Arial', sans-serif;
+  
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* No border radius for square elements */
+  --border-radius: 0;
+}
+
+/* Reset and Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: var(--spacing-md);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 1.8rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-top: var(--spacing-lg);
+}
+
+p {
+  margin-bottom: var(--spacing-md);
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+pre, code {
+  font-family: var(--font-mono);
+  background-color: #f0f0f0;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+}
+
+pre {
+  padding: var(--spacing-md);
+  overflow-x: auto;
+  margin-bottom: var(--spacing-md);
+}
+
+/* Layout Components */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-title h1 {
+  margin-bottom: 0;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.main-content {
+  flex: 1;
+  padding: var(--spacing-lg);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-lg);
+  border: 1px solid var(--color-border);
+}
+
+/* Network Toggle Component */
+.endpoint-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.endpoint-toggle h4 {
+  margin: 0;
+  margin-right: var(--spacing-sm);
+  font-size: 0.9rem;
+}
+
+.toggle-buttons {
+  display: flex;
+  border: 1px solid var(--color-border);
+  /* Square corners */
+  border-radius: 0;
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  /* Square corners and even padding for more square feel */
+  padding: var(--spacing-sm);
+  cursor: pointer;
+  font-size: 0.8rem;
+  border-right: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  min-width: 5.5rem;
+  height: 2.5rem;
+}
+
+.toggle-button:last-child {
+  border-right: none;
+}
+
+.toggle-button.active {
+  background-color: #333333;
+  color: white;
+  font-weight: bold;
+}
+
+/* Block Height Component */
+.block-height {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  font-family: var(--font-mono);
+  /* Square corners */
+  border-radius: 0;
+  min-width: 10rem;
+}
+
+.block-height-label {
+  font-size: 0.75rem;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.block-height-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: var(--spacing-xs) 0;
+}
+
+.block-height-value .loading {
+  color: var(--color-warning);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.block-height-value .error {
+  color: var(--color-error);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.block-height-updated {
+  font-size: 0.7rem;
+  color: var(--color-text-light);
+}
+
+/* Status Indicators */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  /* Square shape instead of round */
+  border-radius: 0;
+  background-color: var(--color-border);
+}
+
+.status-dot.connected {
+  background-color: var(--color-success);
+}
+
+.status-dot.disconnected {
+  background-color: var(--color-error);
+}
+
+.status-dot.unknown {
+  background-color: var(--color-warning);
+}
+
+.status-text {
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+}
+
+/* Debug Elements */
+.debug-info, .network-info {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  /* Square corners */
+  border-radius: 0;
+}
+
+.network-info h3 {
+  margin-top: 0;
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+}
+
+/* Buttons */
+.button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+  cursor: pointer;
+  font-size: 0.9rem;
+  /* Square corners */
+  border-radius: 0;
+}
+
+.primary-button {
+  background-color: var(--color-accent);
+  color: white;
+  border: 1px solid var(--color-accent);
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  /* Square corners */
+  border-radius: 0;
+}
+
+.form-hint {
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  margin-top: var(--spacing-xs);
+}
+
+/* Results Display */
+.result-container {
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  /* Square corners */
+  border-radius: 0;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.result-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+.result-content {
+  font-family: var(--font-mono);
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+/* Card Layouts for API Methods */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.card {
+  border: 1px solid var(--color-border);
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-secondary);
+  /* Square corners */
+  border-radius: 0;
+}
+
+.card-title {
+  margin-top: 0;
+  margin-bottom: var(--spacing-sm);
+  font-size: 1.1rem;
+}
+
+.card-description {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-md);
+}
+
+.card-footer {
+  margin-top: var(--spacing-md);
+  text-align: right;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+  
+  .header-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .main-content {
+    padding: var(--spacing-md);
+  }
+  
+  .container {
+    padding: var(--spacing-md);
+  }
+  
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;

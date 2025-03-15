@@ -7,7 +7,7 @@ import { simulateTransaction } from '../../sdk/alkanes';
  * Form for simulating transactions before they are broadcast to the network
  * Allows previewing the outcome of a transaction execution
  */
-const SimulateForm = ({ endpoint = 'local' }) => {
+const SimulationForm = ({ endpoint = 'local' }) => {
   const [txid, setTxid] = useState('');
   const [scriptHex, setScriptHex] = useState('');
   const [results, setResults] = useState(null);
@@ -132,4 +132,4 @@ const SimulateForm = ({ endpoint = 'local' }) => {
   );
 };
 
-export default SimulateForm;
+export default SimulationForm;
