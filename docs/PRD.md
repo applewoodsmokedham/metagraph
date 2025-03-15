@@ -40,8 +40,14 @@ graph TD
         ProtobufEncoder["utilities/protobuf-encoder.html"]
     end
     
+    subgraph "Experimental"
+        EventsStreamVisual["experimental/events-stream.html"]
+        LiveBlockExplorer["experimental/live-block-explorer.html"]
+    end
+    
     HomePage --> APIDirectory
     HomePage --> Utilities
+    HomePage --> Experimental
     APIDirectory --> APIMethod
     
     class HomePage homepage;
@@ -62,21 +68,47 @@ The homepage serves as the main entry point to the application and should includ
    - Sync status
    - Last update timestamp
 
-3. **Events Stream Visual**
-   - Horizontal stream of the latest Alkanes transactions
-   - Transactions ordered by their index within blocks
-   - Compact representation showing only essential information
-   - Interactive elements to expand for more details
-   - Links to detailed transaction/block pages
-
-4. **Quick Start Guide**
+3. **Quick Start Guide**
    - Brief instructions for using the platform
    - Links to example pages and tutorials
 
-5. **API Category Sections**
+4. **API Category Sections**
    - Grouped method links by functionality
    - Brief descriptions of each category
    - Visual indicators for commonly used methods
+
+5. **Experimental Features Section**
+   - Link to Events Stream Visual
+   - Brief description of experimental features
+   - Visual indicator showing experimental status
+
+### 2.2 Experimental Pages
+
+#### events-stream.html
+
+This page provides a visual representation of Alkanes transactions across multiple blocks:
+
+1. **Header Section**
+   - Page title and description
+   - Navigation breadcrumbs
+   - Experimental badge/indicator
+
+2. **Controls Section**
+   - Block range selector
+   - Transaction type filter
+   - Display options
+   - Refresh rate controls
+
+3. **Events Stream Visual**
+   - Horizontal stream of transactions from recent blocks
+   - Cards showing transaction details
+   - Color-coded by transaction type
+   - Interactive elements for detailed views
+
+4. **Block Statistics**
+   - Transaction counts by type
+   - Gas usage metrics
+   - Time between blocks
 
 ## 3. Page Components
 
@@ -163,12 +195,20 @@ Each API method page must include the following standard components:
 </div>
 ```
 
-#### Events Stream Visual Structure (Homepage)
+#### Events Stream Visual Structure (Experimental)
 ```html
 <div class="events-stream-container horizontal">
   <div class="stream-header">
-    <h3>Latest Alkanes Transactions</h3>
+    <h3>Alkanes Transactions Stream</h3>
+    <div class="experimental-badge">Experimental</div>
     <div class="stream-controls">
+      <div class="block-range">
+        <label for="start-block">Blocks:</label>
+        <input type="number" id="start-block" placeholder="Start" class="block-input">
+        <span>to</span>
+        <input type="number" id="end-block" placeholder="End" class="block-input">
+        <button id="load-blocks" class="btn btn-sm">Load</button>
+      </div>
       <div class="stream-filter">
         <select id="transaction-type" class="compact-select">
           <option value="all">All Types</option>
@@ -177,7 +217,15 @@ Each API method page must include the following standard components:
           <option value="contract-call">Contract Call</option>
         </select>
       </div>
-      <a href="block-transactions.html" class="view-all-link">View All</a>
+      <div class="refresh-control">
+        <label for="refresh-rate">Auto-refresh:</label>
+        <select id="refresh-rate" class="compact-select">
+          <option value="0">Off</option>
+          <option value="10">10s</option>
+          <option value="30">30s</option>
+          <option value="60">60s</option>
+        </select>
+      </div>
     </div>
   </div>
   
@@ -225,10 +273,32 @@ Each API method page must include the following standard components:
     <button class="scroll-button left"><i class="icon-left"></i></button>
     <button class="scroll-button right"><i class="icon-right"></i></button>
   </div>
+  
+  <div class="block-statistics">
+    <h4>Statistics</h4>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <span class="stat-label">Total Transactions</span>
+        <span class="stat-value" id="total-tx-count">42</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Contract Creations</span>
+        <span class="stat-value" id="contract-count">5</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Token Transfers</span>
+        <span class="stat-value" id="transfer-count">27</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Total Gas Used</span>
+        <span class="stat-value" id="total-gas-used">1.24M</span>
+      </div>
+    </div>
+  </div>
 </div>
 ```
 
-#### Events Stream Visual Structure (Detailed View)
+#### Events Stream Visual Structure (Block-Specific)
 ```html
 <div class="events-stream-container">
   <h3>Block Transactions Stream</h3>
@@ -366,9 +436,9 @@ Each API method page must include the following standard components:
 - Examples showing multiple transaction traces
 - Visual representation of block structure if possible
 - **Transactions Events Stream Visual**: 
-  - Reference to the main Events Stream Visual on the homepage
-  - Option to view all transactions from this specific block
-  - More detailed transaction information than the homepage view
+  - Reference to the Events Stream Visual in experimental/events-stream.html
+  - Focus on transactions from this specific block only
+  - More detailed transaction information than the experimental stream
   - All other features from the detailed Events Stream Visual structure
 
 #### alkane-inventory.html
