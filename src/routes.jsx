@@ -6,6 +6,7 @@ import NotFound from './pages/NotFound';
 import Layout from './components/layout/Layout';
 import TraceBlockStatusForm from './components/methods/TraceBlockStatusForm';
 import SimulateForm from './components/methods/SimulateForm';
+import TraceForm from './components/methods/TraceForm';
 
 /**
  * Application Routes
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
         element: <APIMethodPage />
       },
       // Direct method routes
+      {
+        path: 'api-methods/trace',
+        element: <APIMethodPage methodComponent={TraceForm} methodName="Trace" />
+      },
       {
         path: 'api-methods/traceblockstatus',
         element: <APIMethodPage methodComponent={TraceBlockStatusForm} methodName="Trace Block Status" />

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 
 /**
  * Generic APIForm Component
- * 
+ *
  * A reusable form component for API method calls
  * Handles form submission, validation, and displaying results
- * 
+ *
  * @param {Object} props
  * @param {string} props.methodName - Name of the API method
  * @param {string} props.methodType - Type of method (e.g., "VIEW FUNCTION")
@@ -14,6 +14,8 @@ import React, { useState } from 'react';
  * @param {Array} props.parameters - Form field definitions
  * @param {Function} props.onSubmit - Function to call when form is submitted
  * @param {string} props.endpoint - Current endpoint (local, production, oylnet)
+ * @param {Object} props.examples - Example request, response, and curl command
+ * @param {string} props.notes - Additional notes about the method
  */
 const APIForm = ({
   methodName,
@@ -22,12 +24,15 @@ const APIForm = ({
   methodDetails = {},
   parameters = [],
   onSubmit,
-  endpoint = 'local'
+  endpoint = 'local',
+  examples = {},
+  notes = ''
 }) => {
   const [formValues, setFormValues] = useState({});
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('request');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,8 +80,45 @@ const APIForm = ({
         ))}
       </div>
 
+      {examples && Object.keys(examples).length > 0 && (
+        <div className="examples-section">
+          <h3>Examples</h3>
+          <div className="tabs">
+            <div
+              className={`tab ${activeTab === 'request' ? 'active' : ''}`}
+              onClick={() => setActiveTab('request')}
+            >
+              Request
+            </div>
+            <div
+              className={`tab ${activeTab === 'response' ? 'active' : ''}`}
+              onClick={() => setActiveTab('response')}
+            >
+              Response
+            </div>
+            <div
+              className={`tab ${activeTab === 'curl' ? 'active' : ''}`}
+              onClick={() => setActiveTab('curl')}
+            >
+              cURL
+            </div>
+          </div>
+          <div className="tab-content">
+            {activeTab === 'request' && examples.request && (
+              <pre className="code-example">{examples.request}</pre>
+            )}
+            {activeTab === 'response' && examples.response && (
+              <pre className="code-example">{examples.response}</pre>
+            )}
+            {activeTab === 'curl' && examples.curl && (
+              <pre className="code-example">{examples.curl}</pre>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="form-container">
-        <h3>Required Parameters:</h3>
+        <h3>Try It</h3>
         <form onSubmit={handleSubmit}>
           {parameters.map((param) => (
             <div className="form-group" key={param.name}>
@@ -97,12 +139,12 @@ const APIForm = ({
           ))}
 
           <div className="form-actions">
-            <button 
-              type="submit" 
-              className="execute-button" 
+            <button
+              type="submit"
+              className="execute-button"
               disabled={loading}
             >
-              {loading ? 'Executing...' : 'Execute Request'}
+              {loading ? 'Executing...' : 'Execute Trace'}
             </button>
           </div>
         </form>
@@ -127,6 +169,13 @@ const APIForm = ({
       {!results && !error && (
         <div className="placeholder-results">
           <h3>Results will appear here after execution.</h3>
+        </div>
+      )}
+
+      {notes && (
+        <div className="notes-section">
+          <h3>Notes</h3>
+          <div className="notes-content">{notes}</div>
         </div>
       )}
     </div>

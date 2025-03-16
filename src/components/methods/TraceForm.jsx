@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import APIForm from '../shared/APIForm';
 import { traceTransaction } from '../../sdk';
 
@@ -14,9 +14,10 @@ import { traceTransaction } from '../../sdk';
 const TraceForm = ({ endpoint = 'regtest' }) => {
   // Define method details
   const methodDetails = {
-    'Method Type': 'Alkanes View Function',
+    'Method Type': 'View Function',
     'JSON-RPC Method': 'metashrew_view',
-    'View Function': 'trace'
+    'View Function': 'trace',
+    'Required Parameters': 'txid (transaction ID), vout (output index)'
   };
 
   // Define parameters for the form
@@ -24,21 +25,14 @@ const TraceForm = ({ endpoint = 'regtest' }) => {
     {
       name: 'txid',
       label: 'Transaction ID',
-      placeholder: 'e.g. 3a7e83462a4a94c9fc3d6b46dc6eba39c3d05cb16d2ce4f1670cdf02201',
+      placeholder: 'Enter txid',
       description: 'The transaction ID to trace',
-      required: true
-    },
-    {
-      name: 'blockHeight',
-      label: 'Block Height',
-      placeholder: 'e.g. 887845 or 0x00076FE0',
-      description: 'Block height where the transaction was confirmed',
       required: true
     },
     {
       name: 'vout',
       label: 'Output Index',
-      placeholder: 'e.g. 0',
+      placeholder: 'Enter vout',
       description: 'The output index (vout) to trace (default: 0)',
       required: false
     }
@@ -46,18 +40,12 @@ const TraceForm = ({ endpoint = 'regtest' }) => {
 
   // Handle form submission
   const handleSubmit = async (values) => {
-    const { txid, blockHeight, vout = 0 } = values;
-    
-    // Convert blockHeight to number if provided as hex
-    const parsedBlockHeight = blockHeight.startsWith('0x') 
-      ? parseInt(blockHeight, 16) 
-      : parseInt(blockHeight, 10);
+    const { txid, vout = 0 } = values;
     
     // Call the SDK function
     return await traceTransaction(
-      txid, 
-      parsedBlockHeight, 
-      parseInt(vout, 10), 
+      txid,
+      parseInt(vout, 10),
       endpoint
     );
   };
@@ -71,6 +59,30 @@ const TraceForm = ({ endpoint = 'regtest' }) => {
       parameters={parameters}
       onSubmit={handleSubmit}
       endpoint={endpoint}
+      examples={{
+        request: `{
+  "method": "metashrew_view",
+  "params": ["trace", "txid", 0],
+  "id": 1,
+  "jsonrpc": "2.0"
+}`,
+        response: `{
+  "result": {
+    "steps": [
+      {
+        "pc": 0,
+        "op": "OP_0",
+        "stack": []
+      },
+      // Additional steps would be here
+    ]
+  },
+  "id": 1,
+  "jsonrpc": "2.0"
+}`,
+        curl: `curl -X POST --data '{"method":"metashrew_view","params":["trace","txid",0],"id":1,"jsonrpc":"2.0"}' http://localhost:5173`
+      }}
+      notes="Ensure txid and vout correspond to a valid transaction on the current network. The trace method provides detailed execution information that can be used for debugging smart contracts."
     />
   );
 };

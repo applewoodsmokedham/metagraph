@@ -5,38 +5,38 @@ import getProvider from './provider';
 /**
  * Traces a transaction, showing the execution of a smart contract
  * @param {string} txid - Transaction ID to trace
- * @param {string|number} blockHeight - Block height where transaction was confirmed
  * @param {number} vout - Output index (default: 0)
  * @param {string} endpoint - API endpoint to use ('regtest', 'mainnet', 'oylnet')
  * @returns {Promise<Object>} - Trace results
  */
-export const traceTransaction = async (txid, blockHeight, vout = 0, endpoint = 'regtest') => {
+export const traceTransaction = async (txid, vout = 0, endpoint = 'regtest') => {
   try {
     const provider = getProvider(endpoint);
-    console.log(`Tracing transaction ${txid} at height ${blockHeight} with ${endpoint} endpoint`);
+    console.log(`Tracing transaction ${txid} with ${endpoint} endpoint`);
     
     // Ensure provider.alkanes exists
     if (!provider.alkanes || typeof provider.alkanes.trace !== 'function') {
       throw new Error('Alkanes trace method not available');
     }
     
-    // Use the oyl-sdk Provider to trace the transaction
-    const result = await provider.alkanes.trace({ txid, vout });
+    // Use the alkanes.trace method - note that the method will handle txid reversal internally
+    const result = await provider.alkanes.trace({
+      txid,
+      vout
+    });
     
     return {
       status: "success",
       message: "Trace completed",
       txid,
-      blockHeight,
-      steps: result.steps || []
+      result: result // Return the full result from the trace method
     };
   } catch (error) {
     console.error('Error tracing transaction:', error);
     return {
       status: "error",
       message: error.message || "Unknown error",
-      txid,
-      blockHeight
+      txid
     };
   }
 };

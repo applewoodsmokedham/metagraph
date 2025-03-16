@@ -150,6 +150,12 @@ const Home = () => {
           
           <div style={responsiveStyles.methodsList}>
             <div style={responsiveStyles.methodItem}>
+              <h3 style={responsiveStyles.methodTitle}>Trace Transaction</h3>
+              <p style={responsiveStyles.methodDescription}>Get a detailed execution trace of a transaction, showing each step of contract execution.</p>
+              <Link to="/api-methods/trace" style={responsiveStyles.link}>View Method</Link>
+            </div>
+            
+            <div style={responsiveStyles.methodItem}>
               <h3 style={responsiveStyles.methodTitle}>Trace Block Status</h3>
               <p style={responsiveStyles.methodDescription}>Trace all transactions in a block with detailed status information.</p>
               <Link to="/api-methods/traceblockstatus" style={responsiveStyles.link}>View Method</Link>

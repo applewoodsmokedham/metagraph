@@ -475,3 +475,177 @@ pre {
 .read-the-docs {
   color: #888;
 }
+
+/* API Form Styles */
+.api-form {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.method-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.method-type {
+  font-size: 14px;
+  color: #666;
+  margin-left: 10px;
+}
+
+.method-description {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.method-details {
+  margin-bottom: 30px;
+}
+
+.detail-item {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.detail-item h3 {
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 10px;
+  min-width: 150px;
+}
+
+.detail-value {
+  font-size: 14px;
+}
+
+/* Examples Section */
+.examples-section {
+  margin-bottom: 30px;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 15px;
+}
+
+.tab {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.tab.active {
+  border-bottom: 2px solid #B0B0B0;
+}
+
+.tab-content {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.code-example {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+/* Form Container */
+.form-container {
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.param-description {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.form-actions {
+  margin-top: 20px;
+}
+
+.execute-button {
+  background-color: #FF4500;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.execute-button:disabled {
+  background-color: #ccc;
+}
+
+/* Results Container */
+.results-container {
+  margin-top: 30px;
+}
+
+.results-json {
+  background-color: white;
+  padding: 15px;
+  border-radius: 4px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.placeholder-results {
+  margin-top: 30px;
+  color: #666;
+  text-align: center;
+}
+
+/* Notes Section */
+.notes-section {
+  margin-top: 30px;
+  background-color: #F5F5F5;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.notes-content {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Error Container */
+.error-container {
+  margin-top: 30px;
+  background-color: #ffebee;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.error-message {
+  color: #c62828;
+  font-size: 14px;
+}
