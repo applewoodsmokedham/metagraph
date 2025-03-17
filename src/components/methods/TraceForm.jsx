@@ -25,7 +25,7 @@ const TraceForm = ({ endpoint = 'regtest' }) => {
     {
       name: 'txid',
       label: 'Transaction ID',
-      placeholder: 'bc1p2cyx5e2hgh53wxrkcvn85akge9gyvsvw7cxvhmf0h4xswd8gqtf2d5dkkn',
+      placeholder: 'dfc2b297c1f6341365d6a66af3563a9c72644d8b27e7abff54a39b5457acc4ca',
       description: 'The transaction ID to trace',
       required: true
     },
@@ -66,7 +66,7 @@ const TraceForm = ({ endpoint = 'regtest' }) => {
       examples={{
         request: `{
   "method": "metashrew_view",
-  "params": ["trace", "bc1p2cyx5e2hgh53wxrkcvn85akge9gyvsvw7cxvhmf0h4xswd8gqtf2d5dkkn", 4],
+  "params": ["trace", "dfc2b297c1f6341365d6a66af3563a9c72644d8b27e7abff54a39b5457acc4ca", 4],
   "id": 1,
   "jsonrpc": "2.0"
 }`,
@@ -95,7 +95,7 @@ const TraceForm = ({ endpoint = 'regtest' }) => {
   "id": 1,
   "jsonrpc": "2.0"
 }`,
-        curl: `curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" --data '{"method":"metashrew_view","params":["trace","bc1p2cyx5e2hgh53wxrkcvn85akge9gyvsvw7cxvhmf0h4xswd8gqtf2d5dkkn",4],"id":1,"jsonrpc":"2.0"}' https://mainnet.sandshrew.io`
+        curl: `curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" --data '{"method":"metashrew_view","params":["trace","dfc2b297c1f6341365d6a66af3563a9c72644d8b27e7abff54a39b5457acc4ca",4],"id":1,"jsonrpc":"2.0"}' https://mainnet.sandshrew.io`
       }}
       notes="Ensure txid and vout correspond to a valid transaction on the current network. The trace method provides detailed execution information that can be used for debugging smart contracts."
     />

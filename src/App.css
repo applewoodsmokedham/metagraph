@@ -154,6 +154,24 @@ pre {
   gap: var(--spacing-md);
 }
 
+.home-button {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-link);
+  border: 1px solid var(--color-border);
+  padding: 8px 16px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.home-button:hover {
+  background-color: var(--color-bg-primary);
+  text-decoration: none;
+}
+
 .main-content {
   flex: 1;
   padding: var(--spacing-lg);
@@ -711,9 +729,7 @@ pre {
   font-size: 12px;
   white-space: pre-wrap;
   overflow-x: auto;
-  min-height: 300px;
-  max-height: 400px; /* More space for results */
-  overflow-y: auto;
+  min-height: 200px;
   border: 1px solid #E0E0E0;
 }
 

@@ -169,10 +169,9 @@ const TerminalCodeBlock = ({
       </div>
 
       {/* Terminal Content */}
-      <div 
+      <div
         className="terminal-content"
         style={{
-          maxHeight: '400px',
           overflow: 'auto'
         }}
       >
