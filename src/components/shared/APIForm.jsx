@@ -64,20 +64,28 @@ const APIForm = ({
     }
   };
 
+  // Render the LoadingSpinner component when API is loading
+  const LoadingSpinner = () => (
+    <div className="loading-container">
+      <div className="loading-spinner"></div>
+    </div>
+  );
+
   return (
     <div className="api-form">
-      <div className="method-header">
+      {/* Combined header and details section */}
+      <div className="method-header-section">
         <h2>{methodName} <span className="method-type">{methodType}</span></h2>
         <p className="method-description">{description}</p>
-      </div>
-
-      <div className="method-details">
-        {Object.entries(methodDetails).map(([key, value]) => (
-          <div className="detail-item" key={key}>
-            <h3>{key}:</h3>
-            <div className="detail-value">{value}</div>
-          </div>
-        ))}
+        
+        <div className="method-details">
+          {Object.entries(methodDetails).map(([key, value]) => (
+            <div className="detail-item" key={key}>
+              <h3>{key}:</h3>
+              <div className="detail-value">{value}</div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {examples && Object.keys(examples).length > 0 && (
@@ -103,74 +111,84 @@ const APIForm = ({
               cURL
             </div>
           </div>
-          <div className="tab-content">
+          <div className="tab-content" style={{backgroundColor: '#000000'}}>
             {activeTab === 'request' && examples.request && (
-              <pre className="code-example">{examples.request}</pre>
+              <pre className="code-example" style={{backgroundColor: '#000000', color: '#FFFFFF'}}>{examples.request}</pre>
             )}
             {activeTab === 'response' && examples.response && (
-              <pre className="code-example">{examples.response}</pre>
+              <pre className="code-example" style={{backgroundColor: '#000000', color: '#FFFFFF'}}>{examples.response}</pre>
             )}
             {activeTab === 'curl' && examples.curl && (
-              <pre className="code-example">{examples.curl}</pre>
+              <pre className="code-example" style={{backgroundColor: '#000000', color: '#FFFFFF'}}>{examples.curl}</pre>
             )}
           </div>
         </div>
       )}
 
-      <div className="form-container">
-        <h3>Try It</h3>
-        <form onSubmit={handleSubmit}>
-          {parameters.map((param) => (
-            <div className="form-group" key={param.name}>
-              <label htmlFor={param.name}>{param.label}:</label>
-              <input
-                type={param.type || 'text'}
-                id={param.name}
-                name={param.name}
-                value={formValues[param.name] || ''}
-                onChange={handleInputChange}
-                placeholder={param.placeholder}
-                required={param.required !== false}
-              />
-              {param.description && (
-                <div className="param-description">{param.description}</div>
-              )}
+      {/* Combined Try It and Results section */}
+      <div className="try-it-results-section">
+        <div className="form-container">
+          <h3>Try It</h3>
+          <form onSubmit={handleSubmit}>
+            {parameters.map((param) => (
+              <div className="form-group" key={param.name}>
+                <label htmlFor={param.name}>{param.label}:</label>
+                <input
+                  type={param.type || 'text'}
+                  id={param.name}
+                  name={param.name}
+                  value={formValues[param.name] || ''}
+                  onChange={handleInputChange}
+                  placeholder={param.placeholder}
+                  required={param.required !== false}
+                />
+                {param.description && (
+                  <div className="param-description">
+                    {typeof param.description === 'function' ? param.description() : param.description}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            <div className="form-actions">
+              <button
+                type="submit"
+                className="execute-button"
+                disabled={loading}
+              >
+                {loading ? 'Executing...' : `Execute ${methodName}`}
+              </button>
             </div>
-          ))}
+          </form>
+        </div>
 
-          <div className="form-actions">
-            <button
-              type="submit"
-              className="execute-button"
-              disabled={loading}
-            >
-              {loading ? 'Executing...' : 'Execute Trace'}
-            </button>
-          </div>
-        </form>
+        {/* Results section */}
+        <div className="results-section">
+          <h3>Results</h3>
+          
+          {error && (
+            <div className="error-message">{error}</div>
+          )}
+
+          {loading && !error && (
+            <div className="loading-container">
+              <LoadingSpinner />
+            </div>
+          )}
+
+          {results && !loading && !error && (
+            <pre className="results-json">
+              {JSON.stringify(results, null, 2)}
+            </pre>
+          )}
+
+          {!results && !loading && !error && examples && examples.response && (
+            <div className="results-json example-placeholder">
+              {examples.response}
+            </div>
+          )}
+        </div>
       </div>
-
-      {error && (
-        <div className="error-container">
-          <h3>Error</h3>
-          <div className="error-message">{error}</div>
-        </div>
-      )}
-
-      {results && (
-        <div className="results-container">
-          <h3>Results:</h3>
-          <pre className="results-json">
-            {JSON.stringify(results, null, 2)}
-          </pre>
-        </div>
-      )}
-
-      {!results && !error && (
-        <div className="placeholder-results">
-          <h3>Results will appear here after execution.</h3>
-        </div>
-      )}
 
       {notes && (
         <div className="notes-section">

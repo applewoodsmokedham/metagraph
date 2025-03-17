@@ -1,6 +1,9 @@
 /* App.css - METHANE Application Style Guide */
 
-/* 
+/* Import Roboto Mono font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&display=swap');
+
+/*
  * Color Palette - Minimalist Industrial
  * ----------------------------------
  * Primary text: #333333
@@ -478,57 +481,100 @@ pre {
 
 /* API Form Styles */
 .api-form {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 16px;
+  background-color: #F5F5F5;
+  font-family: 'Roboto Mono', monospace;
+}
+
+/* Style for content sections */
+.api-form > div {
+  background-color: #FFFFFF;
+  border: 1px solid #cccccc;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+/* Combined header and details section */
+.method-header-section {
+  text-align: left;
+  margin-bottom: 15px;
+  padding: 10px 15px;
 }
 
 .method-header h2 {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
-  text-align: center;
-  margin-bottom: 10px;
+  text-align: left;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  text-transform: lowercase;
 }
 
 .method-type {
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
   margin-left: 10px;
+  background-color: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 10px;
+  display: inline-block;
 }
 
 .method-description {
-  font-size: 14px;
+  font-size: 12px;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  text-align: left;
 }
 
+/* Update method details to use a compact layout */
 .method-details {
-  margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 20px;
+  margin-bottom: 0;
 }
 
 .detail-item {
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  font-size: 12px;
 }
 
 .detail-item h3 {
-  font-size: 14px;
+  font-size: 12px;
+  text-align: left;
+  margin-top: 0;
+  margin-right: 5px;
+  min-width: auto;
   font-weight: bold;
-  margin-right: 10px;
-  min-width: 150px;
+  padding-right: 0;
 }
 
 .detail-value {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 /* Examples Section */
 .examples-section {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  background-color: #FFFFFF; /* Ensure white background */
+  position: relative; /* Create stacking context */
+}
+
+.examples-section h3 {
+  font-size: 16px;
+  text-align: left;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .tabs {
   display: flex;
+  justify-content: flex-start;
   border-bottom: 1px solid #ddd;
   margin-bottom: 15px;
 }
@@ -537,16 +583,34 @@ pre {
   padding: 8px 16px;
   cursor: pointer;
   font-size: 14px;
+  margin: 0 5px;
+  position: relative;
 }
 
-.tab.active {
-  border-bottom: 2px solid #B0B0B0;
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #666;
+}
+
+.tabs {
+  overflow: hidden; /* Prevent any background from showing through */
 }
 
 .tab-content {
-  background-color: #f5f5f5;
+  background-color: #000000;
   padding: 15px;
-  border-radius: 4px;
+  border-radius: 0;
+  border: none;
+  margin-top: 0;
+  box-shadow: none;
+  position: relative; /* For stacking context */
+  z-index: 1; /* Ensure it's above any backgrounds */
+  overflow: hidden; /* Prevent any background from showing through */
 }
 
 .code-example {
@@ -554,11 +618,28 @@ pre {
   font-size: 12px;
   white-space: pre-wrap;
   margin: 0;
+  color: #FFFFFF;
+  background-color: #000000; /* Ensure the code itself has black background */
+  width: 100%;
+  display: block;
+}
+
+/* Combined Try It and Results section */
+.try-it-results-section {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Form Container */
 .form-container {
-  margin-bottom: 30px;
+  margin-bottom: 0;
+}
+
+.form-container h3 {
+  font-size: 16px;
+  text-align: left;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .form-group {
@@ -569,83 +650,183 @@ pre {
   display: block;
   font-size: 14px;
   margin-bottom: 5px;
+  text-align: left;
 }
 
 .form-group input {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid #E0E0E0;
+  border-radius: 0;
   font-size: 14px;
+  font-family: 'Roboto Mono', monospace;
 }
 
 .param-description {
   font-size: 12px;
   color: #666;
   margin-top: 5px;
+  text-align: left;
 }
 
 .form-actions {
   margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .execute-button {
   background-color: #FF4500;
   color: white;
-  border: none;
+  border: 1px solid #E0E0E0;
   padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 0;
   cursor: pointer;
   font-size: 14px;
+  font-family: 'Roboto Mono', monospace;
 }
 
 .execute-button:disabled {
   background-color: #ccc;
 }
 
-/* Results Container */
-.results-container {
-  margin-top: 30px;
+/* Results Section */
+.results-section {
+  margin-top: 20px;
+}
+
+.results-section h3 {
+  font-size: 16px;
+  text-align: left;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .results-json {
   background-color: white;
   padding: 15px;
-  border-radius: 4px;
   font-family: 'Roboto Mono', monospace;
   font-size: 12px;
   white-space: pre-wrap;
   overflow-x: auto;
+  min-height: 300px;
+  max-height: 400px; /* More space for results */
+  overflow-y: auto;
+  border: 1px solid #E0E0E0;
 }
 
-.placeholder-results {
-  margin-top: 30px;
+.example-placeholder {
   color: #666;
-  text-align: center;
+}
+
+/* Loading spinner styles */
+.loading-spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 3px solid #B0B0B0;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(200px - 40px);
 }
 
 /* Notes Section */
 .notes-section {
-  margin-top: 30px;
-  background-color: #F5F5F5;
+  margin-top: 20px;
+  background-color: #FFF8E1;
   padding: 15px;
-  border-radius: 4px;
+  border: 1px solid #FFE082;
+}
+
+.notes-section h3 {
+  font-size: 16px;
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .notes-content {
   font-size: 14px;
   color: #333;
+  text-align: left;
 }
 
 /* Error Container */
 .error-container {
-  margin-top: 30px;
+  margin-top: 20px;
   background-color: #ffebee;
   padding: 15px;
-  border-radius: 4px;
+  border: 1px solid #ffcdd2;
+  height: 200px;
+  overflow-y: auto;
+}
+
+.error-container h3 {
+  font-size: 18px;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 10px;
 }
 
 .error-message {
   color: #c62828;
   font-size: 14px;
+  text-align: center;
+}
+
+/* Add responsive adjustments */
+@media (max-width: 768px) {
+  /* Reduce font sizes */
+  .api-form {
+    font-size: 12px;
+  }
+  
+  .method-header h2 {
+    font-size: 18px;
+  }
+  
+  .examples-section h3,
+  .form-container h3,
+  .notes-section h3,
+  .error-container h3 {
+    font-size: 16px;
+  }
+  
+  /* Stack method details */
+  .method-details {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Ensure minimum touch target size */
+  .tab,
+  .execute-button,
+  .form-group input {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Adjust spacing */
+  .api-form {
+    padding: 10px;
+  }
+  
+  .api-form > div {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
 }

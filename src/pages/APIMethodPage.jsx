@@ -6,7 +6,7 @@ import TraceForm from '../components/methods/TraceForm';
 
 /**
  * APIMethodPage Component
- * 
+ *
  * Template page for all API method pages
  * Dynamically loads the correct form component based on the route parameter or props
  */
@@ -46,10 +46,6 @@ const APIMethodPage = ({ methodComponent: ProvidedMethodComponent, methodName: p
 
   return (
     <div className="api-method-page">
-      <div className="method-header">
-        <h1>{providedMethodName || currentMethodId.charAt(0).toUpperCase() + currentMethodId.slice(1)}</h1>
-      </div>
-      
       <div className="method-content">
         <MethodComponent endpoint={endpoint} />
       </div>
