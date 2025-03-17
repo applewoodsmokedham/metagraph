@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   useLaserEyes,
   UNISAT,
@@ -22,9 +22,42 @@ import {
  * Follows the design guidelines for styling
  */
 function WalletConnector() {
+  // Helper function to shorten addresses
+  const shortenAddress = (address) => {
+    if (!address) return 'N/A';
+    if (address.length <= 9) return address;
+    return `${address.substring(0, 4)}...${address.substring(address.length - 5)}`;
+  };
+  
+  // Function to copy text to clipboard
+  const copyToClipboard = (text, type) => {
+    if (!text) return;
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        // Show the copied notification
+        setCopiedType(type);
+        // Hide the notification after 2 seconds
+        setTimeout(() => setCopiedType(null), 2000);
+        console.log('Copied to clipboard:', text);
+      })
+      .catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+  };
+  
   const {
     connect,
+    disconnect,
     connected,
+    isConnecting,
+    address,
+    paymentAddress,
+    publicKey,
+    paymentPublicKey,
+    balance,
+    provider,
+    network,
+    accounts,
     hasLeather,
     hasMagicEden,
     hasOkx,
@@ -39,6 +72,8 @@ function WalletConnector() {
   } = useLaserEyes();
 
   const [showWalletList, setShowWalletList] = useState(false);
+  const [showWalletInfo, setShowWalletInfo] = useState(false);
+  const [copiedType, setCopiedType] = useState(null); // To track which address was copied
 
   // Define available wallets with their detection status
   const wallets = [
@@ -76,7 +111,7 @@ function WalletConnector() {
     connectedText: {
       fontSize: '14px',
       fontFamily: 'Roboto Mono, monospace',
-      color: '#A7D', // Green for connected status
+      color: '#000000', // Black color to match app style
       fontWeight: 'bold',
     },
     walletList: {
@@ -124,6 +159,75 @@ function WalletConnector() {
       right: 0,
       bottom: 0,
       zIndex: 5,
+    },
+    walletInfo: {
+      backgroundColor: '#F5F5F5',
+      border: '1px solid #000000',
+      borderRadius: '4px',
+      padding: '12px',
+      fontSize: '12px',
+      fontFamily: 'Roboto Mono, monospace',
+      position: 'absolute',
+      top: '100%',
+      right: '0',
+      marginTop: '10px',
+      zIndex: 10,
+      minWidth: '300px',
+      maxWidth: '400px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    },
+    infoRow: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      marginBottom: '6px',
+      wordBreak: 'break-all',
+    },
+    infoLabel: {
+      fontWeight: 'bold',
+      marginRight: '10px',
+    },
+    infoValue: {
+      maxWidth: '250px',
+      textAlign: 'right',
+    },
+    disconnectButton: {
+      backgroundColor: '#FFFFFF',
+      border: '1px solid #000000',
+      color: '#000000',
+      padding: '6px 10px',
+      fontSize: '12px',
+      fontFamily: 'Roboto Mono, monospace',
+      cursor: 'pointer',
+      fontWeight: 'bold',
+      marginTop: '10px',
+      width: '100%',
+    },
+    copyButton: {
+      backgroundColor: 'transparent',
+      border: 'none',
+      color: '#000000',
+      cursor: 'pointer',
+      padding: '2px 6px',
+      fontSize: '12px',
+      marginLeft: '5px',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    addressContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+    },
+    copiedMessage: {
+      position: 'absolute',
+      right: '40px',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      color: 'white',
+      padding: '4px 8px',
+      borderRadius: '4px',
+      fontSize: '12px',
+      animation: 'fadeOut 2s forwards',
     }
   };
 
@@ -142,7 +246,29 @@ function WalletConnector() {
 
   const handleClickOutside = () => {
     setShowWalletList(false);
+    setShowWalletInfo(false);
   };
+
+  const toggleWalletInfo = () => {
+    setShowWalletInfo(!showWalletInfo);
+  };
+
+  // Add CSS animation for fadeout
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes fadeOut {
+        0% { opacity: 1; }
+        70% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   return (
     <div style={styles.container}>
@@ -171,7 +297,63 @@ function WalletConnector() {
           )}
         </>
       ) : (
-        <span style={styles.connectedText}>Connected</span>
+        <>
+          <span
+            style={{...styles.connectedText, cursor: 'pointer'}}
+            onClick={toggleWalletInfo}
+          >
+            Connected {showWalletInfo ? '▲' : '▼'}
+          </span>
+          {showWalletInfo && (
+            <>
+              <div style={styles.backdrop} onClick={handleClickOutside}></div>
+              <div style={styles.walletInfo}>
+                {copiedType && <div style={styles.copiedMessage}>Copied!</div>}
+                <div style={styles.infoRow}>
+                  <span style={styles.infoLabel}>Taproot:</span>
+                  <div style={styles.addressContainer}>
+                    <span style={styles.infoValue} title={address}>{shortenAddress(address)}</span>
+                    {address && (
+                      <button
+                        style={styles.copyButton}
+                        onClick={() => copyToClipboard(address, 'address')}
+                        title="Copy full address"
+                      >
+                        📋
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div style={styles.infoRow}>
+                  <span style={styles.infoLabel}>Native Segwit:</span>
+                  <div style={styles.addressContainer}>
+                    <span style={styles.infoValue} title={paymentAddress}>{shortenAddress(paymentAddress)}</span>
+                    {paymentAddress && (
+                      <button
+                        style={styles.copyButton}
+                        onClick={() => copyToClipboard(paymentAddress, 'paymentAddress')}
+                        title="Copy full payment address"
+                      >
+                        📋
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div style={styles.infoRow}>
+                  <span style={styles.infoLabel}>Balance:</span>
+                  <span style={styles.infoValue}>{balance !== undefined ? `${Number(balance)} satoshis` : 'Loading...'}</span>
+                </div>
+                <div style={styles.infoRow}>
+                  <span style={styles.infoLabel}>Network:</span>
+                  <span style={styles.infoValue}>{network || 'N/A'}</span>
+                </div>
+                <button style={styles.disconnectButton} onClick={disconnect}>
+                  Disconnect
+                </button>
+              </div>
+            </>
+          )}
+        </>
       )}
     </div>
   );
