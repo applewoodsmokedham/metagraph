@@ -25,9 +25,21 @@ const Header = ({ currentEndpoint = 'local', onEndpointChange }) => {
       </div>
 
       <div className="header-controls">
-        <EndpointToggle 
-          onChange={onEndpointChange} 
-          initialEndpoint={currentEndpoint} 
+        <Link
+          to="/"
+          style={{
+            color: '#0000FF',
+            textDecoration: 'none',
+            marginRight: '20px',
+            fontWeight: 'bold',
+            fontSize: '14px'
+          }}
+        >
+          /home
+        </Link>
+        <EndpointToggle
+          onChange={onEndpointChange}
+          initialEndpoint={currentEndpoint}
         />
         <StatusIndicator endpoint={currentEndpoint} />
       </div>

@@ -1,5 +1,5 @@
 import React, { useState, Suspense, lazy } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, Link } from 'react-router-dom';
 import './App.css';
 import EndpointToggle from './components/shared/EndpointToggle';
 
@@ -98,6 +98,20 @@ function App() {
         <div style={styles.headerTitle} className="header-title">
           <h1 style={styles.title}>METHANE</h1>
           <span style={styles.subtitle} className="subtitle">Method Exploration, Testing, and Analysis eNvironment</span>
+          <Link
+            to="/"
+            style={{
+              color: '#0000FF',
+              textDecoration: 'none',
+              fontWeight: 'bold',
+              fontSize: '14px',
+              marginTop: '4px',
+              display: 'block',
+              textAlign: 'left'
+            }}
+          >
+            /home
+          </Link>
         </div>
         <div style={styles.headerControls} className="header-controls">
           <EndpointToggle
