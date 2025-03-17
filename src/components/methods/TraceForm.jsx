@@ -95,7 +95,7 @@ const TraceForm = ({ endpoint = 'regtest' }) => {
   "id": 1,
   "jsonrpc": "2.0"
 }`,
-        curl: `curl -X POST --data '{"method":"metashrew_view","params":["trace","bc1p2cyx5e2hgh53wxrkcvn85akge9gyvsvw7cxvhmf0h4xswd8gqtf2d5dkkn",4],"id":1,"jsonrpc":"2.0"}' https://mainnet.sandshrew.io`
+        curl: `curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" --data '{"method":"metashrew_view","params":["trace","bc1p2cyx5e2hgh53wxrkcvn85akge9gyvsvw7cxvhmf0h4xswd8gqtf2d5dkkn",4],"id":1,"jsonrpc":"2.0"}' https://mainnet.sandshrew.io`
       }}
       notes="Ensure txid and vout correspond to a valid transaction on the current network. The trace method provides detailed execution information that can be used for debugging smart contracts."
     />

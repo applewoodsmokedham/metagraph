@@ -1,7 +1,9 @@
 /* App.css - METHANE Application Style Guide */
 
-/* Import Roboto Mono font */
+/* Import developer fonts */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap');
 
 /*
  * Color Palette - Minimalist Industrial
@@ -764,6 +766,65 @@ pre {
   font-size: 14px;
   color: #333;
   text-align: left;
+}
+
+/* Syntax Highlighting Overrides */
+code[class*="language-"],
+pre[class*="language-"],
+.token {
+  background-color: transparent !important;
+}
+
+/* Terminal Loading Animation */
+.terminal-loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1E1E1E;
+  padding: 15px;
+  border-radius: 6px;
+  margin-top: 10px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
+}
+
+.terminal-spinner {
+  display: flex;
+  align-items: center;
+}
+
+.terminal-text {
+  color: #D4D4D4;
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+.terminal-dots {
+  display: inline-block;
+}
+
+.terminal-dots .dot {
+  color: #D4D4D4;
+  opacity: 0;
+  animation: terminal-dot-animation 1.4s infinite;
+}
+
+.terminal-dots .dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.terminal-dots .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.terminal-dots .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes terminal-dot-animation {
+  0% { opacity: 0; }
+  20% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* Error Container */

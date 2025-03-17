@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Terminal from './Terminal';
+import TerminalCodeBlock from './TerminalCodeBlock';
 
 /**
  * Generic APIForm Component
@@ -66,8 +68,15 @@ const APIForm = ({
 
   // Render the LoadingSpinner component when API is loading
   const LoadingSpinner = () => (
-    <div className="loading-container">
-      <div className="loading-spinner"></div>
+    <div className="terminal-loading-container">
+      <div className="terminal-spinner">
+        <span className="terminal-text">Loading</span>
+        <span className="terminal-dots">
+          <span className="dot">.</span>
+          <span className="dot">.</span>
+          <span className="dot">.</span>
+        </span>
+      </div>
     </div>
   );
 
@@ -91,37 +100,15 @@ const APIForm = ({
       {examples && Object.keys(examples).length > 0 && (
         <div className="examples-section">
           <h3>Examples</h3>
-          <div className="tabs">
-            <div
-              className={`tab ${activeTab === 'request' ? 'active' : ''}`}
-              onClick={() => setActiveTab('request')}
-            >
-              Request
-            </div>
-            <div
-              className={`tab ${activeTab === 'response' ? 'active' : ''}`}
-              onClick={() => setActiveTab('response')}
-            >
-              Response
-            </div>
-            <div
-              className={`tab ${activeTab === 'curl' ? 'active' : ''}`}
-              onClick={() => setActiveTab('curl')}
-            >
-              cURL
-            </div>
-          </div>
-          <div className="tab-content" style={{backgroundColor: '#000000'}}>
-            {activeTab === 'request' && examples.request && (
-              <pre className="code-example" style={{backgroundColor: '#000000', color: '#FFFFFF'}}>{examples.request}</pre>
-            )}
-            {activeTab === 'response' && examples.response && (
-              <pre className="code-example" style={{backgroundColor: '#000000', color: '#FFFFFF'}}>{examples.response}</pre>
-            )}
-            {activeTab === 'curl' && examples.curl && (
-              <pre className="code-example" style={{backgroundColor: '#000000', color: '#FFFFFF'}}>{examples.curl}</pre>
-            )}
-          </div>
+          <Terminal
+            examples={examples}
+            languages={{
+              request: 'json',
+              response: 'json',
+              curl: 'bash'
+            }}
+            animate={false}
+          />
         </div>
       )}
 
@@ -167,24 +154,44 @@ const APIForm = ({
           <h3>Results</h3>
           
           {error && (
-            <div className="error-message">{error}</div>
+            <TerminalCodeBlock
+              code={error}
+              language="text"
+              title="Error"
+              showLineNumbers={false}
+            />
           )}
 
           {loading && !error && (
-            <div className="loading-container">
-              <LoadingSpinner />
+            <div className="terminal-container" style={{ backgroundColor: '#1E1E1E', border: '1px solid #454545', borderRadius: '6px' }}>
+              <div className="terminal-header" style={{ backgroundColor: '#323233', padding: '6px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #454545' }}>
+                <div className="terminal-title" style={{ color: '#D4D4D4', fontSize: '12px', fontFamily: "'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace" }}>
+                  Processing Request
+                </div>
+              </div>
+              <div style={{ padding: '16px' }}>
+                <LoadingSpinner />
+              </div>
             </div>
           )}
 
           {results && !loading && !error && (
-            <pre className="results-json">
-              {JSON.stringify(results, null, 2)}
-            </pre>
+            <TerminalCodeBlock
+              code={JSON.stringify(results, null, 2)}
+              language="json"
+              title="API Response"
+              showLineNumbers={false}
+            />
           )}
 
           {!results && !loading && !error && examples && examples.response && (
             <div className="results-json example-placeholder">
-              {examples.response}
+              <TerminalCodeBlock
+                code={examples.response}
+                language="json"
+                title="Example Response"
+                showLineNumbers={false}
+              />
             </div>
           )}
         </div>
