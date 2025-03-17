@@ -9,34 +9,30 @@ import { Link, useOutletContext } from 'react-router-dom';
  * Follows industrial aesthetic design guidelines
  */
 const Home = () => {
-  const { endpoint = 'local' } = useOutletContext() || {};
+  const { endpoint = 'regtest' } = useOutletContext() || {};
   
   // CSS for inline styling according to design guidelines
   const styles = {
-    homePage: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '16px',
-      fontFamily: 'Roboto Mono, monospace',
-      color: '#000000',
-      backgroundColor: '#F5F5F5',
+    container: {
+      width: '100%',
+      maxWidth: '1200px',
+      margin: '0 auto',
+      backgroundColor: '#FFFFFF',
       padding: '16px',
+      border: '1px solid #cccccc',
     },
-    title: {
+    welcome: {
       fontSize: '24px',
       fontWeight: 'bold',
-      marginBottom: '8px',
-    },
-    tagline: {
-      fontSize: '18px',
       marginBottom: '16px',
+      textAlign: 'left',
     },
     description: {
       fontSize: '14px',
       marginBottom: '16px',
-      maxWidth: '800px',
+      textAlign: 'left',
     },
-    mainContent: {
+    contentColumns: {
       display: 'flex',
       flexDirection: 'row',
       gap: '20px',
@@ -46,6 +42,7 @@ const Home = () => {
       flex: 1,
       padding: '16px',
       backgroundColor: '#FFFFFF',
+      border: '1px solid #cccccc',
     },
     sectionTitle: {
       fontSize: '24px',
@@ -53,10 +50,13 @@ const Home = () => {
       marginBottom: '16px',
       textAlign: 'left',
     },
-    sectionDescription: {
-      fontSize: '14px',
-      marginBottom: '16px',
+    categoryTitle: {
+      fontSize: '16px',
+      fontWeight: 'bold',
+      marginTop: '20px',
+      marginBottom: '8px',
       textAlign: 'left',
+      color: '#4A4A4A',
     },
     methodsList: {
       display: 'flex',
@@ -65,15 +65,7 @@ const Home = () => {
       textAlign: 'left',
     },
     methodItem: {
-      marginBottom: '16px',
-    },
-    methodTitle: {
-      fontSize: '18px',
-      marginBottom: '5px',
-    },
-    methodDescription: {
-      fontSize: '14px',
-      marginBottom: '5px',
+      marginBottom: '8px',
     },
     link: {
       color: '#0000FF',
@@ -97,7 +89,7 @@ const Home = () => {
     },
     // Responsive styles
     '@media (max-width: 768px)': {
-      mainContent: {
+      contentColumns: {
         flexDirection: 'column',
       }
     }
@@ -108,21 +100,13 @@ const Home = () => {
     if (window.innerWidth <= 768) {
       return {
         ...baseStyles,
-        mainContent: {
-          ...baseStyles.mainContent,
+        contentColumns: {
+          ...baseStyles.contentColumns,
           flexDirection: 'column',
         },
         column: {
           ...baseStyles.column,
           marginBottom: '16px',
-        },
-        title: {
-          ...baseStyles.title,
-          fontSize: '18px',
-        },
-        sectionTitle: {
-          ...baseStyles.sectionTitle,
-          fontSize: '18px',
         },
       };
     }
@@ -133,38 +117,33 @@ const Home = () => {
   const responsiveStyles = applyResponsiveStyles(styles);
   
   return (
-    <div style={responsiveStyles.homePage}>
-      <section>
-        <h1 style={responsiveStyles.title}>METHANE</h1>
-        <p style={responsiveStyles.tagline}>Method Exploration, Testing, and Analysis eNvironment</p>
-        <p style={responsiveStyles.description}>
-          A development tool for exploring and testing API methods in the Oyl ecosystem.
-        </p>
-      </section>
+    <div style={responsiveStyles.container} className="container">
+      <h2 style={responsiveStyles.welcome}>Welcome to METHANE</h2>
+      <p style={responsiveStyles.description}>An interactive playground for Alkanes metaprotocol and Sandshrew API methods.</p>
       
-      <div style={responsiveStyles.mainContent}>
+      <div style={responsiveStyles.contentColumns}>
         {/* Left Column - Playground */}
         <div style={responsiveStyles.column}>
           <h2 style={responsiveStyles.sectionTitle}>Playground</h2>
-          <p style={responsiveStyles.sectionDescription}>Select a method to test:</p>
           
           <div style={responsiveStyles.methodsList}>
+            <h3 style={responsiveStyles.categoryTitle}>Trace Methods</h3>
             <div style={responsiveStyles.methodItem}>
-              <h3 style={responsiveStyles.methodTitle}>Trace Transaction</h3>
-              <p style={responsiveStyles.methodDescription}>Get a detailed execution trace of a transaction, showing each step of contract execution.</p>
-              <Link to="/api-methods/trace" style={responsiveStyles.link}>View Method</Link>
+              <Link to="/api-methods/trace" style={responsiveStyles.link}>/api-methods/trace</Link>
+            </div>
+            <div style={responsiveStyles.methodItem}>
+              <Link to="/api-methods/traceblockstatus" style={responsiveStyles.link}>/api-methods/traceblockstatus</Link>
+            </div>
+            <div style={responsiveStyles.methodItem}>
+              <Link to="/api-methods/simulate" style={responsiveStyles.link}>/api-methods/simulate</Link>
             </div>
             
+            <h3 style={responsiveStyles.categoryTitle}>Alkanes Methods</h3>
             <div style={responsiveStyles.methodItem}>
-              <h3 style={responsiveStyles.methodTitle}>Trace Block Status</h3>
-              <p style={responsiveStyles.methodDescription}>Trace all transactions in a block with detailed status information.</p>
-              <Link to="/api-methods/traceblockstatus" style={responsiveStyles.link}>View Method</Link>
+              <Link to="/api-methods/getalkanes/address" style={responsiveStyles.link}>/api-methods/getalkanes/address</Link>
             </div>
-            
             <div style={responsiveStyles.methodItem}>
-              <h3 style={responsiveStyles.methodTitle}>Simulate Transaction</h3>
-              <p style={responsiveStyles.methodDescription}>Simulate executing a transaction without broadcasting it.</p>
-              <Link to="/api-methods/simulate" style={responsiveStyles.link}>View Method</Link>
+              <Link to="/api-methods/getalkanes/height" style={responsiveStyles.link}>/api-methods/getalkanes/height</Link>
             </div>
           </div>
         </div>
@@ -172,16 +151,20 @@ const Home = () => {
         {/* Right Column - Explorer */}
         <div style={responsiveStyles.column}>
           <h2 style={responsiveStyles.sectionTitle}>Explorer</h2>
-          <p style={responsiveStyles.sectionDescription}>View and analyze blockchain data</p>
           
           <div style={responsiveStyles.methodsList}>
             <div style={responsiveStyles.methodItem}>
-              {/* Direct to trace block status since explorer route isn't defined */}
-              <Link to="/api-methods/traceblockstatus" style={responsiveStyles.link}>Try Block Explorer</Link>
+              <Link to="/explorer/block" style={responsiveStyles.link}>/explorer/block</Link>
+            </div>
+            <div style={responsiveStyles.methodItem}>
+              <Link to="/explorer/transaction" style={responsiveStyles.link}>/explorer/transaction</Link>
+            </div>
+            <div style={responsiveStyles.methodItem}>
+              <Link to="/explorer/address" style={responsiveStyles.link}>/explorer/address</Link>
             </div>
             
             <div style={responsiveStyles.statusSection}>
-              <h3 style={responsiveStyles.methodTitle}>Network Status</h3>
+              <h3 style={responsiveStyles.categoryTitle}>Network Status</h3>
               <p style={responsiveStyles.statusIndicator}>
                 Current endpoint: <strong>{endpoint.toUpperCase()}</strong>
               </p>

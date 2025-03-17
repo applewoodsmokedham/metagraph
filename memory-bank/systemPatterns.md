@@ -71,6 +71,14 @@ METHANE implements a comprehensive error handling strategy:
 - User-friendly error messages are displayed in the UI
 - No mock data is returned in error cases
 
+### 6. React Router Integration
+
+The application uses React Router for client-side routing:
+- App.jsx serves as the root layout component
+- Outlet component for rendering nested routes
+- Context API for passing data between routes
+- Dynamic route parameters for API method pages
+
 ## Design Patterns in Use
 
 ### 1. Component Composition
@@ -79,6 +87,7 @@ React components are composed to create complex UIs from simple, reusable parts:
 - Layout components for page structure
 - Shared components for common UI elements
 - Method-specific components for specialized functionality
+- Template components for consistent API method pages
 
 ### 2. Container/Presentational Pattern
 
@@ -105,27 +114,33 @@ Factory functions are used to create configured instances:
 - `getProvider` creates provider instances for different networks
 - Each provider is configured with network-specific parameters
 
+### 6. Template Pattern
+
+The application uses a template pattern for API method pages:
+- APIForm component serves as a template for all API method pages
+- Method-specific components customize the template with their own parameters and behavior
+- Consistent UI and behavior across all method pages
+
 ## Component Relationships
 
 ### Core Component Hierarchy
 
 ```
-App
-├── Router
-│   ├── Layout
-│   │   ├── Header
-│   │   │   └── EndpointToggle
-│   │   ├── NavBar
-│   │   └── Footer
+App (Root Layout)
+├── Header
+│   ├── EndpointToggle
+│   └── BlockHeight
+├── Outlet (Router Outlet)
 │   ├── Home
-│   │   └── BlockHeight
 │   ├── APIMethodPage
-│   │   ├── APIForm
-│   │   ├── StatusIndicator
-│   │   └── Method-specific forms
-│   │       ├── TraceForm
-│   │       ├── SimulateForm
-│   │       └── TraceBlockForm
+│   │   ├── Method-specific forms
+│   │   │   ├── TraceForm
+│   │   │   │   └── APIForm
+│   │   │   ├── SimulateForm
+│   │   │   │   └── APIForm
+│   │   │   └── TraceBlockForm
+│   │   │       └── APIForm
+│   │   └── StatusIndicator
 │   └── NotFound
 ```
 
@@ -147,13 +162,15 @@ index.js
 ## Data Flow
 
 1. User selects network environment (mainnet, regtest, oylnet)
-2. User navigates to a method page
-3. User fills out form parameters
-4. Form submission triggers API call through SDK layer
-5. SDK layer calls Oyl SDK methods
-6. Oyl SDK interacts with Bitcoin network
-7. Response flows back through the layers
-8. UI updates with results or error messages
+2. App component stores network state and passes it via context
+3. User navigates to a method page
+4. Method page receives network context from App
+5. User fills out form parameters
+6. Form submission triggers API call through SDK layer
+7. SDK layer calls Oyl SDK methods
+8. Oyl SDK interacts with Bitcoin network
+9. Response flows back through the layers
+10. UI updates with results or error messages
 
 ## State Management
 
@@ -161,6 +178,16 @@ METHANE uses React's built-in state management:
 - Component state for local UI state
 - Context API for global state (network environment)
 - Props for passing data between components
+- Outlet context for passing data to nested routes
+
+## Routing Architecture
+
+The application uses a nested routing architecture:
+- App.jsx serves as the root layout component
+- Routes are defined in routes.jsx
+- Each route is associated with a specific component
+- Dynamic route parameters for API method pages
+- Outlet component for rendering nested routes
 
 ## Error Handling Flow
 

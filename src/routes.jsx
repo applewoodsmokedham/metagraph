@@ -1,23 +1,23 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
+import App from './App';
 import Home from './pages/Home';
 import APIMethodPage from './pages/APIMethodPage';
 import NotFound from './pages/NotFound';
-import Layout from './components/layout/Layout';
 import TraceBlockStatusForm from './components/methods/TraceBlockStatusForm';
 import SimulateForm from './components/methods/SimulateForm';
 import TraceForm from './components/methods/TraceForm';
 
 /**
  * Application Routes
- * 
+ *
  * Defines all routes for the METHANE application
  * Including API method routes and 404 handling
  */
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Layout />,
+    element: <App />,
     children: [
       {
         index: true,

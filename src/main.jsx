@@ -3,8 +3,9 @@ import './sdk/node-shims.js';
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { RouterProvider } from 'react-router-dom'
 import './index.css'
-import App from './App.jsx'
+import router from './routes'
 
 console.log('---DEBUGGING START---');
 console.log('DOM ready state:', document.readyState);
@@ -22,7 +23,7 @@ try {
   
   root.render(
     <StrictMode>
-      <App />
+      <RouterProvider router={router} />
     </StrictMode>,
   );
   

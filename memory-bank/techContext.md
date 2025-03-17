@@ -145,7 +145,7 @@ Bitcoin JavaScript library that provides:
 
 Custom abstraction layer that wraps the Oyl SDK:
 - `provider.js` - Provider implementation
-- `alkanes.js` - Alkanes API methods
+- `alkanes.js` - Alkanes API methods (updated with correct trace implementation)
 - `node-shims.js` - Browser compatibility shims
 - `index.js` - SDK exports
 
@@ -153,9 +153,47 @@ Custom abstraction layer that wraps the Oyl SDK:
 
 - `src/components/layout/` - Layout components
 - `src/components/shared/` - Reusable components
+  - `APIForm.jsx` - Enhanced template component for API method pages
+  - `BlockHeight.jsx` - Real-time block height display
+  - `EndpointToggle.jsx` - Network selection toggle
+  - `StatusIndicator.jsx` - Network status indicator
 - `src/components/methods/` - Method-specific forms
+  - `TraceForm.jsx` - Form for tracing transaction execution
+  - `SimulateForm.jsx` - Form for simulating transaction execution
+  - `TraceBlockForm.jsx` - Form for tracing all transactions in a block
 - `src/pages/` - Page components
-- `src/routes.jsx` - Routing configuration
+  - `Home.jsx` - Landing page with method directory
+  - `APIMethodPage.jsx` - Template page for API methods
+  - `NotFound.jsx` - 404 error page
+- `src/routes.jsx` - Routing configuration with React Router
+- `src/App.jsx` - Root layout component with React Router integration
+
+## Application Architecture
+
+### Routing Architecture
+
+The application uses React Router for client-side routing:
+- `App.jsx` serves as the root layout component
+- Routes are defined in `routes.jsx`
+- Outlet component for rendering nested routes
+- Context API for passing data between routes
+- Dynamic route parameters for API method pages
+
+### Component Architecture
+
+The application uses a component-based architecture:
+- Reusable components for common UI elements
+- Template components for consistent API method pages
+- Method-specific components for specialized functionality
+- Context passing for sharing data between components
+
+### State Management
+
+The application uses React's built-in state management:
+- Component state for local UI state
+- Context API for global state (network environment)
+- Props for passing data between components
+- Outlet context for passing data to nested routes
 
 ## Integration Points
 
@@ -169,7 +207,7 @@ The application integrates with Bitcoin networks through the Oyl SDK:
 ### Alkanes Smart Contract Integration
 
 Alkanes is a metaprotocol for smart contracts on Bitcoin:
-- Trace method for examining contract execution
+- Trace method for examining contract execution (updated implementation)
 - Simulate method for previewing outcomes
 - Methods for querying contract state
 

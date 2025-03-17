@@ -1,4 +1,5 @@
 import React, { useState, Suspense, lazy } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import './App.css';
 import EndpointToggle from './components/shared/EndpointToggle';
 
@@ -39,6 +40,7 @@ class ErrorBoundary extends React.Component {
  */
 function App() {
   const [network, setNetwork] = useState('regtest');
+  const navigate = useNavigate();
 
   const handleNetworkChange = (newNetwork) => {
     console.log('Network changed to:', newNetwork);
@@ -88,72 +90,6 @@ function App() {
       flex: 1,
       padding: '16px',
     },
-    container: {
-      width: '100%',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      backgroundColor: '#FFFFFF',
-      padding: '16px',
-      border: '1px solid #cccccc',
-    },
-    welcome: {
-      fontSize: '24px',
-      fontWeight: 'bold',
-      marginBottom: '16px',
-      textAlign: 'left',
-    },
-    description: {
-      fontSize: '14px',
-      marginBottom: '16px',
-      textAlign: 'left',
-    },
-    contentColumns: {
-      display: 'flex',
-      flexDirection: 'row',
-      gap: '20px',
-      marginTop: '16px',
-    },
-    column: {
-      flex: 1,
-      padding: '16px',
-      backgroundColor: '#FFFFFF',
-      border: '1px solid #cccccc',
-    },
-    sectionTitle: {
-      fontSize: '24px',
-      fontWeight: 'bold',
-      marginBottom: '16px',
-      textAlign: 'left',
-    },
-    categoryTitle: {
-      fontSize: '16px',
-      fontWeight: 'bold',
-      marginTop: '20px',
-      marginBottom: '8px',
-      textAlign: 'left',
-      color: '#4A4A4A',
-    },
-    methodsList: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '5px',
-      textAlign: 'left',
-    },
-    methodItem: {
-      marginBottom: '8px',
-    },
-    link: {
-      color: '#0000FF',
-      textDecoration: 'none',
-      fontWeight: 'bold',
-      fontSize: '14px',
-    },
-    // Responsive styles
-    '@media (max-width: 768px)': {
-      contentColumns: {
-        flexDirection: 'column',
-      }
-    }
   };
 
   return (
@@ -176,55 +112,8 @@ function App() {
         </div>
       </header>
       <main style={styles.mainContent} className="main-content">
-        <div style={styles.container} className="container">
-          <h2 style={styles.welcome}>Welcome to METHANE</h2>
-          <p style={styles.description}>An interactive playground for Alkanes metaprotocol and Sandshrew API methods.</p>
-          
-          <div style={styles.contentColumns}>
-            {/* Left Column - Playground */}
-            <div style={styles.column}>
-              <h2 style={styles.sectionTitle}>Playground</h2>
-              
-              <div style={styles.methodsList}>
-                <h3 style={styles.categoryTitle}>Trace Methods</h3>
-                <div style={styles.methodItem}>
-                  <a href="/api-methods/traceblockstatus" style={{...styles.link, color: '#0000FF'}}>/api-methods/traceblockstatus</a>
-                </div>
-                <div style={styles.methodItem}>
-                  <a href="/api-methods/tracetransaction" style={{...styles.link, color: '#0000FF'}}>/api-methods/tracetransaction</a>
-                </div>
-                <div style={styles.methodItem}>
-                  <a href="/api-methods/simulate" style={{...styles.link, color: '#0000FF'}}>/api-methods/simulate</a>
-                </div>
-                
-                <h3 style={styles.categoryTitle}>Alkanes Methods</h3>
-                <div style={styles.methodItem}>
-                  <a href="/api-methods/getalkanes/address" style={{...styles.link, color: '#0000FF'}}>/api-methods/getalkanes/address</a>
-                </div>
-                <div style={styles.methodItem}>
-                  <a href="/api-methods/getalkanes/height" style={{...styles.link, color: '#0000FF'}}>/api-methods/getalkanes/height</a>
-                </div>
-              </div>
-            </div>
-            
-            {/* Right Column - Explorer */}
-            <div style={styles.column}>
-              <h2 style={styles.sectionTitle}>Explorer</h2>
-              
-              <div style={styles.methodsList}>
-                <div style={styles.methodItem}>
-                  <a href="/explorer/block" style={{...styles.link, color: '#0000FF'}}>/explorer/block</a>
-                </div>
-                <div style={styles.methodItem}>
-                  <a href="/explorer/transaction" style={{...styles.link, color: '#0000FF'}}>/explorer/transaction</a>
-                </div>
-                <div style={styles.methodItem}>
-                  <a href="/explorer/address" style={{...styles.link, color: '#0000FF'}}>/explorer/address</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* This is where we render the current route's component */}
+        <Outlet context={{ endpoint: network }} />
       </main>
     </div>
   );
