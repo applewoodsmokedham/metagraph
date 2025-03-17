@@ -2,7 +2,7 @@
 
 ## System Architecture
 
-METHANE is built as a single-page application (SPA) using React, with a focus on direct interaction with Bitcoin blockchain APIs through the Oyl SDK. The architecture is designed to be modular, maintainable, and extensible.
+METHANE is built as a single-page application (SPA) using React, with a focus on direct interaction with Bitcoin blockchain APIs through the Oyl SDK and wallet functionality through the LaserEyes package. The architecture is designed to be modular, maintainable, and extensible.
 
 ### High-Level Architecture
 
@@ -12,6 +12,11 @@ METHANE is built as a single-page application (SPA) using React, with a focus on
 ├─────────────┬─────────────────────────────┬─────────────────┤
 │  Components │         Pages               │    Routing      │
 └─────────────┴─────────────────────────────┴─────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  LaserEyesProvider                          │
+└─────────────────────────────────────────────────────────────┘
                            │
                            ▼
 ┌─────────────────────────────────────────────────────────────┐
@@ -79,6 +84,14 @@ The application uses React Router for client-side routing:
 - Context API for passing data between routes
 - Dynamic route parameters for API method pages
 
+### 7. Wallet Integration Strategy
+
+The application integrates Bitcoin wallet functionality using the LaserEyes package:
+- LaserEyesProvider wraps the entire application for global wallet access
+- Client-side only rendering to prevent server-side rendering issues
+- Network mapping to align LaserEyes network types with METHANE network environments
+- Multi-wallet support with a wallet selection UI
+
 ## Design Patterns in Use
 
 ### 1. Component Composition
@@ -88,6 +101,7 @@ React components are composed to create complex UIs from simple, reusable parts:
 - Shared components for common UI elements
 - Method-specific components for specialized functionality
 - Template components for consistent API method pages
+- Wallet components for Bitcoin wallet functionality
 
 ### 2. Container/Presentational Pattern
 
@@ -97,10 +111,15 @@ Components are separated into:
 
 ### 3. Provider Pattern
 
-The SDK implements a provider pattern for network interaction:
-- Provider instances are created with specific configurations
-- Provider methods abstract the complexity of API calls
-- Error handling is centralized in the provider implementation
+The application uses multiple provider patterns:
+- SDK Provider for network interaction:
+  - Provider instances are created with specific configurations
+  - Provider methods abstract the complexity of API calls
+  - Error handling is centralized in the provider implementation
+- LaserEyesProvider for wallet functionality:
+  - Provides wallet context to all components
+  - Manages wallet connection state
+  - Abstracts wallet-specific implementation details
 
 ### 4. Proxy Pattern
 
@@ -113,6 +132,7 @@ Proxies are used to handle browser compatibility issues:
 Factory functions are used to create configured instances:
 - `getProvider` creates provider instances for different networks
 - Each provider is configured with network-specific parameters
+- Network mapping utility creates LaserEyes network configurations
 
 ### 6. Template Pattern
 
@@ -121,27 +141,36 @@ The application uses a template pattern for API method pages:
 - Method-specific components customize the template with their own parameters and behavior
 - Consistent UI and behavior across all method pages
 
+### 7. Hook Pattern
+
+The application uses React hooks for state management and side effects:
+- useState for local component state
+- useEffect for side effects and lifecycle management
+- Custom hooks like useLaserEyes for wallet functionality
+
 ## Component Relationships
 
 ### Core Component Hierarchy
 
 ```
 App (Root Layout)
-├── Header
-│   ├── EndpointToggle
-│   └── BlockHeight
-├── Outlet (Router Outlet)
-│   ├── Home
-│   ├── APIMethodPage
-│   │   ├── Method-specific forms
-│   │   │   ├── TraceForm
-│   │   │   │   └── APIForm
-│   │   │   ├── SimulateForm
-│   │   │   │   └── APIForm
-│   │   │   └── TraceBlockForm
-│   │   │       └── APIForm
-│   │   └── StatusIndicator
-│   └── NotFound
+├── LaserEyesProvider
+│   ├── Header
+│   │   ├── EndpointToggle
+│   │   ├── WalletConnector
+│   │   └── BlockHeight
+│   ├── Outlet (Router Outlet)
+│   │   ├── Home
+│   │   ├── APIMethodPage
+│   │   │   ├── Method-specific forms
+│   │   │   │   ├── TraceForm
+│   │   │   │   │   └── APIForm
+│   │   │   │   ├── SimulateForm
+│   │   │   │   │   └── APIForm
+│   │   │   │   └── TraceBlockForm
+│   │   │   │       └── APIForm
+│   │   │   └── StatusIndicator
+│   │   └── NotFound
 ```
 
 ### SDK Module Relationships
@@ -159,7 +188,20 @@ index.js
     └── getAlkanesByHeight
 ```
 
+### Wallet Integration Relationships
+
+```
+App.jsx
+├── LaserEyesProvider
+│   ├── WalletConnector
+│   │   └── useLaserEyes hook
+│   └── Other components
+│       └── useLaserEyes hook (as needed)
+```
+
 ## Data Flow
+
+### API Data Flow
 
 1. User selects network environment (mainnet, regtest, oylnet)
 2. App component stores network state and passes it via context
@@ -172,13 +214,25 @@ index.js
 9. Response flows back through the layers
 10. UI updates with results or error messages
 
+### Wallet Data Flow
+
+1. User clicks "Connect Wallet" button in WalletConnector component
+2. WalletConnector displays list of available wallet options
+3. User selects a wallet provider
+4. LaserEyes package connects to the selected wallet
+5. Connection state is updated in LaserEyesProvider
+6. WalletConnector UI updates to show connected state
+7. Other components can access wallet information through useLaserEyes hook
+8. Wallet operations (transactions, signing) flow through LaserEyes to the wallet provider
+
 ## State Management
 
 METHANE uses React's built-in state management:
 - Component state for local UI state
-- Context API for global state (network environment)
+- Context API for global state (network environment, wallet state)
 - Props for passing data between components
 - Outlet context for passing data to nested routes
+- LaserEyesProvider context for wallet state
 
 ## Routing Architecture
 
@@ -196,5 +250,14 @@ The application uses a nested routing architecture:
 3. Structured error responses are returned
 4. UI components display error messages
 5. User is guided on how to resolve issues
+
+## Network Configuration Flow
+
+1. User selects network in EndpointToggle component
+2. Network state is updated in App component
+3. Network state is passed to LaserEyesProvider via mapNetworkToLaserEyes utility
+4. Network state is passed to SDK layer via context
+5. SDK layer configures provider for selected network
+6. API calls are made to the selected network
 
 This system patterns document provides a comprehensive overview of the architecture, design patterns, and component relationships in the METHANE application.

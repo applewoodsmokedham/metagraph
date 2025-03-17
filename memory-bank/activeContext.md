@@ -2,11 +2,23 @@
 
 ## Current Work Focus
 
-The current focus is on implementing new API method pages and improving the application's architecture. We're working on properly integrating the Oyl SDK into the METHANE application, implementing new API methods like the trace method, and enhancing the overall user experience through better routing and UI design.
+The current focus is on implementing new API method pages, improving the application's architecture, and integrating wallet functionality through the LaserEyes package. We're working on properly integrating the Oyl SDK into the METHANE application, implementing new API methods like the trace method, enhancing the overall user experience through better routing and UI design, and adding Bitcoin wallet connectivity.
 
 ## Recent Changes
 
-### 1. Trace Method Implementation
+### 1. LaserEyes Wallet Integration
+
+We've integrated the LaserEyes package to provide Bitcoin wallet functionality:
+
+- Modified `App.jsx` to wrap the application with `LaserEyesProvider` and ensure client-side only rendering
+- Created a `WalletConnector.jsx` component that displays a list of supported wallets
+- Implemented a network mapping utility to align LaserEyes network types with METHANE network environments
+- Created an example component demonstrating how to use LaserEyes functionality in other components
+- Ensured the wallet connection UI follows the design guidelines
+
+The integration allows users to connect various Bitcoin wallets (Unisat, Leather, Magic Eden, etc.) and provides access to wallet functionality throughout the application.
+
+### 2. Trace Method Implementation
 
 We've implemented a dedicated page for the "trace" API method that visualizes and allows testing of transaction execution traces:
 
@@ -16,7 +28,7 @@ We've implemented a dedicated page for the "trace" API method that visualizes an
 - Added proper routing for the trace method page
 - Implemented the UI according to the design specifications
 
-### 2. Application Architecture Improvements
+### 3. Application Architecture Improvements
 
 We've improved the application architecture to better use React Router and create a more consistent user experience:
 
@@ -26,7 +38,7 @@ We've improved the application architecture to better use React Router and creat
 - Updated `routes.jsx` to use App.jsx as the root layout component
 - Ensured proper context passing between components
 
-### 3. Node.js Compatibility Layer Implementation
+### 4. Node.js Compatibility Layer Implementation
 
 We've implemented a comprehensive Node.js compatibility layer to allow the Oyl SDK (which was designed for Node.js) to run in a browser environment:
 
@@ -40,7 +52,7 @@ We've implemented a comprehensive Node.js compatibility layer to allow the Oyl S
 
 This approach allows us to use the Oyl SDK without modifying its source code, making future updates easier.
 
-### 4. Provider Implementation Improvements
+### 5. Provider Implementation Improvements
 
 We've enhanced the provider implementation to handle errors more gracefully and avoid using mock data:
 
@@ -50,7 +62,7 @@ We've enhanced the provider implementation to handle errors more gracefully and 
 - Added proper error handling and logging
 - Implemented real health check and block height methods
 
-### 5. Alkanes API Methods Implementation
+### 6. Alkanes API Methods Implementation
 
 We've updated the Alkanes API methods to use real data and handle errors properly:
 
@@ -60,7 +72,7 @@ We've updated the Alkanes API methods to use real data and handle errors properl
 - Removed mock data fallbacks
 - Added comprehensive logging for debugging
 
-### 6. Error Handling Improvements
+### 7. Error Handling Improvements
 
 We've implemented a more robust error handling strategy:
 
@@ -71,15 +83,26 @@ We've implemented a more robust error handling strategy:
 
 ## Active Decisions and Considerations
 
-### 1. Component Structure and Reusability
+### 1. Wallet Integration Approach
+
+We've adopted a specific approach for wallet integration:
+
+- Using LaserEyes package for wallet connectivity rather than implementing our own solution
+- Implementing a wallet selection UI that shows all available wallet options
+- Focusing on connection functionality first, with display of wallet information to be handled in specific components as needed
+- Ensuring the wallet provider is only rendered on the client-side to prevent server-side rendering issues
+- Using network mapping to align LaserEyes network types with METHANE network environments
+
+### 2. Component Structure and Reusability
 
 We've adopted a component structure that promotes reusability:
 
 - Created a template component (`APIForm.jsx`) that can be reused for all API methods
 - Implemented method-specific components that use the template component
-- Ensured consistent styling and behavior across all method pages
+- Created a reusable `WalletConnector` component for wallet functionality
+- Ensured consistent styling and behavior across all components
 
-### 2. Routing Architecture
+### 3. Routing Architecture
 
 We've implemented a routing architecture that:
 
@@ -88,7 +111,7 @@ We've implemented a routing architecture that:
 - Ensures proper route matching for API method pages
 - Provides a consistent user experience across the application
 
-### 3. Browser Compatibility Approach
+### 4. Browser Compatibility Approach
 
 We decided to implement custom Node.js shims rather than modifying the Oyl SDK or using a different library. This decision was made because:
 
@@ -97,7 +120,7 @@ We decided to implement custom Node.js shims rather than modifying the Oyl SDK o
 - It's more maintainable as the SDK evolves
 - It's a cleaner solution than trying to modify the SDK
 
-### 4. Error Handling Strategy
+### 5. Error Handling Strategy
 
 We decided to handle errors at multiple levels:
 
@@ -107,7 +130,7 @@ We decided to handle errors at multiple levels:
 
 This multi-layered approach ensures that errors are handled appropriately at each level of the application.
 
-### 5. Network Configuration
+### 6. Network Configuration
 
 We're supporting three network environments:
 
@@ -117,7 +140,7 @@ We're supporting three network environments:
 
 Each environment has its own configuration and can be selected at runtime.
 
-### 6. Performance Considerations
+### 7. Performance Considerations
 
 We're implementing several strategies to address performance concerns:
 
@@ -125,44 +148,55 @@ We're implementing several strategies to address performance concerns:
 - Adding validation before making API calls
 - Implementing retry mechanisms with backoff
 - Providing clear feedback during long-running operations
+- Ensuring the LaserEyesProvider is only rendered on the client-side
 
 ## Next Steps
 
-### 1. Implement Additional API Methods
+### 1. Enhance Wallet Integration
+
+- Add more wallet-specific functionality
+- Implement transaction history display
+- Add balance display in appropriate components
+- Improve error handling for wallet connection failures
+- Test with various wallet providers
+
+### 2. Implement Additional API Methods
 
 - Implement remaining API methods from the method matrix
 - Ensure consistent design and behavior across all method pages
 - Add comprehensive documentation for each method
 
-### 2. Enhance User Experience
+### 3. Enhance User Experience
 
 - Improve navigation between method pages
 - Add more interactive examples
 - Implement better error handling and feedback
 - Add pagination for methods that return large datasets
 
-### 3. Complete Integration Testing
+### 4. Complete Integration Testing
 
 - Test all API methods with real data
 - Verify error handling works as expected
 - Test performance with large datasets
 - Test across different network environments
+- Test wallet functionality with different wallet providers
 
-### 4. UI Improvements
+### 5. UI Improvements
 
 - Enhance loading states for better user experience
 - Improve error message display
 - Add more contextual help for users
 - Implement responsive design improvements
 
-### 5. Documentation Updates
+### 6. Documentation Updates
 
 - Update API method documentation with real examples
 - Add troubleshooting guides for common errors
 - Document the integration approach for other developers
 - Create tutorials for common use cases
+- Document wallet integration and usage
 
-### 6. Additional Features
+### 7. Additional Features
 
 - Implement caching for frequently accessed data
 - Add export functionality for API responses
@@ -171,18 +205,22 @@ We're implementing several strategies to address performance concerns:
 
 ## Key Insights
 
-1. **React Router Integration**: Properly integrating React Router is crucial for a consistent user experience. Using the Outlet component and context passing ensures that components have access to the data they need.
+1. **Wallet Integration**: The LaserEyes package provides a clean way to integrate with various Bitcoin wallets without having to implement wallet-specific code. The package handles the detection of available wallets and provides a consistent interface for interacting with them.
 
-2. **Component Reusability**: Creating reusable components like APIForm has significantly reduced code duplication and ensured consistency across method pages.
+2. **React Router Integration**: Properly integrating React Router is crucial for a consistent user experience. Using the Outlet component and context passing ensures that components have access to the data they need.
 
-3. **Node.js to Browser Compatibility**: The most significant challenge has been making the Node.js-based Oyl SDK work in a browser environment. Our shims approach has proven effective but requires careful testing.
+3. **Component Reusability**: Creating reusable components like APIForm and WalletConnector has significantly reduced code duplication and ensured consistency across the application.
 
-4. **Real vs. Mock Data**: Removing mock data has revealed several edge cases and error scenarios that weren't previously handled. This has led to more robust error handling throughout the application.
+4. **Node.js to Browser Compatibility**: The most significant challenge has been making the Node.js-based Oyl SDK work in a browser environment. Our shims approach has proven effective but requires careful testing.
 
-5. **API Reliability**: Different network environments have different reliability characteristics. Mainnet is more stable but slower, while regtest is faster but requires local setup.
+5. **Real vs. Mock Data**: Removing mock data has revealed several edge cases and error scenarios that weren't previously handled. This has led to more robust error handling throughout the application.
 
-6. **Developer Experience**: The application needs to provide clear feedback and guidance to developers, especially when errors occur. This includes both UI feedback and detailed logging.
+6. **API Reliability**: Different network environments have different reliability characteristics. Mainnet is more stable but slower, while regtest is faster but requires local setup.
 
-7. **Performance Tradeoffs**: There's a balance between providing comprehensive data and maintaining good performance. We're implementing strategies like pagination and limiting dataset size to address this.
+7. **Developer Experience**: The application needs to provide clear feedback and guidance to developers, especially when errors occur. This includes both UI feedback and detailed logging.
+
+8. **Performance Tradeoffs**: There's a balance between providing comprehensive data and maintaining good performance. We're implementing strategies like pagination and limiting dataset size to address this.
+
+9. **Client-Side Rendering**: Some components, like the LaserEyesProvider, need to be rendered only on the client-side to prevent server-side rendering issues. This requires careful handling of the rendering lifecycle.
 
 This active context document captures the current state of the METHANE project, focusing on the recent implementation work and the decisions and considerations that are guiding this work.

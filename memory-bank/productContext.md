@@ -2,7 +2,7 @@
 
 ## Project Purpose
 
-METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactive, developer-friendly playground and documentation hub designed specifically to facilitate exploration, testing, and integration of Alkanes metaprotocol and Sandshrew API methods on the Bitcoin blockchain. It serves as a critical tool for Bitcoin developers who need to work with smart contract functionality on Bitcoin.
+METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactive, developer-friendly playground and documentation hub designed specifically to facilitate exploration, testing, and integration of Alkanes metaprotocol and Sandshrew API methods on the Bitcoin blockchain. It serves as a critical tool for Bitcoin developers who need to work with smart contract functionality on Bitcoin. With the addition of wallet integration, it now also provides a complete environment for testing real transactions and interacting with the Bitcoin blockchain using actual wallets.
 
 ## Problems Solved
 
@@ -17,6 +17,10 @@ METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactiv
 5. **Learning Curve**: The learning curve for Bitcoin protocol development is steep. METHANE provides a structured environment to explore and understand the capabilities of Alkanes and Sandshrew APIs.
 
 6. **Debugging Difficulty**: Debugging smart contract execution on Bitcoin is challenging. METHANE's trace method visualization helps developers understand exactly how their contracts execute.
+
+7. **Wallet Integration Complexity**: Integrating Bitcoin wallets into applications is complex and requires understanding of multiple wallet providers. METHANE demonstrates proper wallet integration patterns through its implementation of the LaserEyes package.
+
+8. **Testing with Real Funds**: Developers need to test their applications with real Bitcoin transactions. METHANE's wallet integration allows developers to connect their wallets and test with real funds.
 
 ## User Experience Goals
 
@@ -38,6 +42,10 @@ METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactiv
 
 9. **Reusable Components**: Use template components to ensure consistency and reduce development time.
 
+10. **Wallet Connectivity**: Provide seamless wallet connection with support for multiple wallet providers.
+
+11. **Real Transaction Testing**: Enable testing with real Bitcoin transactions through connected wallets.
+
 ## Target Users
 
 1. **Bitcoin Protocol Developers**: Professionals working on Bitcoin protocol improvements and extensions.
@@ -47,6 +55,10 @@ METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactiv
 3. **Blockchain Integrators**: Developers integrating Bitcoin functionality into applications.
 
 4. **Technical Documentation Specialists**: Professionals creating and maintaining technical documentation for Bitcoin projects.
+
+5. **Wallet Integration Developers**: Developers working on integrating Bitcoin wallets into their applications.
+
+6. **DApp Developers**: Developers building decentralized applications on Bitcoin.
 
 ## User Stories
 
@@ -65,6 +77,12 @@ METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactiv
 7. As a smart contract developer, I want to see detailed execution traces of my transactions so that I can debug and optimize my code.
 
 8. As a developer, I want a consistent user interface across all method pages so that I can quickly learn how to use new methods.
+
+9. As a DApp developer, I want to connect my Bitcoin wallet so that I can test my application with real transactions.
+
+10. As a wallet integration developer, I want to see examples of proper wallet integration so that I can implement it in my own application.
+
+11. As a Bitcoin developer, I want to interact with multiple wallet providers so that I can ensure my application works with different wallets.
 
 ## Key Features
 
@@ -90,6 +108,14 @@ METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactiv
 
 11. **Notes Sections**: Method-specific notes and guidance for developers.
 
+12. **Wallet Connection**: Connect to Bitcoin wallets with support for multiple wallet providers.
+
+13. **Multi-Wallet Support**: Integration with various wallet providers (Unisat, Leather, Magic Eden, etc.).
+
+14. **Wallet Selection UI**: User interface for selecting and connecting to different wallet providers.
+
+15. **Network Synchronization**: Synchronization between METHANE network environment and wallet network.
+
 ## Implementation Approach
 
 1. **Component-Based Architecture**: Using React components for modularity and reusability.
@@ -101,5 +127,27 @@ METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactiv
 4. **SDK Abstraction Layer**: Using a custom SDK abstraction layer for interacting with the Oyl SDK.
 
 5. **Error Handling Strategy**: Implementing a comprehensive error handling strategy at multiple levels.
+
+6. **Wallet Integration**: Using the LaserEyes package for Bitcoin wallet integration.
+
+7. **Client-Side Rendering**: Ensuring wallet functionality is only rendered on the client-side to prevent server-side rendering issues.
+
+8. **Network Mapping**: Using a network mapping utility to align METHANE network environments with LaserEyes network types.
+
+## Value Proposition
+
+METHANE provides a complete environment for Bitcoin developers to:
+
+1. **Explore and Learn**: Discover and understand Alkanes metaprotocol and Sandshrew API methods.
+
+2. **Test and Debug**: Test smart contracts and debug issues with detailed execution traces.
+
+3. **Integrate and Deploy**: Learn proper integration patterns for both API methods and wallet functionality.
+
+4. **Connect and Transact**: Connect to Bitcoin wallets and test with real transactions.
+
+5. **Switch and Compare**: Toggle between different network environments to compare behavior.
+
+By combining API method exploration, smart contract testing, and wallet integration, METHANE offers a comprehensive toolkit for Bitcoin developers that addresses the full development lifecycle from learning and exploration to testing and deployment.
 
 This product context provides the foundation for understanding why METHANE exists, what problems it solves, and how it should work to meet user needs.
