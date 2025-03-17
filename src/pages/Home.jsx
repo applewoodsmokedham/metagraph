@@ -9,7 +9,7 @@ import { Link, useOutletContext } from 'react-router-dom';
  * Follows industrial aesthetic design guidelines
  */
 const Home = () => {
-  const { endpoint = 'regtest' } = useOutletContext() || {};
+  const { endpoint = 'mainnet' } = useOutletContext() || {};
   
   // CSS for inline styling according to design guidelines
   const styles = {
@@ -43,6 +43,22 @@ const Home = () => {
       padding: '16px',
       backgroundColor: '#FFFFFF',
       border: '1px solid #cccccc',
+    },
+    playgroundColumn: {
+      flex: 1,
+      padding: '16px',
+      backgroundColor: '#f8f9fa',
+      border: '1px solid #000000',
+      borderLeft: '5px solid #000000',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    },
+    explorerColumn: {
+      flex: 1,
+      padding: '16px',
+      backgroundColor: '#f8f9fa',
+      border: '1px solid #000000',
+      borderLeft: '5px solid #000000',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
     },
     sectionTitle: {
       fontSize: '24px',
@@ -108,6 +124,14 @@ const Home = () => {
           ...baseStyles.column,
           marginBottom: '16px',
         },
+        playgroundColumn: {
+          ...baseStyles.playgroundColumn,
+          marginBottom: '16px',
+        },
+        explorerColumn: {
+          ...baseStyles.explorerColumn,
+          marginBottom: '16px',
+        }
       };
     }
     return baseStyles;
@@ -123,53 +147,28 @@ const Home = () => {
       
       <div style={responsiveStyles.contentColumns}>
         {/* Left Column - Playground */}
-        <div style={responsiveStyles.column}>
+        <div style={responsiveStyles.playgroundColumn}>
           <h2 style={responsiveStyles.sectionTitle}>Playground</h2>
           
           <div style={responsiveStyles.methodsList}>
-            <h3 style={responsiveStyles.categoryTitle}>Trace Methods</h3>
             <div style={responsiveStyles.methodItem}>
               <Link to="/api-methods/trace" style={responsiveStyles.link}>/api-methods/trace</Link>
-            </div>
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/api-methods/traceblockstatus" style={responsiveStyles.link}>/api-methods/traceblockstatus</Link>
-            </div>
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/api-methods/simulate" style={responsiveStyles.link}>/api-methods/simulate</Link>
-            </div>
-            
-            <h3 style={responsiveStyles.categoryTitle}>Alkanes Methods</h3>
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/api-methods/getalkanes/address" style={responsiveStyles.link}>/api-methods/getalkanes/address</Link>
-            </div>
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/api-methods/getalkanes/height" style={responsiveStyles.link}>/api-methods/getalkanes/height</Link>
+              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
+                Explore and debug transaction execution with detailed trace output
+              </p>
             </div>
           </div>
         </div>
         
         {/* Right Column - Explorer */}
-        <div style={responsiveStyles.column}>
+        <div style={responsiveStyles.explorerColumn}>
           <h2 style={responsiveStyles.sectionTitle}>Explorer</h2>
           
           <div style={responsiveStyles.methodsList}>
             <div style={responsiveStyles.methodItem}>
-              <Link to="/explorer/block" style={responsiveStyles.link}>/explorer/block</Link>
-            </div>
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/explorer/transaction" style={responsiveStyles.link}>/explorer/transaction</Link>
-            </div>
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/explorer/address" style={responsiveStyles.link}>/explorer/address</Link>
-            </div>
-            
-            <div style={responsiveStyles.statusSection}>
-              <h3 style={responsiveStyles.categoryTitle}>Network Status</h3>
-              <p style={responsiveStyles.statusIndicator}>
-                Current endpoint: <strong>{endpoint.toUpperCase()}</strong>
-              </p>
-              <p style={responsiveStyles.helpText}>
-                You can change the endpoint using the selector in the header.
+              <Link to="/explorer/alkanesBalance" style={responsiveStyles.link}>/explorer/alkanesBalance</Link>
+              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
+                Explore Alkanes balances across the network
               </p>
             </div>
           </div>

@@ -12,7 +12,7 @@ import { traceTransaction } from '../../sdk';
  * @param {Object} props
  * @param {string} props.endpoint - Current endpoint (regtest, mainnet, oylnet)
  */
-const TraceForm = ({ endpoint = 'regtest' }) => {
+const TraceForm = ({ endpoint = 'mainnet' }) => {
   // Define method details
   const methodDetails = {
     'Method Type': 'View Function',

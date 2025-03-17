@@ -9,7 +9,7 @@ import Header from './Header';
  * Uses Outlet from react-router-dom to render nested route components
  */
 const Layout = () => {
-  const [endpoint, setEndpoint] = useState('local');
+  const [endpoint, setEndpoint] = useState('mainnet');
   
   const handleEndpointChange = (newEndpoint) => {
     setEndpoint(newEndpoint);

@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import APIMethodPage from './pages/APIMethodPage';
 import NotFound from './pages/NotFound';
 import ShadowVoutDocs from './pages/ShadowVoutDocs';
+import AlkanesBalanceExplorer from './pages/AlkanesBalanceExplorer';
 import TraceBlockStatusForm from './components/methods/TraceBlockStatusForm';
 import SimulateForm from './components/methods/SimulateForm';
 import TraceForm from './components/methods/TraceForm';
@@ -45,6 +46,11 @@ const router = createBrowserRouter([
       {
         path: 'api-methods/simulate',
         element: <APIMethodPage methodComponent={SimulateForm} methodName="Simulate Transaction" />
+      },
+      // Explorer routes
+      {
+        path: 'explorer/alkanesBalance',
+        element: <AlkanesBalanceExplorer />
       },
       // Not found route
       {
