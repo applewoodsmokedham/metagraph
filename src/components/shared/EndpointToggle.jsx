@@ -9,7 +9,7 @@ import React, { useState } from 'react';
  * @param {Function} props.onChange - Callback when endpoint is changed
  * @param {string} props.initialEndpoint - Initial endpoint value
  */
-const EndpointToggle = ({ onChange, initialEndpoint = 'regtest' }) => {
+const EndpointToggle = ({ onChange, initialEndpoint = 'mainnet' }) => {
   const [endpoint, setEndpoint] = useState(initialEndpoint);
 
   const handleToggle = (newEndpoint) => {
