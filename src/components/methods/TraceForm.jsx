@@ -26,7 +26,17 @@ const TraceForm = ({ endpoint = 'regtest' }) => {
       name: 'txid',
       label: 'Transaction ID',
       placeholder: 'dfc2b297c1f6341365d6a66af3563a9c72644d8b27e7abff54a39b5457acc4ca',
-      description: 'The transaction ID to trace',
+      description: () => (
+        <span>
+          The transaction ID to trace. View example transaction on <a
+            href="https://mempool.space/tx/dfc2b297c1f6341365d6a66af3563a9c72644d8b27e7abff54a39b5457acc4ca"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{color: '#0000FF', textDecoration: 'none'}}>
+            mempool.space
+          </a>
+        </span>
+      ),
       required: true
     },
     {
@@ -71,33 +81,104 @@ const TraceForm = ({ endpoint = 'regtest' }) => {
   "jsonrpc": "2.0"
 }`,
         response: `{
-  "result": {
-    "steps": [
-      {
-        "pc": 0,
-        "op": "OP_0",
-        "stack": []
-      },
-      {
-        "pc": 1,
-        "op": "OP_PUSHDATA",
-        "data": "0x21023acebb3dca7b13a5100dbe1dce60ea2596c6a8d552d30713da05f5b9cdf8116d",
-        "stack": ["OP_0"]
-      },
-      {
-        "pc": 37,
-        "op": "OP_CHECKSIG",
-        "stack": ["OP_0", "0x21023acebb3dca7b13a5100dbe1dce60ea2596c6a8d552d30713da05f5b9cdf8116d"]
+  "status": "success",
+  "message": "Trace completed",
+  "txid": "dfc2b297c1f6341365d6a66af3563a9c72644d8b27e7abff54a39b5457acc4ca",
+  "result": [
+    {
+      "event": "create",
+      "data": {
+        "block": "0x2",
+        "tx": "0xc"
       }
-      // Additional steps would be here
-    ]
-  },
-  "id": 1,
-  "jsonrpc": "2.0"
+    },
+    {
+      "event": "invoke",
+      "data": {
+        "type": "call",
+        "context": {
+          "myself": {
+            "block": "0x2",
+            "tx": "0xc"
+          },
+          "caller": {
+            "block": "0x0",
+            "tx": "0x0"
+          },
+          "inputs": [
+            "0x0",
+            "0x2386f26fc0ffff",
+            "0x1",
+            "0x2386f26fc0ffff",
+            "0x454e494c4f534147",
+            "0x4c455546",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0",
+            "0x0"
+          ],
+          "incomingAlkanes": [],
+          "vout": 4
+        },
+        "fuel": 9017886
+      }
+    },
+    {
+      "event": "return",
+      "data": {
+        "status": "success",
+        "response": {
+          "alkanes": [
+            {
+              "id": {
+                "block": "0x2",
+                "tx": "0xc"
+              },
+              "value": "0x2386f26fc0ffff"
+            }
+          ],
+          "data": "0x",
+          "storage": [
+            {
+              "key": "/symbol",
+              "value": "0x4655454c"
+            },
+            {
+              "key": "/cap",
+              "value": "0xffffc06ff28623000000000000000000"
+            },
+            {
+              "key": "/name",
+              "value": "0x4741534f4c494e45"
+            },
+            {
+              "key": "/76616c75652d7065722d6d696e74",
+              "value": "0x01000000000000000000000000000000"
+            },
+            {
+              "key": "/totalsupply",
+              "value": "0xffffc06ff28623000000000000000000"
+            },
+            {
+              "key": "/data",
+              "value": "0x"
+            }
+          ]
+        }
+      }
+    }
+  ]
 }`,
         curl: `curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" --data '{"method":"metashrew_view","params":["trace","dfc2b297c1f6341365d6a66af3563a9c72644d8b27e7abff54a39b5457acc4ca",4],"id":1,"jsonrpc":"2.0"}' https://mainnet.sandshrew.io`
       }}
-      notes="Ensure txid and vout correspond to a valid transaction on the current network. The trace method provides detailed execution information that can be used for debugging smart contracts."
+      notes="Ensure txid and vout correspond to a valid transaction on the current network. You can view transactions on mempool.space to verify their existence. The trace method provides detailed execution information that can be used for debugging smart contracts."
     />
   );
 };
