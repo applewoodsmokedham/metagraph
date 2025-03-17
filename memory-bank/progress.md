@@ -23,6 +23,7 @@
 - ✅ API method forms for parameter input
 - ✅ Enhanced APIForm component with examples and notes sections
 - ✅ Reusable template components for API methods
+- ✅ WalletConnector component for Bitcoin wallet integration
 
 ### 4. API Methods
 - ✅ traceTransaction - Trace a transaction's smart contract execution
@@ -41,6 +42,13 @@
 - ✅ Context passing between components
 - ✅ Consistent design across the application
 - ✅ Improved home page with proper routing
+
+### 7. Wallet Integration
+- ✅ LaserEyes package integration for Bitcoin wallet connectivity
+- ✅ Client-side only rendering for wallet provider
+- ✅ Multi-wallet support (Unisat, Leather, Magic Eden, etc.)
+- ✅ Network mapping between METHANE and LaserEyes network types
+- ✅ Example component for wallet functionality usage
 
 ## What's Left to Build
 
@@ -61,12 +69,14 @@
 - ✅ Interactive examples with sample data (for trace method)
 - ⬜ Tutorials and guides
 - ⬜ Troubleshooting section
+- ⬜ Wallet integration documentation
 
 ### 4. Testing
 - ⬜ Unit tests for components
 - ⬜ Integration tests for API methods
 - ⬜ End-to-end testing
 - ⬜ Performance testing
+- ⬜ Wallet functionality testing
 
 ### 5. Deployment
 - ⬜ Production build optimization
@@ -74,9 +84,16 @@
 - ⬜ Monitoring and analytics
 - ⬜ User feedback mechanism
 
+### 6. Wallet Functionality Enhancements
+- ⬜ Transaction history display
+- ⬜ Balance display in appropriate components
+- ⬜ Transaction sending interface
+- ⬜ Message signing interface
+- ⬜ Network switching interface
+
 ## Current Status
 
-The project is in active development, with significant progress made on implementing API method pages and improving the application architecture. The core functionality is implemented, and we're now focusing on enhancing the user experience and implementing additional API methods.
+The project is in active development, with significant progress made on implementing API method pages, improving the application architecture, and integrating Bitcoin wallet functionality. The core functionality is implemented, and we're now focusing on enhancing the user experience, implementing additional API methods, and expanding wallet functionality.
 
 ### Phase Completion Status
 
@@ -89,6 +106,7 @@ The project is in active development, with significant progress made on implemen
 | 5 | Interactive Mainnet Integration | 🔄 In Progress (60%) |
 | 6 | Documentation and Contextual Integration | 🔄 In Progress (20%) |
 | 7 | Comprehensive Testing and Review | ⬜ Not Started |
+| 8 | Wallet Integration | ✅ Complete |
 
 ### Method Implementation Matrix
 
@@ -114,52 +132,73 @@ The project is in active development, with significant progress made on implemen
 - Some error messages could be more user-friendly
 - Error recovery could be improved in some components
 - Network errors need better handling and retry mechanisms
+- Wallet connection errors need specific handling
 
 ### 3. Performance
 - Large result sets can cause performance issues
 - Some API calls to mainnet can be slow
 - No caching mechanism for frequently accessed data
+- LaserEyesProvider may impact initial load time
 
 ### 4. UI/UX
 - Loading states could be improved
 - Form validation needs enhancement
 - Mobile responsiveness needs improvement
 - Some links may not work correctly if routes are not properly defined
+- Wallet selection UI could be enhanced with wallet icons
+
+### 5. Wallet Integration
+- Not all wallets may be available in all browsers
+- Some wallets may have specific requirements or limitations
+- Error handling for wallet-specific issues needs improvement
+- Network alignment between METHANE and wallet providers needs testing
 
 ## Recent Achievements
 
-1. **Implemented Trace Method Page**: Successfully implemented a dedicated page for the "trace" API method with proper examples, documentation, and functionality.
+1. **Integrated LaserEyes Wallet Functionality**: Successfully integrated the LaserEyes package to provide Bitcoin wallet connectivity with support for multiple wallet providers.
 
-2. **Improved Application Architecture**: Enhanced the application architecture to better use React Router and create a more consistent user experience.
+2. **Implemented Multi-Wallet Selection UI**: Created a wallet selection interface that displays all available wallet options and allows users to choose which wallet to connect.
 
-3. **Fixed Home Page Issues**: Resolved issues with the home page by merging the design from App.jsx with the functionality from Home.jsx.
+3. **Created Network Mapping Utility**: Developed a utility to map between METHANE network environments and LaserEyes network types to ensure consistent network configuration.
 
-4. **Enhanced Component Reusability**: Improved the APIForm component to support examples and notes sections, making it more reusable across different API methods.
+4. **Implemented Client-Side Only Rendering**: Ensured that wallet functionality is only rendered on the client-side to prevent server-side rendering issues.
 
-5. **Updated SDK Implementation**: Updated the traceTransaction function in the SDK to correctly use the AlkanesRpc trace method.
+5. **Created Example Wallet Component**: Developed an example component that demonstrates how to use LaserEyes functionality in other components.
 
-6. **Removed Mock Data**: Successfully removed all mock data from the application and implemented real data fetching through the Oyl SDK.
+6. **Implemented Trace Method Page**: Successfully implemented a dedicated page for the "trace" API method with proper examples, documentation, and functionality.
 
-7. **Browser Compatibility**: Implemented a comprehensive Node.js compatibility layer that allows the Oyl SDK to run in a browser environment.
+7. **Improved Application Architecture**: Enhanced the application architecture to better use React Router and create a more consistent user experience.
 
-8. **Error Handling**: Improved error handling throughout the application, with better error messages and recovery mechanisms.
+8. **Fixed Home Page Issues**: Resolved issues with the home page by merging the design from App.jsx with the functionality from Home.jsx.
 
-9. **Provider Implementation**: Enhanced the provider implementation to handle different network environments and provide a consistent interface.
+9. **Enhanced Component Reusability**: Improved the APIForm component to support examples and notes sections, making it more reusable across different API methods.
 
-10. **Alkanes API Methods**: Implemented all core Alkanes API methods with proper error handling and response formatting.
+10. **Updated SDK Implementation**: Updated the traceTransaction function in the SDK to correctly use the AlkanesRpc trace method.
+
+11. **Removed Mock Data**: Successfully removed all mock data from the application and implemented real data fetching through the Oyl SDK.
+
+12. **Browser Compatibility**: Implemented a comprehensive Node.js compatibility layer that allows the Oyl SDK to run in a browser environment.
+
+13. **Error Handling**: Improved error handling throughout the application, with better error messages and recovery mechanisms.
+
+14. **Provider Implementation**: Enhanced the provider implementation to handle different network environments and provide a consistent interface.
+
+15. **Alkanes API Methods**: Implemented all core Alkanes API methods with proper error handling and response formatting.
 
 ## Next Priorities
 
-1. **Implement Additional API Methods**: Complete the implementation of the remaining API methods from the method matrix.
+1. **Enhance Wallet Functionality**: Expand wallet functionality to include transaction history, balance display, and transaction sending interface.
 
-2. **Enhance User Experience**: Improve navigation between method pages, add more interactive examples, and implement better error handling and feedback.
+2. **Implement Additional API Methods**: Complete the implementation of the remaining API methods from the method matrix.
 
-3. **Complete Integration Testing**: Test all API methods with real data across different network environments.
+3. **Enhance User Experience**: Improve navigation between method pages, add more interactive examples, and implement better error handling and feedback.
 
-4. **Improve UI/UX**: Enhance the user interface and experience with better loading states, error messages, and form validation.
+4. **Complete Integration Testing**: Test all API methods and wallet functionality with real data across different network environments.
 
-5. **Enhance Documentation**: Add comprehensive documentation for all API methods and use cases.
+5. **Improve UI/UX**: Enhance the user interface and experience with better loading states, error messages, and form validation.
 
-6. **Optimize Performance**: Implement caching and pagination to improve performance with large datasets.
+6. **Enhance Documentation**: Add comprehensive documentation for all API methods, wallet functionality, and use cases.
+
+7. **Optimize Performance**: Implement caching and pagination to improve performance with large datasets.
 
 This progress document provides a comprehensive overview of the current state of the METHANE project, what has been accomplished, what remains to be done, and the known issues that need to be addressed.

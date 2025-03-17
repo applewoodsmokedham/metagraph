@@ -1,7 +1,10 @@
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Outlet, useNavigate, Link } from 'react-router-dom';
+import { LaserEyesProvider } from '@omnisat/lasereyes';
 import './App.css';
 import EndpointToggle from './components/shared/EndpointToggle';
+import WalletConnector from './components/shared/WalletConnector';
+import { mapNetworkToLaserEyes } from './utils/networkMapping';
 
 // Lazy load BlockHeight component to prevent initial render issues
 const BlockHeight = lazy(() => import('./components/shared/BlockHeight'));
@@ -40,7 +43,12 @@ class ErrorBoundary extends React.Component {
  */
 function App() {
   const [network, setNetwork] = useState('mainnet');
+  const [isClient, setIsClient] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleNetworkChange = (newNetwork) => {
     console.log('Network changed to:', newNetwork);
@@ -93,43 +101,50 @@ function App() {
   };
 
   return (
-    <div style={styles.app} className="app">
-      <header style={styles.header} className="header">
-        <div style={styles.headerTitle} className="header-title">
-          <h1 style={styles.title}>METHANE</h1>
-          <span style={styles.subtitle} className="subtitle">Method Exploration, Testing, and Analysis eNvironment</span>
-          <Link
-            to="/"
-            style={{
-              color: '#0000FF',
-              textDecoration: 'none',
-              fontWeight: 'bold',
-              fontSize: '14px',
-              marginTop: '4px',
-              display: 'block',
-              textAlign: 'left'
-            }}
-          >
-            /home
-          </Link>
-        </div>
-        <div style={styles.headerControls} className="header-controls">
-          <EndpointToggle
-            onChange={handleNetworkChange}
-            initialEndpoint={network}
-          />
-          <ErrorBoundary fallback={<div className="block-height">Height: Unavailable</div>}>
-            <Suspense fallback={<div className="block-height">Loading height...</div>}>
-              <BlockHeight network={network} refreshInterval={10000} />
-            </Suspense>
-          </ErrorBoundary>
-        </div>
-      </header>
-      <main style={styles.mainContent} className="main-content">
-        {/* This is where we render the current route's component */}
-        <Outlet context={{ endpoint: network }} />
-      </main>
-    </div>
+    <>
+      {isClient ? (
+        <LaserEyesProvider config={{ network: mapNetworkToLaserEyes(network) }}>
+          <div style={styles.app} className="app">
+            <header style={styles.header} className="header">
+              <div style={styles.headerTitle} className="header-title">
+                <h1 style={styles.title}>METHANE</h1>
+                <span style={styles.subtitle} className="subtitle">Method Exploration, Testing, and Analysis eNvironment</span>
+                <Link
+                  to="/"
+                  style={{
+                    color: '#0000FF',
+                    textDecoration: 'none',
+                    fontWeight: 'bold',
+                    fontSize: '14px',
+                    marginTop: '4px',
+                    display: 'block',
+                    textAlign: 'left'
+                  }}
+                >
+                  /home
+                </Link>
+              </div>
+              <div style={styles.headerControls} className="header-controls">
+                <EndpointToggle
+                  onChange={handleNetworkChange}
+                  initialEndpoint={network}
+                />
+                <WalletConnector />
+                <ErrorBoundary fallback={<div className="block-height">Height: Unavailable</div>}>
+                  <Suspense fallback={<div className="block-height">Loading height...</div>}>
+                    <BlockHeight network={network} refreshInterval={10000} />
+                  </Suspense>
+                </ErrorBoundary>
+              </div>
+            </header>
+            <main style={styles.mainContent} className="main-content">
+              {/* This is where we render the current route's component */}
+              <Outlet context={{ endpoint: network }} />
+            </main>
+          </div>
+        </LaserEyesProvider>
+      ) : null}
+    </>
   );
 }
 
