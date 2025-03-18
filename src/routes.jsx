@@ -6,6 +6,8 @@ import APIMethodPage from './pages/APIMethodPage';
 import NotFound from './pages/NotFound';
 import ShadowVoutDocs from './pages/ShadowVoutDocs';
 import AlkanesBalanceExplorer from './pages/AlkanesBalanceExplorer';
+import AlkanesTokensExplorer from './pages/AlkanesTokensExplorer';
+import AlkanesTemplatesExplorer from './pages/AlkanesTemplatesExplorer';
 import TraceBlockStatusForm from './components/methods/TraceBlockStatusForm';
 import SimulateForm from './components/methods/SimulateForm';
 import TraceForm from './components/methods/TraceForm';
@@ -48,6 +50,14 @@ const router = createBrowserRouter([
         element: <APIMethodPage methodComponent={SimulateForm} methodName="Simulate Transaction" />
       },
       // Explorer routes
+      {
+        path: 'explorer/alkanesTokens',
+        element: <AlkanesTokensExplorer />
+      },
+      {
+        path: 'explorer/alkanesTemplates',
+        element: <AlkanesTemplatesExplorer />
+      },
       {
         path: 'explorer/alkanesBalance',
         element: <AlkanesBalanceExplorer />

@@ -166,6 +166,26 @@ const Home = () => {
           
           <div style={responsiveStyles.methodsList}>
             <div style={responsiveStyles.methodItem}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Link to="/explorer/alkanesTokens" style={responsiveStyles.link}>/explorer/alkanesTokens</Link>
+                <span style={{ fontSize: '12px', color: '#666666', fontWeight: 'bold' }}>[2,n]</span>
+              </div>
+              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
+                View all <strong>initialized</strong> Alkanes tokens
+              </p>
+            </div>
+            
+            <div style={responsiveStyles.methodItem}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Link to="/explorer/alkanesTemplates" style={responsiveStyles.link}>/explorer/alkanesTemplates</Link>
+                <span style={{ fontSize: '12px', color: '#666666', fontWeight: 'bold' }}>[3,n]</span>
+              </div>
+              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
+                View all deployed Alkanes factory templates
+              </p>
+            </div>
+            
+            <div style={responsiveStyles.methodItem}>
               <Link to="/explorer/alkanesBalance" style={responsiveStyles.link}>/explorer/alkanesBalance</Link>
               <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
                 Explore Alkanes balances across the network
