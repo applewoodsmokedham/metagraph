@@ -42,35 +42,52 @@ export const traceTransaction = async (txid, vout = 0, endpoint = 'regtest') => 
 };
 
 /**
- * Simulates a transaction to preview the outcome
- * @param {Object} params - Simulation parameters
+ * Simulates an Alkanes transaction or operation
+ * @param {Object} simulationParams - Parameters for the simulation
+ * @param {Object} simulationParams.target - The target block and transaction ID
+ * @param {string} simulationParams.target.block - Block identifier
+ * @param {string} simulationParams.target.tx - Transaction identifier
+ * @param {Array} simulationParams.inputs - Array of operation inputs
+ * @param {Array} [simulationParams.alkanes=[]] - Optional tokens to include
  * @param {string} endpoint - API endpoint to use ('regtest', 'mainnet', 'oylnet')
  * @returns {Promise<Object>} - Simulation results
  */
-export const simulateTransaction = async (params, endpoint = 'regtest') => {
+export const performAlkanesSimulation = async (simulationParams, endpoint = 'regtest') => {
   try {
     const provider = getProvider(endpoint);
-    console.log(`Simulating transaction with ${endpoint} endpoint`, params);
+    console.log(`Performing Alkanes simulation with ${endpoint} endpoint`, simulationParams);
     
-    // Ensure provider.alkanes exists
+    // Ensure provider.alkanes exists and the simulate method is available
     if (!provider.alkanes || typeof provider.alkanes.simulate !== 'function') {
       throw new Error('Alkanes simulate method not available');
     }
     
-    // Use the oyl-sdk Provider to simulate the transaction
-    const result = await provider.alkanes.simulate(params);
+    // Prepare simulation request with required defaults
+    const simulationRequest = {
+      target: simulationParams.target,
+      inputs: simulationParams.inputs,
+      alkanes: simulationParams.alkanes || [],
+      // Default values will be provided by the AlkanesRpc.simulate method
+    };
+    
+    // Call the provider's simulate method
+    const result = await provider.alkanes.simulate(simulationRequest);
+
+    console.log(result)
     
     return {
       status: "success",
-      message: "Simulation completed",
-      txid: params.txid,
-      results: result
+      message: "Simulation completed successfully",
+      data: result,
+      // If a parsed property exists, include it for easier consumption
+      parsedResults: result.parsed
     };
   } catch (error) {
-    console.error('Error simulating transaction:', error);
+    console.error('Error performing Alkanes simulation:', error);
     return {
       status: "error",
-      message: error.message || "Unknown error"
+      message: error.message || "Unknown error occurred during simulation",
+      details: error.toString()
     };
   }
 };
@@ -127,6 +144,145 @@ export const traceBlock = async (blockHeight, endpoint = 'regtest') => {
 };
 
 /**
+ * Helper function to transform the Alkanes response from the provider
+ * into a format that the AlkanesBalanceExplorer component can use
+ *
+ * @param {Object|Array} response - The response from the provider.alkanes.getAlkanesByAddress method
+ * @returns {Array} - Array of token objects with name, symbol, amount, and tokenId properties
+ */
+const transformAlkanesResponse = (response) => {
+  try {
+    // Initialize an empty array to store the transformed tokens
+    const tokens = [];
+    
+    // Check if the response is an array (outpoints) or has an outpoints property
+    const outpoints = Array.isArray(response) ? response : (response.outpoints || []);
+    
+    // Iterate through each outpoint
+    outpoints.forEach(outpoint => {
+      // Check if the outpoint has a runes property
+      if (outpoint.runes && Array.isArray(outpoint.runes)) {
+        // Iterate through each rune in the outpoint
+        outpoint.runes.forEach(runeData => {
+          // Extract the rune and balance information
+          const { rune, balance } = runeData;
+          
+          // Create a token object with the required properties
+          const token = {
+            name: rune.name || rune.spacedName || 'Unknown',
+            symbol: rune.symbol || '-',
+            amount: parseFloat(balance) || 0,
+            tokenId: rune.id || null // Add the tokenId for image fetching
+          };
+          
+          // Add the token to the array
+          tokens.push(token);
+        });
+      }
+    });
+    
+    return tokens;
+  } catch (error) {
+    console.error('Error transforming Alkanes response:', error);
+    return []; // Return an empty array in case of error
+  }
+};
+
+/**
+ * Converts a hex string to a data URI
+ * @param {string} hexString - The hex string to convert
+ * @returns {string|null} - The data URI or null if conversion fails
+ */
+const hexToDataUri = (hexString) => {
+  try {
+    if (!hexString || typeof hexString !== 'string') {
+      return null;
+    }
+    
+    // Remove '0x' prefix if present
+    const cleanHex = hexString.startsWith('0x') ? hexString.slice(2) : hexString;
+    
+    // Convert hex to binary
+    const binary = new Uint8Array(cleanHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+    
+    // Detect file type (simplified version - in production, use proper file signature detection)
+    let mimeType = 'image/png'; // Default to PNG
+    
+    // Check for common file signatures
+    if (binary[0] === 0xFF && binary[1] === 0xD8) {
+      mimeType = 'image/jpeg';
+    } else if (binary[0] === 0x47 && binary[1] === 0x49 && binary[2] === 0x46) {
+      mimeType = 'image/gif';
+    } else if (binary[0] === 0x89 && binary[1] === 0x50 && binary[2] === 0x4E && binary[3] === 0x47) {
+      mimeType = 'image/png';
+    }
+    
+    // Convert binary to base64
+    const base64 = btoa(Array.from(binary).map(b => String.fromCharCode(b)).join(''));
+    
+    // Create data URI
+    return `data:${mimeType};base64,${base64}`;
+  } catch (error) {
+    console.error('Error converting hex to data URI:', error);
+    return null;
+  }
+};
+
+/**
+ * Gets the image for an Alkanes token
+ * @param {Object} tokenId - The token ID object with block and tx properties
+ * @param {string} endpoint - API endpoint to use ('regtest', 'mainnet', 'oylnet')
+ * @returns {Promise<Object>} - Object containing the image data URI or placeholder
+ */
+export const getAlkanesTokenImage = async (tokenId, endpoint = 'regtest') => {
+  try {
+    if (!tokenId || !tokenId.block || !tokenId.tx) {
+      throw new Error('Invalid token ID');
+    }
+
+    // Create simulation parameters for image retrieval
+    const simulationParams = {
+      target: tokenId,
+      inputs: ["1000"], // 1000 is the input value for images
+      alkanes: []
+    };
+
+    // Call the simulation function
+    const result = await performAlkanesSimulation(simulationParams, endpoint);
+
+    if (result.status === "error" || !result.data) {
+      throw new Error(result.message || 'Failed to retrieve token image');
+    }
+
+    // Extract the hex string from the result
+    const hexData = result?.data?.execution?.data;
+    
+    if (!hexData) {
+      throw new Error('No image data found');
+    }
+
+    // Convert hex string to data URI
+    const dataUri = hexToDataUri(hexData);
+    
+    if (!dataUri) {
+      throw new Error('Failed to convert image data');
+    }
+    
+    return {
+      status: "success",
+      imageUri: dataUri
+    };
+  } catch (error) {
+    console.error('Error getting token image:', error);
+    return {
+      status: "error",
+      message: error.message || "Unknown error",
+      imageUri: null
+    };
+  }
+};
+
+/**
  * Gets all Alkanes owned by a specific address
  * @param {string} address - Bitcoin address to query
  * @param {string} endpoint - API endpoint to use ('regtest', 'mainnet', 'oylnet')
@@ -148,11 +304,14 @@ export const getAlkanesByAddress = async (address, endpoint = 'regtest') => {
       protocolTag: '1'
     });
     
+    // Transform the result into the format expected by the component
+    const transformedAlkanes = transformAlkanesResponse(result);
+    
     return {
       status: "success",
       message: "Alkanes retrieved",
       address,
-      alkanes: result
+      alkanes: transformedAlkanes
     };
   } catch (error) {
     console.error('Error getting Alkanes by address:', error);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { simulateTransaction } from '../../sdk/alkanes';
+import { performAlkanesSimulation } from '../../sdk/alkanes';
 
 /**
  * SimulationForm Component
@@ -29,7 +29,7 @@ const SimulateForm = ({ endpoint = 'regtest' }) => {
       };
       
       // Call the simulation API
-      const simulationResult = await simulateTransaction(params, endpoint);
+      const simulationResult = await performAlkanesSimulation(params, endpoint);
       
       if (simulationResult.status === 'error') {
         throw new Error(simulationResult.message);

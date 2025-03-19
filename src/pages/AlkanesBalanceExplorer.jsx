@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useLaserEyes } from '@omnisat/lasereyes';
-import { getAlkanesByAddress } from '../sdk/alkanes';
+import { getAlkanesByAddress, getAlkanesTokenImage } from '../sdk/alkanes';
 
 /**
  * AlkanesBalanceExplorer Component
@@ -19,12 +19,25 @@ const AlkanesBalanceExplorer = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showCopied, setShowCopied] = useState(false);
+  const [tokenImages, setTokenImages] = useState({});
+  const [imageLoading, setImageLoading] = useState({});
   
   // Helper function to shorten addresses
   const shortenAddress = (addr) => {
     if (!addr) return 'N/A';
     if (addr.length <= 9) return addr;
     return `${addr.substring(0, 4)}...${addr.substring(addr.length - 5)}`;
+  };
+  
+  // Helper function to format AlkaneId
+  const formatAlkaneId = (tokenId) => {
+    if (!tokenId) return 'N/A';
+    
+    // Format as block:tx
+    const blockPart = tokenId.block ? tokenId.block.substring(0, 6) : '------';
+    const txPart = tokenId.tx ? tokenId.tx.substring(0, 6) : '------';
+    
+    return `${blockPart}:${txPart}`;
   };
   
   // Function to copy text to clipboard
@@ -47,6 +60,48 @@ const AlkanesBalanceExplorer = () => {
     }
   }, [connected, walletAddress, address]);
   
+  // Fetch token images when alkanes are loaded
+  useEffect(() => {
+    if (alkanes.length > 0) {
+      fetchTokenImages(alkanes);
+    }
+  }, [alkanes, endpoint]);
+  
+  // Function to fetch token images
+  const fetchTokenImages = async (tokens) => {
+    const newImageLoading = { ...imageLoading };
+    
+    // For each token with a tokenId, fetch its image if not already loaded
+    for (const token of tokens) {
+      if (token.tokenId && !tokenImages[token.tokenId.tx]) {
+        try {
+          // Set loading state for this token
+          newImageLoading[token.tokenId.tx] = true;
+          setImageLoading(newImageLoading);
+          
+          // Fetch the image
+          const result = await getAlkanesTokenImage(token.tokenId, endpoint);
+          
+          // Update the image state
+          if (result.status === "success" && result.imageUri) {
+            setTokenImages(prev => ({
+              ...prev,
+              [token.tokenId.tx]: result.imageUri
+            }));
+          }
+        } catch (error) {
+          console.error(`Error fetching image for token ${token.name}:`, error);
+        } finally {
+          // Update loading state
+          setImageLoading(prev => ({
+            ...prev,
+            [token.tokenId.tx]: false
+          }));
+        }
+      }
+    }
+  };
+  
   // Validate Bitcoin address (basic validation)
   const isValidBitcoinAddress = (addr) => {
     // Basic validation - check if it starts with valid prefixes
@@ -54,6 +109,7 @@ const AlkanesBalanceExplorer = () => {
       addr.startsWith('bc1') || 
       addr.startsWith('1') || 
       addr.startsWith('3') ||
+      addr.startsWith('bcr') || //regtest
       addr.startsWith('tb1') || // testnet
       addr.startsWith('m') || // testnet
       addr.startsWith('n') || // testnet
@@ -303,6 +359,31 @@ const AlkanesBalanceExplorer = () => {
       fontFamily: 'Roboto Mono, monospace',
       marginBottom: '16px',
     },
+    tokenImage: {
+      width: '40px',
+      height: '40px',
+      objectFit: 'contain',
+      borderRadius: '4px',
+      backgroundColor: '#F5F5F5',
+    },
+    tokenImageContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '50px',
+      height: '50px',
+    },
+    tokenImagePlaceholder: {
+      width: '40px',
+      height: '40px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#F5F5F5',
+      borderRadius: '4px',
+      fontSize: '20px',
+      color: '#666666',
+    },
   };
   
   // Add CSS animations for fadeout and spinner
@@ -430,6 +511,8 @@ const AlkanesBalanceExplorer = () => {
           <table style={styles.table}>
             <thead style={styles.tableHead}>
               <tr style={styles.tableRow}>
+                <th style={styles.tableHeaderCell}>Image</th>
+                <th style={styles.tableHeaderCell}>AlkaneId</th>
                 <th style={styles.tableHeaderCell}>Token Name</th>
                 <th style={styles.tableHeaderCell}>Symbol</th>
                 <th style={styles.tableHeaderCell}>Balance</th>
@@ -441,6 +524,42 @@ const AlkanesBalanceExplorer = () => {
                   ...styles.tableRow,
                   backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#F5F5F5'
                 }}>
+                  <td style={styles.tableCell}>
+                    <div style={styles.tokenImageContainer}>
+                      {token.tokenId && tokenImages[token.tokenId.tx] ? (
+                        <img
+                          src={tokenImages[token.tokenId.tx]}
+                          alt={`${token.name} icon`}
+                          style={styles.tokenImage}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" fill="%23f5f5f5"/><text x="50%" y="50%" font-family="Arial" font-size="14" fill="%23666" text-anchor="middle" dominant-baseline="middle">?</text></svg>';
+                          }}
+                        />
+                      ) : (
+                        <div style={styles.tokenImagePlaceholder}>
+                          {imageLoading[token.tokenId?.tx] ? '⌛' : '?'}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td style={styles.tableCell}>
+                    <div style={{ position: 'relative' }}>
+                      <span title={token.tokenId ? `Block: ${token.tokenId.block}, TX: ${token.tokenId.tx}` : 'No ID available'}>
+                        {formatAlkaneId(token.tokenId)}
+                      </span>
+                      {token.tokenId && (
+                        <button
+                          style={{...styles.copyButton, marginLeft: '4px'}}
+                          onClick={() => copyToClipboard(JSON.stringify(token.tokenId))}
+                          title="Copy full AlkaneId"
+                          type="button"
+                        >
+                          📋
+                        </button>
+                      )}
+                    </div>
+                  </td>
                   <td style={styles.tableCell}>{token.name || 'Unknown'}</td>
                   <td style={styles.tableCell}>{token.symbol || '-'}</td>
                   <td style={styles.tableCell}>
