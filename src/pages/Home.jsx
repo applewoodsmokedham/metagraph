@@ -157,6 +157,13 @@ const Home = () => {
                 Explore and debug transaction execution with detailed trace output
               </p>
             </div>
+            
+            <div style={responsiveStyles.methodItem}>
+              <Link to="/api-methods/simulate" style={responsiveStyles.link}>/api-methods/simulate</Link>
+              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
+                Simulate Alkanes operations to preview outcomes without broadcasting to the network
+              </p>
+            </div>
           </div>
         </div>
         

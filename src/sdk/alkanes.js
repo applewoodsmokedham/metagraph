@@ -229,6 +229,85 @@ const hexToDataUri = (hexString) => {
 };
 
 /**
+ * Gets a list of all available Alkanes tokens with pagination
+ * @param {number} limit - Maximum number of tokens to retrieve (max 1000)
+ * @param {number} [offset=0] - Starting index for pagination
+ * @param {string} [endpoint='regtest'] - API endpoint to use ('regtest', 'mainnet', 'oylnet')
+ * @returns {Promise<Object>} - Retrieved Alkanes tokens
+ */
+export const getAllAlkanes = async (limit, offset = 0, endpoint = 'regtest') => {
+  try {
+    // Input validation
+    if (!limit || typeof limit !== 'number' || limit <= 0) {
+      throw new Error('Invalid limit parameter: must be a positive number');
+    }
+
+    if (limit > 1000) {
+      throw new Error('Limit exceeds maximum allowed value (1000)');
+    }
+
+    // Get the provider
+    const provider = getProvider(endpoint);
+    console.log(`Getting ${limit} Alkanes tokens starting from offset ${offset} with ${endpoint} endpoint`);
+    
+    // Ensure provider.alkanes exists and has the getAlkanes method
+    if (!provider.alkanes || typeof provider.alkanes.getAlkanes !== 'function') {
+      throw new Error('Alkanes getAlkanes method not available');
+    }
+    
+    // Call the getAlkanes method
+    const result = await provider.alkanes.getAlkanes({
+      limit,
+      offset
+    });
+    
+    // Transform tokens to a consistent format if needed
+    const transformedTokens = result.map(token => ({
+      // Core token details
+      id: token.id || { block: '', tx: '' },
+      name: token.name || 'Unknown',
+      symbol: token.symbol || '-',
+      
+      // Supply information
+      totalSupply: token.totalSupply || 0,
+      cap: token.cap || 0,
+      minted: token.minted || 0,
+      mintAmount: token.mintAmount || 0,
+      
+      // Calculated fields
+      mintActive: token.mintActive || false,
+      percentageMinted: token.percentageMinted || 0,
+      
+      // For consistent API response structure
+      amount: 0 // Default to 0 as this isn't an address-specific balance
+    }));
+    
+    // Return in a consistent format with other API functions
+    return {
+      status: "success",
+      message: "Alkanes tokens retrieved",
+      pagination: {
+        limit,
+        offset,
+        total: transformedTokens.length
+      },
+      tokens: transformedTokens
+    };
+  } catch (error) {
+    console.error('Error getting Alkanes tokens:', error);
+    return {
+      status: "error",
+      message: error.message || "Unknown error",
+      pagination: {
+        limit,
+        offset
+      },
+      tokens: []
+    };
+  }
+};
+
+/**
  * Gets the image for an Alkanes token
  * @param {Object} tokenId - The token ID object with block and tx properties
  * @param {string} endpoint - API endpoint to use ('regtest', 'mainnet', 'oylnet')
