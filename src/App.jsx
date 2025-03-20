@@ -42,7 +42,7 @@ class ErrorBoundary extends React.Component {
  * Follows industrial aesthetic design guidelines
  */
 function App() {
-  const [network, setNetwork] = useState('mainnet');
+  const [network, setNetwork] = useState('oylnet');
   const [isClient, setIsClient] = useState(false);
   const navigate = useNavigate();
 
