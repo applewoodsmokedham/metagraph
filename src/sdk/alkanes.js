@@ -167,9 +167,14 @@ const transformAlkanesResponse = (response) => {
           // Extract the rune and balance information
           const { rune, balance } = runeData;
           
+          // Skip tokens with invalid names (no name or spacedName)
+          if (!rune.name && !rune.spacedName) {
+            return;
+          }
+          
           // Create a token object with the required properties
           const token = {
-            name: rune.name || rune.spacedName || 'Unknown',
+            name: rune.name || rune.spacedName,
             symbol: rune.symbol || '-',
             amount: parseFloat(balance) || 0,
             tokenId: rune.id || null // Add the tokenId for image fetching
@@ -261,26 +266,28 @@ export const getAllAlkanes = async (limit, offset = 0, endpoint = 'regtest') => 
       offset
     });
     
-    // Transform tokens to a consistent format if needed
-    const transformedTokens = result.map(token => ({
-      // Core token details
-      id: token.id || { block: '', tx: '' },
-      name: token.name || 'Unknown',
-      symbol: token.symbol || '-',
-      
-      // Supply information
-      totalSupply: token.totalSupply || 0,
-      cap: token.cap || 0,
-      minted: token.minted || 0,
-      mintAmount: token.mintAmount || 0,
-      
-      // Calculated fields
-      mintActive: token.mintActive || false,
-      percentageMinted: token.percentageMinted || 0,
-      
-      // For consistent API response structure
-      amount: 0 // Default to 0 as this isn't an address-specific balance
-    }));
+    // Transform tokens to a consistent format and filter out tokens with invalid names
+    const transformedTokens = result
+      .filter(token => token.name) // Skip tokens with no name
+      .map(token => ({
+        // Core token details
+        id: token.id || { block: '', tx: '' },
+        name: token.name,
+        symbol: token.symbol || '-',
+        
+        // Supply information
+        totalSupply: token.totalSupply || 0,
+        cap: token.cap || 0,
+        minted: token.minted || 0,
+        mintAmount: token.mintAmount || 0,
+        
+        // Calculated fields
+        mintActive: token.mintActive || false,
+        percentageMinted: token.percentageMinted || 0,
+        
+        // For consistent API response structure
+        amount: 0 // Default to 0 as this isn't an address-specific balance
+      }));
     
     // Return in a consistent format with other API functions
     return {

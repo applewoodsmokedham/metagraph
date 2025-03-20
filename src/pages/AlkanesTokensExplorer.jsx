@@ -18,7 +18,7 @@ const AlkanesTokensExplorer = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [totalTokens, setTotalTokens] = useState(0);
-  const tokensPerPage = 10;
+  const tokensPerPage = 30;
   
   // Fetch tokens on component mount and when page or endpoint changes
   useEffect(() => {
@@ -212,7 +212,7 @@ const AlkanesTokensExplorer = () => {
                         {token.id.block}:{token.id.tx}
                       </span>
                     </td>
-                    <td style={styles.tableCell}>{token.name || 'Unnamed'}</td>
+                    <td style={styles.tableCell}>{token.name}</td>
                     <td style={styles.tableCell}>{token.symbol || '-'}</td>
                     <td style={styles.tableCell}>{token.totalSupply || '0'}</td>
                     <td style={styles.tableCell}>

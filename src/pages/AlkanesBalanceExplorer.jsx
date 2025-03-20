@@ -560,7 +560,7 @@ const AlkanesBalanceExplorer = () => {
                       )}
                     </div>
                   </td>
-                  <td style={styles.tableCell}>{token.name || 'Unknown'}</td>
+                  <td style={styles.tableCell}>{token.name}</td>
                   <td style={styles.tableCell}>{token.symbol || '-'}</td>
                   <td style={styles.tableCell}>
                     {token.amount ? token.amount.toLocaleString() : '0'}
