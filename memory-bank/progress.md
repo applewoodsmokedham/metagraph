@@ -24,13 +24,17 @@
 - ✅ Enhanced APIForm component with examples and notes sections
 - ✅ Reusable template components for API methods
 - ✅ WalletConnector component for Bitcoin wallet integration
+- ✅ AlkanesBalanceExplorer component with token display and images
+- ✅ Token image display with loading states and placeholders
+- ✅ Token ID formatting and copy functionality
 
 ### 4. API Methods
 - ✅ traceTransaction - Trace a transaction's smart contract execution
-- ✅ simulateTransaction - Simulate transaction execution
+- ✅ performAlkanesSimulation - Simulate Alkanes operations including image retrieval
 - ✅ traceBlock - Trace all transactions in a block
-- ✅ getAlkanesByAddress - Get Alkanes owned by a specific address
+- ✅ getAlkanesByAddress - Get Alkanes owned by a specific address with token details
 - ✅ getAlkanesByHeight - Get Alkanes at a specific block height
+- ✅ getAlkanesTokenImage - Retrieve images for Alkanes tokens using simulation
 
 ### 5. Environment Configuration
 - ✅ Environment variables setup
@@ -155,35 +159,45 @@ The project is in active development, with significant progress made on implemen
 
 ## Recent Achievements
 
-1. **Integrated LaserEyes Wallet Functionality**: Successfully integrated the LaserEyes package to provide Bitcoin wallet connectivity with support for multiple wallet providers.
+1. **Implemented AlkanesBalanceExplorer**: Successfully created a comprehensive page for exploring Alkanes token balances by address, complete with visual representation of tokens.
 
-2. **Implemented Multi-Wallet Selection UI**: Created a wallet selection interface that displays all available wallet options and allows users to choose which wallet to connect.
+2. **Added Token Image Retrieval**: Implemented functionality to retrieve token images using the simulate method with input value 1000, demonstrating advanced use of the Oyl SDK.
 
-3. **Created Network Mapping Utility**: Developed a utility to map between METHANE network environments and LaserEyes network types to ensure consistent network configuration.
+3. **Enhanced Response Transformation**: Improved the transformAlkanesResponse function to include tokenId information needed for image retrieval and display.
 
-4. **Implemented Client-Side Only Rendering**: Ensured that wallet functionality is only rendered on the client-side to prevent server-side rendering issues.
+4. **Created Hex to Data URI Conversion**: Implemented a utility function to convert hex string image data to displayable data URIs for direct use in the browser.
 
-5. **Created Example Wallet Component**: Developed an example component that demonstrates how to use LaserEyes functionality in other components.
+5. **Implemented Token ID Display**: Added formatted display of Alkanes token IDs with copy functionality for better user experience.
 
-6. **Implemented Trace Method Page**: Successfully implemented a dedicated page for the "trace" API method with proper examples, documentation, and functionality.
+6. **Integrated LaserEyes Wallet Functionality**: Successfully integrated the LaserEyes package to provide Bitcoin wallet connectivity with support for multiple wallet providers.
 
-7. **Improved Application Architecture**: Enhanced the application architecture to better use React Router and create a more consistent user experience.
+7. **Implemented Multi-Wallet Selection UI**: Created a wallet selection interface that displays all available wallet options and allows users to choose which wallet to connect.
 
-8. **Fixed Home Page Issues**: Resolved issues with the home page by merging the design from App.jsx with the functionality from Home.jsx.
+8. **Created Network Mapping Utility**: Developed a utility to map between METHANE network environments and LaserEyes network types to ensure consistent network configuration.
 
-9. **Enhanced Component Reusability**: Improved the APIForm component to support examples and notes sections, making it more reusable across different API methods.
+9. **Implemented Client-Side Only Rendering**: Ensured that wallet functionality is only rendered on the client-side to prevent server-side rendering issues.
 
-10. **Updated SDK Implementation**: Updated the traceTransaction function in the SDK to correctly use the AlkanesRpc trace method.
+10. **Created Example Wallet Component**: Developed an example component that demonstrates how to use LaserEyes functionality in other components.
 
-11. **Removed Mock Data**: Successfully removed all mock data from the application and implemented real data fetching through the Oyl SDK.
+11. **Implemented Trace Method Page**: Successfully implemented a dedicated page for the "trace" API method with proper examples, documentation, and functionality.
 
-12. **Browser Compatibility**: Implemented a comprehensive Node.js compatibility layer that allows the Oyl SDK to run in a browser environment.
+12. **Improved Application Architecture**: Enhanced the application architecture to better use React Router and create a more consistent user experience.
 
-13. **Error Handling**: Improved error handling throughout the application, with better error messages and recovery mechanisms.
+13. **Fixed Home Page Issues**: Resolved issues with the home page by merging the design from App.jsx with the functionality from Home.jsx.
 
-14. **Provider Implementation**: Enhanced the provider implementation to handle different network environments and provide a consistent interface.
+14. **Enhanced Component Reusability**: Improved the APIForm component to support examples and notes sections, making it more reusable across different API methods.
 
-15. **Alkanes API Methods**: Implemented all core Alkanes API methods with proper error handling and response formatting.
+15. **Updated SDK Implementation**: Updated the traceTransaction function in the SDK to correctly use the AlkanesRpc trace method.
+
+16. **Removed Mock Data**: Successfully removed all mock data from the application and implemented real data fetching through the Oyl SDK.
+
+17. **Browser Compatibility**: Implemented a comprehensive Node.js compatibility layer that allows the Oyl SDK to run in a browser environment.
+
+18. **Error Handling**: Improved error handling throughout the application, with better error messages and recovery mechanisms.
+
+19. **Provider Implementation**: Enhanced the provider implementation to handle different network environments and provide a consistent interface.
+
+20. **Alkanes API Methods**: Implemented all core Alkanes API methods with proper error handling and response formatting.
 
 ## Next Priorities
 

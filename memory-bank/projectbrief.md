@@ -83,6 +83,9 @@
 #### Pages
 - `Home.jsx` - Application homepage with method directory and environment info
 - `APIMethodPage.jsx` - Dynamic page for API method documentation and testing
+- `AlkanesBalanceExplorer.jsx` - Interactive page for exploring Alkanes token balances by address
+- `AlkanesTemplatesExplorer.jsx` - Page for exploring Alkanes templates
+- `AlkanesTokensExplorer.jsx` - Page for exploring Alkanes tokens
 - `NotFound.jsx` - 404 error page
 
 #### SDK Integration (`src/sdk/`)
@@ -94,10 +97,11 @@
 ### Key API Methods
 1. **Alkanes Metaprotocol Methods**
    - `traceTransaction` - Traces a transaction's smart contract execution
-   - `simulateTransaction` - Simulates transaction execution
+   - `performAlkanesSimulation` - Simulates Alkanes operations, including retrieving token images
    - `traceBlock` - Traces all transactions in a block
-   - `getAlkanesByAddress` - Gets Alkanes owned by a specific address
+   - `getAlkanesByAddress` - Gets Alkanes owned by a specific address with token details
    - `getAlkanesByHeight` - Gets Alkanes at a specific block height
+   - `getAlkanesTokenImage` - Retrieves images for Alkanes tokens using simulation
 
 2. **Bitcoin RPC Methods**
    - Access to standard Bitcoin JSON-RPC methods via Sandshrew API
@@ -151,5 +155,8 @@
 - Improved error handling throughout the application
 - Added validation to ensure required methods exist before calling them
 - Implemented proxy pattern for handling missing functionality
+- Implemented AlkanesBalanceExplorer for viewing token balances by address
+- Added token image retrieval functionality using the simulate method
+- Enhanced the transformAlkanesResponse function to include tokenId for image fetching
 
 This comprehensive project brief provides the technical context needed for effective debugging, modifications, and extensions to the METHANE project.

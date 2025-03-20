@@ -180,7 +180,13 @@ Bitcoin JavaScript library that provides:
 
 Custom abstraction layer that wraps the Oyl SDK:
 - `provider.js` - Provider implementation
-- `alkanes.js` - Alkanes API methods (updated with correct trace implementation)
+- `alkanes.js` - Alkanes API methods including:
+  - `traceTransaction` - Trace transaction execution
+  - `performAlkanesSimulation` - Simulate Alkanes operations
+  - `getAlkanesByAddress` - Get tokens by address with transformed response
+  - `getAlkanesTokenImage` - Retrieve token images using simulation
+  - `transformAlkanesResponse` - Transform complex API responses to usable format
+  - `hexToDataUri` - Convert hex string image data to data URIs
 - `node-shims.js` - Browser compatibility shims
 - `index.js` - SDK exports
 
@@ -209,6 +215,9 @@ Custom components and utilities for wallet integration:
 - `src/pages/` - Page components
   - `Home.jsx` - Landing page with method directory
   - `APIMethodPage.jsx` - Template page for API methods
+  - `AlkanesBalanceExplorer.jsx` - Interactive page for exploring Alkanes token balances with images
+  - `AlkanesTemplatesExplorer.jsx` - Page for exploring Alkanes templates
+  - `AlkanesTokensExplorer.jsx` - Page for exploring Alkanes tokens
   - `NotFound.jsx` - 404 error page
 - `src/routes.jsx` - Routing configuration with React Router
 - `src/App.jsx` - Root layout component with React Router integration and LaserEyesProvider

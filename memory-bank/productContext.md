@@ -84,6 +84,12 @@ METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactiv
 
 11. As a Bitcoin developer, I want to interact with multiple wallet providers so that I can ensure my application works with different wallets.
 
+12. As a token holder, I want to view my Alkanes token balances so that I can track my assets.
+
+13. As a developer, I want to see visual representations of Alkanes tokens so that I can better understand their properties.
+
+14. As a token explorer, I want to see token IDs in a readable format so that I can reference them in other applications.
+
 ## Key Features
 
 1. **Endpoint Toggle**: Switch between Production and Local environments with real-time health status indication.
@@ -115,6 +121,12 @@ METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactiv
 14. **Wallet Selection UI**: User interface for selecting and connecting to different wallet providers.
 
 15. **Network Synchronization**: Synchronization between METHANE network environment and wallet network.
+
+16. **Alkanes Balance Explorer**: Interactive interface for exploring Alkanes token balances by address.
+
+17. **Token Image Display**: Visual representation of Alkanes tokens with images retrieved via simulation.
+
+18. **Token ID Display**: Formatted display of Alkanes token IDs with copy functionality.
 
 ## Implementation Approach
 

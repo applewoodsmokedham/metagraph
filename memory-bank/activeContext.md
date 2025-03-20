@@ -6,7 +6,23 @@ The current focus is on implementing new API method pages, improving the applica
 
 ## Recent Changes
 
-### 1. LaserEyes Wallet Integration
+### 1. AlkanesBalanceExplorer Implementation
+
+We've implemented a comprehensive Alkanes Balance Explorer that allows users to view their token balances with visual representation:
+
+- Created `AlkanesBalanceExplorer.jsx` page component for exploring Alkanes token balances by address
+- Enhanced the `getAlkanesByAddress` function to transform complex API responses into a user-friendly format
+- Implemented `getAlkanesTokenImage` function to retrieve token images using the simulate method
+- Added `hexToDataUri` utility to convert hex string image data to displayable data URIs
+- Created a responsive table layout with token images, names, symbols, IDs, and balances
+- Added copy functionality for token IDs and addresses
+- Implemented wallet integration to allow users to view their own token balances
+- Added loading states and error handling for token image retrieval
+- Ensured proper formatting of token IDs for better readability
+
+This implementation demonstrates the power of the Oyl SDK's simulation capabilities for retrieving token metadata beyond basic balance information.
+
+### 2. LaserEyes Wallet Integration
 
 We've integrated the LaserEyes package to provide Bitcoin wallet functionality:
 
@@ -83,7 +99,21 @@ We've implemented a more robust error handling strategy:
 
 ## Active Decisions and Considerations
 
-### 1. Wallet Integration Approach
+### 1. Token Image Retrieval Approach
+
+We've adopted a specific approach for retrieving and displaying token images:
+
+- Using the simulate method with input value 1000 to retrieve token images
+- Converting hex string responses to data URIs for direct display in the browser
+- Implementing a caching mechanism to avoid redundant image requests
+- Adding placeholder images for tokens without images
+- Implementing loading states to provide feedback during image retrieval
+- Using error handling to gracefully handle failed image retrievals
+- Optimizing image display with proper sizing and formatting
+
+This approach leverages the Oyl SDK's simulation capabilities to retrieve rich token metadata beyond what's available in basic balance queries.
+
+### 2. Wallet Integration Approach
 
 We've adopted a specific approach for wallet integration:
 

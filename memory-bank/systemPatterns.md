@@ -170,6 +170,10 @@ App (Root Layout)
 │   │   │   │   └── TraceBlockForm
 │   │   │   │       └── APIForm
 │   │   │   └── StatusIndicator
+│   │   ├── AlkanesBalanceExplorer
+│   │   │   └── Token display with images
+│   │   ├── AlkanesTemplatesExplorer
+│   │   ├── AlkanesTokensExplorer
 │   │   └── NotFound
 ```
 
@@ -182,10 +186,13 @@ index.js
 │   └── Provider configuration
 └── alkanes.js
     ├── traceTransaction
-    ├── simulateTransaction
+    ├── performAlkanesSimulation
     ├── traceBlock
     ├── getAlkanesByAddress
-    └── getAlkanesByHeight
+    ├── getAlkanesByHeight
+    ├── getAlkanesTokenImage
+    ├── transformAlkanesResponse
+    └── hexToDataUri
 ```
 
 ### Wallet Integration Relationships
@@ -213,6 +220,19 @@ App.jsx
 8. Oyl SDK interacts with Bitcoin network
 9. Response flows back through the layers
 10. UI updates with results or error messages
+
+### Token Balance and Image Flow
+
+1. User navigates to AlkanesBalanceExplorer page
+2. User enters a Bitcoin address or connects wallet
+3. Form submission triggers getAlkanesByAddress call
+4. SDK transforms response to include tokenId information
+5. Component displays token list with basic information
+6. For each token with a tokenId, component calls getAlkanesTokenImage
+7. getAlkanesTokenImage uses performAlkanesSimulation with input value 1000
+8. Hex string response is converted to data URI using hexToDataUri
+9. Images are stored in component state and displayed in the UI
+10. User can view token details including name, symbol, ID, and image
 
 ### Wallet Data Flow
 
