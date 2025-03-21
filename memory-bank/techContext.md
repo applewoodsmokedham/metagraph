@@ -1,4 +1,4 @@
-# METHANE Technical Context
+# METAGRAPH Technical Context
 
 ## Technologies Used
 
@@ -194,7 +194,7 @@ Custom abstraction layer that wraps the Oyl SDK:
 
 Custom components and utilities for wallet integration:
 - `WalletConnector.jsx` - Component for connecting to wallets
-- `networkMapping.js` - Utility for mapping between METHANE and LaserEyes network types
+- `networkMapping.js` - Utility for mapping between METAGRAPH and LaserEyes network types
 - Example components demonstrating wallet functionality usage
 
 #### Component Structure
@@ -307,4 +307,4 @@ GitHub Actions workflow for:
 - Wallet operations require user confirmation through wallet UI
 - Client-side only rendering for wallet functionality
 
-This technical context document provides a comprehensive overview of the technologies, dependencies, constraints, and integration points for the METHANE application.
+This technical context document provides a comprehensive overview of the technologies, dependencies, constraints, and integration points for the METAGRAPH application.

@@ -18,10 +18,10 @@ const Header = ({ currentEndpoint = 'local', onEndpointChange }) => {
       <div className="header-title">
         <h1>
           <Link to="/" className="logo">
-            METHANE
+            METAGRAPH
           </Link>
         </h1>
-        <span className="subtitle">Method Exploration, Testing, and Analysis eNvironment</span>
+        <span className="subtitle">Method Exploration, Tool And Graph Renderer for Alkanes Protocol Handling</span>
       </div>
 
       <div className="header-controls">

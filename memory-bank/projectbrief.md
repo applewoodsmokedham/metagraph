@@ -1,8 +1,8 @@
-# METHANE Project Brief
+# METAGRAPH Project Brief
 
 ## Project Overview
 
-**METHANE** (Method Exploration, Testing, and Analysis eNvironment) is an interactive, developer-friendly playground and documentation hub designed specifically to facilitate exploration, testing, and integration of Alkanes metaprotocol and Sandshrew API methods on the Bitcoin blockchain. It leverages the Oyl SDK for business logic and interaction with Bitcoin.
+**METAGRAPH** (Method Exploration, Tool And Graph Renderer for Alkanes Protocol Handling) is an interactive, developer-friendly playground and documentation hub designed specifically to facilitate exploration, testing, and integration of Alkanes metaprotocol and Sandshrew API methods on the Bitcoin blockchain. It leverages the Oyl SDK for business logic and interaction with Bitcoin.
 
 ### Key Goals
 - Provide an intuitive interface to explore and test Sandshrew and Alkanes RPC API methods
@@ -159,4 +159,4 @@
 - Added token image retrieval functionality using the simulate method
 - Enhanced the transformAlkanesResponse function to include tokenId for image fetching
 
-This comprehensive project brief provides the technical context needed for effective debugging, modifications, and extensions to the METHANE project.
+This comprehensive project brief provides the technical context needed for effective debugging, modifications, and extensions to the METAGRAPH project.

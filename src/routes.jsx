@@ -15,7 +15,7 @@ import TraceForm from './components/methods/TraceForm';
 /**
  * Application Routes
  *
- * Defines all routes for the METHANE application
+ * Defines all routes for the METAGRAPH application
  * Including API method routes and 404 handling
  */
 const router = createBrowserRouter([

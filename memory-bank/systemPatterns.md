@@ -1,8 +1,8 @@
-# METHANE System Patterns
+# METAGRAPH System Patterns
 
 ## System Architecture
 
-METHANE is built as a single-page application (SPA) using React, with a focus on direct interaction with Bitcoin blockchain APIs through the Oyl SDK and wallet functionality through the LaserEyes package. The architecture is designed to be modular, maintainable, and extensible.
+METAGRAPH is built as a single-page application (SPA) using React, with a focus on direct interaction with Bitcoin blockchain APIs through the Oyl SDK and wallet functionality through the LaserEyes package. The architecture is designed to be modular, maintainable, and extensible.
 
 ### High-Level Architecture
 
@@ -42,7 +42,7 @@ METHANE is built as a single-page application (SPA) using React, with a focus on
 
 ### 1. Direct API Integration
 
-METHANE uses direct API calls to Bitcoin nodes rather than implementing a traditional backend. This approach:
+METAGRAPH uses direct API calls to Bitcoin nodes rather than implementing a traditional backend. This approach:
 - Reduces complexity by eliminating an additional server layer
 - Provides a more authentic experience for developers
 - Allows for real-time interaction with the blockchain
@@ -56,7 +56,7 @@ The application implements a custom SDK abstraction layer (`src/sdk/`) that wrap
 
 ### 3. Node.js Compatibility in Browser
 
-The Oyl SDK was designed for Node.js environments but needs to run in the browser. To address this, METHANE:
+The Oyl SDK was designed for Node.js environments but needs to run in the browser. To address this, METAGRAPH:
 - Implements custom Node.js shims (`src/sdk/node-shims.js`)
 - Uses Vite's node polyfills plugin
 - Creates proxies for Node-specific functionality
@@ -70,7 +70,7 @@ The application uses a provider pattern for network interaction:
 
 ### 5. Error Handling Strategy
 
-METHANE implements a comprehensive error handling strategy:
+METAGRAPH implements a comprehensive error handling strategy:
 - All API calls are wrapped in try/catch blocks
 - Errors are logged to console for debugging
 - User-friendly error messages are displayed in the UI
@@ -89,7 +89,7 @@ The application uses React Router for client-side routing:
 The application integrates Bitcoin wallet functionality using the LaserEyes package:
 - LaserEyesProvider wraps the entire application for global wallet access
 - Client-side only rendering to prevent server-side rendering issues
-- Network mapping to align LaserEyes network types with METHANE network environments
+- Network mapping to align LaserEyes network types with METAGRAPH network environments
 - Multi-wallet support with a wallet selection UI
 
 ## Design Patterns in Use
@@ -247,7 +247,7 @@ App.jsx
 
 ## State Management
 
-METHANE uses React's built-in state management:
+METAGRAPH uses React's built-in state management:
 - Component state for local UI state
 - Context API for global state (network environment, wallet state)
 - Props for passing data between components
@@ -280,4 +280,4 @@ The application uses a nested routing architecture:
 5. SDK layer configures provider for selected network
 6. API calls are made to the selected network
 
-This system patterns document provides a comprehensive overview of the architecture, design patterns, and component relationships in the METHANE application.
+This system patterns document provides a comprehensive overview of the architecture, design patterns, and component relationships in the METAGRAPH application.

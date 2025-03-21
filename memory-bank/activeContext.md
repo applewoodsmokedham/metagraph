@@ -1,8 +1,8 @@
-# METHANE Active Context
+# METAGRAPH Active Context
 
 ## Current Work Focus
 
-The current focus is on implementing new API method pages, improving the application's architecture, and integrating wallet functionality through the LaserEyes package. We're working on properly integrating the Oyl SDK into the METHANE application, implementing new API methods like the trace method, enhancing the overall user experience through better routing and UI design, and adding Bitcoin wallet connectivity.
+The current focus is on implementing new API method pages, improving the application's architecture, and integrating wallet functionality through the LaserEyes package. We're working on properly integrating the Oyl SDK into the METAGRAPH application, implementing new API methods like the trace method, enhancing the overall user experience through better routing and UI design, and adding Bitcoin wallet connectivity.
 
 ## Recent Changes
 
@@ -28,7 +28,7 @@ We've integrated the LaserEyes package to provide Bitcoin wallet functionality:
 
 - Modified `App.jsx` to wrap the application with `LaserEyesProvider` and ensure client-side only rendering
 - Created a `WalletConnector.jsx` component that displays a list of supported wallets
-- Implemented a network mapping utility to align LaserEyes network types with METHANE network environments
+- Implemented a network mapping utility to align LaserEyes network types with METAGRAPH network environments
 - Created an example component demonstrating how to use LaserEyes functionality in other components
 - Ensured the wallet connection UI follows the design guidelines
 
@@ -121,7 +121,7 @@ We've adopted a specific approach for wallet integration:
 - Implementing a wallet selection UI that shows all available wallet options
 - Focusing on connection functionality first, with display of wallet information to be handled in specific components as needed
 - Ensuring the wallet provider is only rendered on the client-side to prevent server-side rendering issues
-- Using network mapping to align LaserEyes network types with METHANE network environments
+- Using network mapping to align LaserEyes network types with METAGRAPH network environments
 
 ### 2. Component Structure and Reusability
 
@@ -253,4 +253,4 @@ We're implementing several strategies to address performance concerns:
 
 9. **Client-Side Rendering**: Some components, like the LaserEyesProvider, need to be rendered only on the client-side to prevent server-side rendering issues. This requires careful handling of the rendering lifecycle.
 
-This active context document captures the current state of the METHANE project, focusing on the recent implementation work and the decisions and considerations that are guiding this work.
+This active context document captures the current state of the METAGRAPH project, focusing on the recent implementation work and the decisions and considerations that are guiding this work.

@@ -1,24 +1,24 @@
-# METHANE Product Context
+# METAGRAPH Product Context
 
 ## Project Purpose
 
-METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactive, developer-friendly playground and documentation hub designed specifically to facilitate exploration, testing, and integration of Alkanes metaprotocol and Sandshrew API methods on the Bitcoin blockchain. It serves as a critical tool for Bitcoin developers who need to work with smart contract functionality on Bitcoin. With the addition of wallet integration, it now also provides a complete environment for testing real transactions and interacting with the Bitcoin blockchain using actual wallets.
+METAGRAPH (Method Exploration, Tool And Graph Renderer for Alkanes Protocol Handling) is an interactive, developer-friendly playground and documentation hub designed specifically to facilitate exploration, testing, and integration of Alkanes metaprotocol and Sandshrew API methods on the Bitcoin blockchain. It serves as a critical tool for Bitcoin developers who need to work with smart contract functionality on Bitcoin. With the addition of wallet integration, it now also provides a complete environment for testing real transactions and interacting with the Bitcoin blockchain using actual wallets.
 
 ## Problems Solved
 
-1. **Complexity of Bitcoin Smart Contracts**: Bitcoin smart contracts through Alkanes are powerful but complex to develop and test. METHANE simplifies this process by providing an intuitive interface.
+1. **Complexity of Bitcoin Smart Contracts**: Bitcoin smart contracts through Alkanes are powerful but complex to develop and test. METAGRAPH simplifies this process by providing an intuitive interface.
 
-2. **Lack of Interactive Documentation**: Traditional documentation for blockchain APIs is often static and doesn't allow for real-time testing. METHANE provides interactive examples that connect directly to the Bitcoin mainnet.
+2. **Lack of Interactive Documentation**: Traditional documentation for blockchain APIs is often static and doesn't allow for real-time testing. METAGRAPH provides interactive examples that connect directly to the Bitcoin mainnet.
 
-3. **Environment Switching Challenges**: Developers need to test in both local and production environments. METHANE allows seamless toggling between these environments.
+3. **Environment Switching Challenges**: Developers need to test in both local and production environments. METAGRAPH allows seamless toggling between these environments.
 
-4. **Integration Complexity**: Integrating Alkanes smart contracts into applications is complex. METHANE demonstrates proper integration patterns through its own implementation.
+4. **Integration Complexity**: Integrating Alkanes smart contracts into applications is complex. METAGRAPH demonstrates proper integration patterns through its own implementation.
 
-5. **Learning Curve**: The learning curve for Bitcoin protocol development is steep. METHANE provides a structured environment to explore and understand the capabilities of Alkanes and Sandshrew APIs.
+5. **Learning Curve**: The learning curve for Bitcoin protocol development is steep. METAGRAPH provides a structured environment to explore and understand the capabilities of Alkanes and Sandshrew APIs.
 
-6. **Debugging Difficulty**: Debugging smart contract execution on Bitcoin is challenging. METHANE's trace method visualization helps developers understand exactly how their contracts execute.
+6. **Debugging Difficulty**: Debugging smart contract execution on Bitcoin is challenging. METAGRAPH's trace method visualization helps developers understand exactly how their contracts execute.
 
-7. **Wallet Integration Complexity**: Integrating Bitcoin wallets into applications is complex and requires understanding of multiple wallet providers. METHANE demonstrates proper wallet integration patterns through its implementation of the LaserEyes package.
+7. **Wallet Integration Complexity**: Integrating Bitcoin wallets into applications is complex and requires understanding of multiple wallet providers. METAGRAPH demonstrates proper wallet integration patterns through its implementation of the LaserEyes package.
 
 8. **Testing with Real Funds**: Developers need to test their applications with real Bitcoin transactions. METHANE's wallet integration allows developers to connect their wallets and test with real funds.
 
@@ -120,7 +120,7 @@ METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactiv
 
 14. **Wallet Selection UI**: User interface for selecting and connecting to different wallet providers.
 
-15. **Network Synchronization**: Synchronization between METHANE network environment and wallet network.
+15. **Network Synchronization**: Synchronization between METAGRAPH network environment and wallet network.
 
 16. **Alkanes Balance Explorer**: Interactive interface for exploring Alkanes token balances by address.
 
@@ -144,11 +144,11 @@ METHANE (Method Exploration, Testing, and Analysis eNvironment) is an interactiv
 
 7. **Client-Side Rendering**: Ensuring wallet functionality is only rendered on the client-side to prevent server-side rendering issues.
 
-8. **Network Mapping**: Using a network mapping utility to align METHANE network environments with LaserEyes network types.
+8. **Network Mapping**: Using a network mapping utility to align METAGRAPH network environments with LaserEyes network types.
 
 ## Value Proposition
 
-METHANE provides a complete environment for Bitcoin developers to:
+METAGRAPH provides a complete environment for Bitcoin developers to:
 
 1. **Explore and Learn**: Discover and understand Alkanes metaprotocol and Sandshrew API methods.
 
@@ -160,6 +160,6 @@ METHANE provides a complete environment for Bitcoin developers to:
 
 5. **Switch and Compare**: Toggle between different network environments to compare behavior.
 
-By combining API method exploration, smart contract testing, and wallet integration, METHANE offers a comprehensive toolkit for Bitcoin developers that addresses the full development lifecycle from learning and exploration to testing and deployment.
+By combining API method exploration, smart contract testing, and wallet integration, METAGRAPH offers a comprehensive toolkit for Bitcoin developers that addresses the full development lifecycle from learning and exploration to testing and deployment.
 
-This product context provides the foundation for understanding why METHANE exists, what problems it solves, and how it should work to meet user needs.
+This product context provides the foundation for understanding why METAGRAPH exists, what problems it solves, and how it should work to meet user needs.

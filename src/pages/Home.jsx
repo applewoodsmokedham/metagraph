@@ -4,7 +4,7 @@ import { Link, useOutletContext } from 'react-router-dom';
 /**
  * Home Page Component
  *
- * The main landing page for the METHANE application
+ * The main landing page for the METAGRAPH application
  * Displays categories of API methods with links to their specific pages
  * Follows industrial aesthetic design guidelines
  */
@@ -142,7 +142,7 @@ const Home = () => {
   
   return (
     <div style={responsiveStyles.container} className="container">
-      <h2 style={responsiveStyles.welcome}>Welcome to METHANE</h2>
+      <h2 style={responsiveStyles.welcome}>Welcome to METAGRAPH</h2>
       <p style={responsiveStyles.description}>An interactive playground for Alkanes metaprotocol and Sandshrew API methods.</p>
       
       <div style={responsiveStyles.contentColumns}>

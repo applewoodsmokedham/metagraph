@@ -1,12 +1,12 @@
 import { MAINNET, TESTNET } from '@omnisat/lasereyes';
 
 /**
- * Maps METHANE network names to LaserEyes network types
- * @param {string} methaneNetwork - The METHANE network name ('mainnet', 'regtest', 'oylnet')
+ * Maps METAGRAPH network names to LaserEyes network types
+ * @param {string} metagraphNetwork - The METAGRAPH network name ('mainnet', 'regtest', 'oylnet')
  * @returns {string} - The corresponding LaserEyes network type
  */
-export const mapNetworkToLaserEyes = (methaneNetwork) => {
-  switch (methaneNetwork) {
+export const mapNetworkToLaserEyes = (metagraphNetwork) => {
+  switch (metagraphNetwork) {
     case 'mainnet':
       return MAINNET;
     case 'regtest':

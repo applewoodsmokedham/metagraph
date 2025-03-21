@@ -12,13 +12,13 @@ const Footer = () => {
     <footer className="main-footer">
       <div className="footer-content">
         <div className="copyright">
-          © {currentYear} Alkanes Explorer | METHANE (Method Exploration, Testing, and Analysis eNvironment)
+          © {currentYear} Alkanes Explorer | METAGRAPH (Method Exploration, Tool And Graph Renderer for Alkanes Protocol Handling)
         </div>
         <div className="version">
           Version 0.1.0
         </div>
         <div className="links">
-          <a href="https://github.com/drillMethane/METHANE" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/JinMaa/METAGRAPH" target="_blank" rel="noopener noreferrer">
             GitHub
           </a>
           <span className="separator">|</span>

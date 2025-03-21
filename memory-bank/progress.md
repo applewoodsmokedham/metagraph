@@ -1,4 +1,4 @@
-# METHANE Project Progress
+# METAGRAPH Project Progress
 
 ## What Works
 
@@ -51,7 +51,7 @@
 - ✅ LaserEyes package integration for Bitcoin wallet connectivity
 - ✅ Client-side only rendering for wallet provider
 - ✅ Multi-wallet support (Unisat, Leather, Magic Eden, etc.)
-- ✅ Network mapping between METHANE and LaserEyes network types
+- ✅ Network mapping between METAGRAPH and LaserEyes network types
 - ✅ Example component for wallet functionality usage
 
 ## What's Left to Build
@@ -155,7 +155,7 @@ The project is in active development, with significant progress made on implemen
 - Not all wallets may be available in all browsers
 - Some wallets may have specific requirements or limitations
 - Error handling for wallet-specific issues needs improvement
-- Network alignment between METHANE and wallet providers needs testing
+- Network alignment between METAGRAPH and wallet providers needs testing
 
 ## Recent Achievements
 
@@ -173,7 +173,7 @@ The project is in active development, with significant progress made on implemen
 
 7. **Implemented Multi-Wallet Selection UI**: Created a wallet selection interface that displays all available wallet options and allows users to choose which wallet to connect.
 
-8. **Created Network Mapping Utility**: Developed a utility to map between METHANE network environments and LaserEyes network types to ensure consistent network configuration.
+8. **Created Network Mapping Utility**: Developed a utility to map between METAGRAPH network environments and LaserEyes network types to ensure consistent network configuration.
 
 9. **Implemented Client-Side Only Rendering**: Ensured that wallet functionality is only rendered on the client-side to prevent server-side rendering issues.
 
@@ -215,4 +215,4 @@ The project is in active development, with significant progress made on implemen
 
 7. **Optimize Performance**: Implement caching and pagination to improve performance with large datasets.
 
-This progress document provides a comprehensive overview of the current state of the METHANE project, what has been accomplished, what remains to be done, and the known issues that need to be addressed.
+This progress document provides a comprehensive overview of the current state of the METAGRAPH project, what has been accomplished, what remains to be done, and the known issues that need to be addressed.

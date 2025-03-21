@@ -1,8 +1,8 @@
-# METHANE Product Requirements Document (PRD)
+# METAGRAPH Product Requirements Document (PRD)
 
 ## 1. Project Overview
 
-**METHANE** (Method Exploration, Testing, and Analysis eNvironment) is an interactive, developer-friendly playground and documentation hub designed specifically to facilitate exploration, testing, and integration of Alkanes metaprotocol and Sandshrew API methods on the Bitcoin blockchain. It leverages the Oyl SDK for business logic and interaction with Bitcoin.
+**METAGRAPH** (Method Exploration, Tool And Graph Renderer for Alkanes Protocol Handling) is an interactive, developer-friendly playground and documentation hub designed specifically to facilitate exploration, testing, and integration of Alkanes metaprotocol and Sandshrew API methods on the Bitcoin blockchain. It leverages the Oyl SDK for business logic and interaction with Bitcoin.
 
 ## 2. Project Goals
 
@@ -123,4 +123,4 @@
   - Status indicators
   - Method documentation structures
 
-This PRD serves as a comprehensive foundation for the implementation and deployment of the METHANE playground, ensuring consistency, quality, and maintainability throughout the development lifecycle.
+This PRD serves as a comprehensive foundation for the implementation and deployment of the METAGRAPH playground, ensuring consistency, quality, and maintainability throughout the development lifecycle.

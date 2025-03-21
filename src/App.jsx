@@ -42,7 +42,7 @@ class ErrorBoundary extends React.Component {
  * Follows industrial aesthetic design guidelines
  */
 function App() {
-  const [network, setNetwork] = useState('oylnet');
+  const [network, setNetwork] = useState('mainnet');
   const [isClient, setIsClient] = useState(false);
   const navigate = useNavigate();
 
@@ -107,8 +107,8 @@ function App() {
           <div style={styles.app} className="app">
             <header style={styles.header} className="header">
               <div style={styles.headerTitle} className="header-title">
-                <h1 style={styles.title}>METHANE</h1>
-                <span style={styles.subtitle} className="subtitle">Method Exploration, Testing, and Analysis eNvironment</span>
+                <h1 style={styles.title}>METAGRAPH</h1>
+                <span style={styles.subtitle} className="subtitle">Method Exploration, Tool And Graph Renderer for Alkanes Protocol Handling</span>
                 <Link
                   to="/"
                   style={{

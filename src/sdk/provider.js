@@ -1,5 +1,5 @@
 /**
- * Provider implementation for the METHANE application
+ * Provider implementation for the METAGRAPH application
  *
  * This implementation uses the oyl-sdk Provider to interact with
  * Bitcoin networks and provides a consistent interface across environments.
