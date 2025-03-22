@@ -53,13 +53,35 @@ const AlkanesBalanceExplorer = () => {
       });
   };
   
-  // When wallet address changes and address is empty, update it
-  // In mainnet mode, also set the manual address to auto-fill the search field
+  // Reset component state when endpoint/network changes
   useEffect(() => {
+    // Reset the state to prevent issues when switching networks
+    setAlkanes([]);
+    setTokenImages({});
+    setImageLoading({});
+    setError(null);
+    
+    // Clear the address when changing networks
     if (connected && walletAddress) {
-      if (!address) {
-        setAddress(walletAddress);
-      }
+      setAddress(walletAddress);
+    } else {
+      setAddress('');
+    }
+    
+    // Only auto-fill manual address in mainnet mode
+    if (endpoint === 'mainnet' && connected && walletAddress) {
+      setManualAddress(walletAddress);
+    } else {
+      setManualAddress('');
+    }
+    
+    console.log(`Network switched to ${endpoint}`);
+  }, [endpoint, connected, walletAddress]);
+  
+  // When wallet address changes and address is empty, update it
+  useEffect(() => {
+    if (connected && walletAddress && !address) {
+      setAddress(walletAddress);
       
       if (endpoint === 'mainnet') {
         setManualAddress(walletAddress);
@@ -72,7 +94,7 @@ const AlkanesBalanceExplorer = () => {
     if (alkanes.length > 0) {
       fetchTokenImages(alkanes);
     }
-  }, [alkanes, endpoint]);
+  }, [alkanes]);
   
   // Function to fetch token images
   const fetchTokenImages = async (tokens) => {
@@ -80,29 +102,34 @@ const AlkanesBalanceExplorer = () => {
     
     // For each token with a tokenId, fetch its image if not already loaded
     for (const token of tokens) {
-      if (token.tokenId && !tokenImages[token.tokenId.tx]) {
+      if (!token.tokenId) continue;
+      
+      // Create a network-specific cache key
+      const cacheKey = `${endpoint}:${token.tokenId.tx}`;
+      
+      if (!tokenImages[cacheKey]) {
         try {
           // Set loading state for this token
-          newImageLoading[token.tokenId.tx] = true;
+          newImageLoading[cacheKey] = true;
           setImageLoading(newImageLoading);
           
-          // Fetch the image
+          // Fetch the image for the specific network
           const result = await getAlkanesTokenImage(token.tokenId, endpoint);
           
-          // Update the image state
+          // Update the image state with network-specific key
           if (result.status === "success" && result.imageUri) {
             setTokenImages(prev => ({
               ...prev,
-              [token.tokenId.tx]: result.imageUri
+              [cacheKey]: result.imageUri
             }));
           }
         } catch (error) {
-          console.error(`Error fetching image for token ${token.name}:`, error);
+          console.error(`Error fetching image for token ${token.name} on ${endpoint}:`, error);
         } finally {
           // Update loading state
           setImageLoading(prev => ({
             ...prev,
-            [token.tokenId.tx]: false
+            [cacheKey]: false
           }));
         }
       }
@@ -128,8 +155,10 @@ const AlkanesBalanceExplorer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Reset error state
+    // Reset all states before making a new request
     setError(null);
+    setTokenImages({});
+    setImageLoading({});
     
     // Validate address
     const addressToUse = manualAddress || address;
@@ -145,9 +174,12 @@ const AlkanesBalanceExplorer = () => {
     
     // Set loading state
     setLoading(true);
+    setAlkanes([]); // Clear previous results
     
     try {
-      // Fetch alkanes data
+      console.log(`Searching for Alkanes on network ${endpoint} for address ${addressToUse}`);
+      
+      // Fetch alkanes data for the current endpoint
       const result = await getAlkanesByAddress(addressToUse, endpoint);
       
       if (result.status === "error") {
@@ -531,10 +563,11 @@ const AlkanesBalanceExplorer = () => {
                 }}>
                   <td style={styles.tableCell}>
                     <div style={styles.tokenImageContainer}>
-                      {token.tokenId && tokenImages[token.tokenId.tx] ? (
+                      {/* Create network-specific cache key for image lookup */}
+                      {token.tokenId && tokenImages[`${endpoint}:${token.tokenId.tx}`] ? (
                         <img
-                          src={tokenImages[token.tokenId.tx]}
-                          alt={`${token.name} icon`}
+                          src={tokenImages[`${endpoint}:${token.tokenId.tx}`]}
+                          alt={`${token.name} icon (${endpoint})`}
                           style={styles.tokenImage}
                           onError={(e) => {
                             e.target.onerror = null;
@@ -543,7 +576,7 @@ const AlkanesBalanceExplorer = () => {
                         />
                       ) : (
                         <div style={styles.tokenImagePlaceholder}>
-                          {imageLoading[token.tokenId?.tx] ? '⌛' : '?'}
+                          {token.tokenId && imageLoading[`${endpoint}:${token.tokenId.tx}`] ? '⌛' : '?'}
                         </div>
                       )}
                     </div>
