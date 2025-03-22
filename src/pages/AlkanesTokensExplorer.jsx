@@ -197,11 +197,13 @@ const AlkanesTokensExplorer = () => {
             <table style={styles.table}>
               <thead>
                 <tr>
-                  <th style={styles.tableHeader}>Token ID</th>
-                  <th style={styles.tableHeader}>Name</th>
+                  <th style={styles.tableHeader}>AlkaneId</th>
                   <th style={styles.tableHeader}>Symbol</th>
+                  <th style={styles.tableHeader}>Name</th>
                   <th style={styles.tableHeader}>Total Supply</th>
+                  <th style={styles.tableHeader}>Cap</th>
                   <th style={styles.tableHeader}>Minted</th>
+                  <th style={styles.tableHeader}>Mint Amount</th>
                 </tr>
               </thead>
               <tbody>
@@ -212,12 +214,32 @@ const AlkanesTokensExplorer = () => {
                         {token.id.block}:{token.id.tx}
                       </span>
                     </td>
-                    <td style={styles.tableCell}>{token.name}</td>
                     <td style={styles.tableCell}>{token.symbol || '-'}</td>
-                    <td style={styles.tableCell}>{token.totalSupply || '0'}</td>
+                    <td style={styles.tableCell}>{token.name}</td>
                     <td style={styles.tableCell}>
-                      {token.minted || '0'}
+                      {(token.totalSupply ? (token.totalSupply / 100000000) : 0).toLocaleString(undefined, {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 8
+                      })}
+                    </td>
+                    <td style={styles.tableCell}>
+                      {(token.cap ? (token.cap / 100000000) : 0).toLocaleString(undefined, {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 8
+                      })}
+                    </td>
+                    <td style={styles.tableCell}>
+                      {(token.minted ? (token.minted / 100000000) : 0).toLocaleString(undefined, {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 8
+                      })}
                       {token.percentageMinted ? ` (${token.percentageMinted}%)` : ''}
+                    </td>
+                    <td style={styles.tableCell}>
+                      {(token.mintAmount ? (token.mintAmount / 100000000) : 0).toLocaleString(undefined, {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 8
+                      })}
                     </td>
                   </tr>
                 ))}

@@ -61,33 +61,20 @@ const AlkanesBalanceExplorer = () => {
     setImageLoading({});
     setError(null);
     
-    // Clear the address when changing networks
-    if (connected && walletAddress) {
-      setAddress(walletAddress);
-    } else {
-      setAddress('');
-    }
-    
-    // Only auto-fill manual address in mainnet mode
-    if (endpoint === 'mainnet' && connected && walletAddress) {
-      setManualAddress(walletAddress);
-    } else {
-      setManualAddress('');
-    }
+    // Don't automatically set the address or manual address
+    // This prevents overriding manually entered addresses when switching networks
     
     console.log(`Network switched to ${endpoint}`);
-  }, [endpoint, connected, walletAddress]);
+  }, [endpoint]);
   
-  // When wallet address changes and address is empty, update it
+  // Only populate the address field when both wallet connects and no address is already entered
   useEffect(() => {
-    if (connected && walletAddress && !address) {
+    if (connected && walletAddress && !address && !manualAddress) {
+      // Only set the wallet address when both address and manualAddress are empty
+      // This prevents overriding any user input
       setAddress(walletAddress);
-      
-      if (endpoint === 'mainnet') {
-        setManualAddress(walletAddress);
-      }
     }
-  }, [connected, walletAddress, address, endpoint]);
+  }, [connected, walletAddress, address, manualAddress]);
   
   // Fetch token images when alkanes are loaded
   useEffect(() => {
@@ -189,7 +176,9 @@ const AlkanesBalanceExplorer = () => {
       // Set data
       setAlkanes(result.alkanes || []);
       setAddress(addressToUse);
-      setManualAddress('');
+      
+      // Don't clear manual address if the user entered one
+      // This ensures we don't revert to the wallet address on search
     } catch (err) {
       console.error("Error fetching Alkanes data:", err);
       setError(err.message || "Failed to fetch Alkanes data");
