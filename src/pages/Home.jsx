@@ -185,7 +185,7 @@ const Home = () => {
             <div style={responsiveStyles.methodItem}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Link to="/explorer/alkanesTemplates" style={responsiveStyles.link}>/explorer/alkanesTemplates</Link>
-                <span style={{ fontSize: '12px', color: '#666666', fontWeight: 'bold' }}>[3,n]</span>
+                <span style={{ fontSize: '12px', color: '#666666', fontWeight: 'bold' }}>[4,n]</span>
               </div>
               <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
                 View all deployed Alkanes factory templates
