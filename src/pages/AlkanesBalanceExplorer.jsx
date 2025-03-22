@@ -54,11 +54,18 @@ const AlkanesBalanceExplorer = () => {
   };
   
   // When wallet address changes and address is empty, update it
+  // In mainnet mode, also set the manual address to auto-fill the search field
   useEffect(() => {
-    if (connected && walletAddress && !address) {
-      setAddress(walletAddress);
+    if (connected && walletAddress) {
+      if (!address) {
+        setAddress(walletAddress);
+      }
+      
+      if (endpoint === 'mainnet') {
+        setManualAddress(walletAddress);
+      }
     }
-  }, [connected, walletAddress, address]);
+  }, [connected, walletAddress, address, endpoint]);
   
   // Fetch token images when alkanes are loaded
   useEffect(() => {
@@ -420,11 +427,11 @@ const AlkanesBalanceExplorer = () => {
           <div>
             <label style={styles.label}>Bitcoin Address</label>
             
-            {/* Show address if already set */}
-            {address && (
+            {/* Show address if already set, but hide in mainnet when connected */}
+            {address && !(endpoint === 'mainnet' && connected) && (
               <div style={{...styles.addressDisplay, position: 'relative', marginBottom: '10px'}}>
                 <span title={address}>{shortenAddress(address)}</span>
-                <button 
+                <button
                   style={styles.copyButton}
                   onClick={() => copyToClipboard(address)}
                   title="Copy full address"
@@ -447,8 +454,8 @@ const AlkanesBalanceExplorer = () => {
                 disabled={loading}
               />
               
-              {/* Button to use connected wallet */}
-              {connected && walletAddress && (
+              {/* Button to use connected wallet - hidden in mainnet when connected */}
+              {connected && walletAddress && endpoint !== 'mainnet' && (
                 <button
                   type="button"
                   style={styles.secondaryButton}
@@ -468,9 +475,7 @@ const AlkanesBalanceExplorer = () => {
               </button>
             </div>
             
-            <p style={styles.warningText}>
-              <i>⚠️ This should be a Taproot address that contains Alkanes tokens</i>
-            </p>
+            {/* Warning text removed as requested */}
           </div>
         </form>
       </div>
