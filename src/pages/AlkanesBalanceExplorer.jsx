@@ -459,21 +459,7 @@ const AlkanesBalanceExplorer = () => {
           <div>
             <label style={styles.label}>Bitcoin Address</label>
             
-            {/* Show address if already set, but hide in mainnet when connected */}
-            {address && !(endpoint === 'mainnet' && connected) && (
-              <div style={{...styles.addressDisplay, position: 'relative', marginBottom: '10px'}}>
-                <span title={address}>{shortenAddress(address)}</span>
-                <button
-                  style={styles.copyButton}
-                  onClick={() => copyToClipboard(address)}
-                  title="Copy full address"
-                  type="button"
-                >
-                  📋
-                </button>
-                {showCopied && <div style={{...styles.copiedPopup, right: '30px'}}>Copied!</div>}
-              </div>
-            )}
+            {/* Address display removed as requested */}
             
             {/* Input for manual address entry */}
             <div style={styles.formRow}>
@@ -486,17 +472,7 @@ const AlkanesBalanceExplorer = () => {
                 disabled={loading}
               />
               
-              {/* Button to use connected wallet - hidden in mainnet when connected */}
-              {connected && walletAddress && endpoint !== 'mainnet' && (
-                <button
-                  type="button"
-                  style={styles.secondaryButton}
-                  onClick={useConnectedWallet}
-                  disabled={loading}
-                >
-                  Use Wallet
-                </button>
-              )}
+              {/* "Use Wallet" button removed as requested */}
               
               <button
                 type="submit"
@@ -544,70 +520,67 @@ const AlkanesBalanceExplorer = () => {
         )}
         
         {/* Show results table */}
-        {!loading && !error && alkanes.length > 0 && (
-          <table style={styles.table}>
-            <thead style={styles.tableHead}>
-              <tr style={styles.tableRow}>
-                <th style={styles.tableHeaderCell}>Image</th>
-                <th style={styles.tableHeaderCell}>AlkaneId</th>
-                <th style={styles.tableHeaderCell}>Token Name</th>
-                <th style={styles.tableHeaderCell}>Symbol</th>
-                <th style={styles.tableHeaderCell}>Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {alkanes.map((token, index) => (
-                <tr key={index} style={{
-                  ...styles.tableRow,
-                  backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#F5F5F5'
-                }}>
-                  <td style={styles.tableCell}>
-                    <div style={styles.tokenImageContainer}>
-                      {/* Create network-specific cache key for image lookup */}
-                      {token.tokenId && tokenImages[`${endpoint}:${token.tokenId.tx}`] ? (
-                        <img
-                          src={tokenImages[`${endpoint}:${token.tokenId.tx}`]}
-                          alt={`${token.name} icon (${endpoint})`}
-                          style={styles.tokenImage}
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" fill="%23f5f5f5"/><text x="50%" y="50%" font-family="Arial" font-size="14" fill="%23666" text-anchor="middle" dominant-baseline="middle">?</text></svg>';
-                          }}
-                        />
-                      ) : (
-                        <div style={styles.tokenImagePlaceholder}>
-                          {token.tokenId && imageLoading[`${endpoint}:${token.tokenId.tx}`] ? '⌛' : '?'}
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                  <td style={styles.tableCell}>
-                    <div style={{ position: 'relative' }}>
-                      <span title={token.tokenId ? `Block: ${token.tokenId.block}, TX: ${token.tokenId.tx}` : 'No ID available'}>
-                        {formatAlkaneId(token.tokenId)}
-                      </span>
-                      {token.tokenId && (
-                        <button
-                          style={{...styles.copyButton, marginLeft: '4px'}}
-                          onClick={() => copyToClipboard(JSON.stringify(token.tokenId))}
-                          title="Copy full AlkaneId"
-                          type="button"
-                        >
-                          📋
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                  <td style={styles.tableCell}>{token.name}</td>
-                  <td style={styles.tableCell}>{token.symbol || '-'}</td>
-                  <td style={styles.tableCell}>
-                    {token.amount ? token.amount.toLocaleString() : '0'}
-                  </td>
+        {!loading && !error && alkanes.length > 0 && (() => {
+          // Aggregate tokens by AlkaneId
+          const aggregatedTokens = {};
+          
+          alkanes.forEach(token => {
+            if (!token.tokenId) return;
+            
+            const id = `${token.tokenId.block}:${token.tokenId.tx}`;
+            if (!aggregatedTokens[id]) {
+              aggregatedTokens[id] = {
+                tokenId: token.tokenId,
+                name: token.name,
+                symbol: token.symbol || '-',
+                amount: 0,
+                // Store raw amount (with 8 decimal places)
+                rawAmount: 0
+              };
+            }
+            
+            // Add to the existing balance (keeping raw value)
+            aggregatedTokens[id].rawAmount += token.amount;
+            // Divide by 10^8 to get the actual balance with proper decimal places
+            aggregatedTokens[id].amount = aggregatedTokens[id].rawAmount / 100000000;
+          });
+          
+          // Convert to array for rendering
+          const tokenList = Object.values(aggregatedTokens);
+          
+          return (
+            <table style={styles.table}>
+              <thead style={styles.tableHead}>
+                <tr style={styles.tableRow}>
+                  <th style={styles.tableHeaderCell}>AlkaneId</th>
+                  <th style={styles.tableHeaderCell}>Symbol</th>
+                  <th style={styles.tableHeaderCell}>Token Name</th>
+                  <th style={styles.tableHeaderCell}>Balance</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody>
+                {tokenList.map((token, index) => (
+                  <tr key={index} style={{
+                    ...styles.tableRow,
+                    backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#F5F5F5'
+                  }}>
+                    <td style={styles.tableCell} title={token.tokenId ? `Block: ${token.tokenId.block}, TX: ${token.tokenId.tx}` : 'No ID available'}>
+                      {formatAlkaneId(token.tokenId)}
+                    </td>
+                    <td style={styles.tableCell}>{token.symbol}</td>
+                    <td style={styles.tableCell}>{token.name}</td>
+                    <td style={styles.tableCell}>
+                      {token.amount ? token.amount.toLocaleString(undefined, {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 8
+                      }) : '0'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          );
+        })()}
       </div>
     </div>
   );
