@@ -240,6 +240,28 @@ const hexToDataUri = (hexString) => {
  * @param {string} [endpoint='regtest'] - API endpoint to use ('regtest', 'mainnet', 'oylnet')
  * @returns {Promise<Object>} - Retrieved Alkanes tokens
  */
+
+export const decorateProviderInterruptSimulate = (provider) => {
+  const _simulate = provider.alkanes.simulate;
+  const _getAlkanes = provider.alkanes.getAlkanes;
+  const alkanes = new (provider.alkanes.constructor)(provider.alkanes.alkanesUrl);
+  alkanes.getAlkanes = async function (o) {
+    alkanes.simulate = async function (...args) {
+      const response = await _simulate.apply(alkanes, args);
+      console.log(response);
+      if (response.execution.error === "unexpected end-of-file (at offset 0x0)") {
+        alkanes.simulate = async function (...args) { throw Error('catch me'); };
+        return null;
+      }
+      return response;
+    };
+    const result = await _getAlkanes.call(alkanes, o);
+    alkanes.simulate = _simulate;
+    return result;
+  };
+  provider.alkanes = alkanes;
+  return provider;
+}
 export const getAllAlkanes = async (limit, offset = 0, endpoint = 'regtest') => {
   try {
     // Input validation
@@ -261,7 +283,7 @@ export const getAllAlkanes = async (limit, offset = 0, endpoint = 'regtest') => 
     }
     
     // Call the getAlkanes method
-    const result = await provider.alkanes.getAlkanes({
+    const result = await decorateProviderInterruptSimulate(provider).alkanes.getAlkanes({
       limit,
       offset
     });
