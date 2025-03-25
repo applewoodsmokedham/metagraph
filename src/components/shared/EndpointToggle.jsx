@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 /**
  * EndpointToggle Component
- * 
+ *
  * Provides a UI for toggling between different Bitcoin networks (mainnet/regtest/oylnet)
- * 
+ *
  * @param {Object} props
  * @param {Function} props.onChange - Callback when endpoint is changed
- * @param {string} props.initialEndpoint - Initial endpoint value
+ * @param {string} props.initialEndpoint - Current endpoint value
  */
-const EndpointToggle = ({ onChange, initialEndpoint = 'regtest' }) => {
-  const [endpoint, setEndpoint] = useState(initialEndpoint);
-
+const EndpointToggle = ({ onChange, initialEndpoint = 'mainnet' }) => {
+  // Use the parent's state directly, no local state
+  const endpoint = initialEndpoint;
+  
   const handleToggle = (newEndpoint) => {
-    setEndpoint(newEndpoint);
+    // Only call the parent onChange, don't maintain local state
     if (onChange) onChange(newEndpoint);
   };
 
