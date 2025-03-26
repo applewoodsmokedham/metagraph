@@ -174,7 +174,7 @@ const Home = () => {
           <div style={responsiveStyles.methodsList}>
             <div style={responsiveStyles.methodItem}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Link to="/explorer/alkanesTokens" style={responsiveStyles.link}>/explorer/alkanesTokens</Link>
+                <Link to="/explorer/alkanes-tokens" style={responsiveStyles.link}>/explorer/alkanes-tokens</Link>
                 <span style={{ fontSize: '12px', color: '#666666', fontWeight: 'bold' }}>[2,n]</span>
               </div>
               <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
@@ -184,7 +184,7 @@ const Home = () => {
             
             <div style={responsiveStyles.methodItem}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Link to="/explorer/alkanesTemplates" style={responsiveStyles.link}>/explorer/alkanesTemplates</Link>
+                <Link to="/explorer/alkanes-templates" style={responsiveStyles.link}>/explorer/alkanes-templates</Link>
                 <span style={{ fontSize: '12px', color: '#666666', fontWeight: 'bold' }}>[4,n]</span>
               </div>
               <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
@@ -193,7 +193,7 @@ const Home = () => {
             </div>
             
             <div style={responsiveStyles.methodItem}>
-              <Link to="/explorer/alkanesBalance" style={responsiveStyles.link}>/explorer/alkanesBalance</Link>
+              <Link to="/explorer/alkanes-balance" style={responsiveStyles.link}>/explorer/alkanes-balance</Link>
               <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
                 Explore Alkanes balances across the network
               </p>

@@ -51,15 +51,15 @@ const router = createBrowserRouter([
       },
       // Explorer routes
       {
-        path: 'explorer/alkanesTokens',
+        path: 'explorer/alkanes-tokens',
         element: <AlkanesTokensExplorer />
       },
       {
-        path: 'explorer/alkanesTemplates',
+        path: 'explorer/alkanes-templates',
         element: <AlkanesTemplatesExplorer />
       },
       {
-        path: 'explorer/alkanesBalance',
+        path: 'explorer/alkanes-balance',
         element: <AlkanesBalanceExplorer />
       },
       // Not found route
