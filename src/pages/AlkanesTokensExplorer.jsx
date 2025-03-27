@@ -18,7 +18,7 @@ const AlkanesTokensExplorer = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [totalTokens, setTotalTokens] = useState(0);
-  const tokensPerPage = 75;
+  const tokensPerPage = 50;
   
   // Fetch tokens on component mount and when page or endpoint changes
   useEffect(() => {
@@ -200,7 +200,7 @@ const AlkanesTokensExplorer = () => {
                   <th style={styles.tableHeader}>AlkaneId</th>
                   <th style={styles.tableHeader}>Symbol</th>
                   <th style={styles.tableHeader}>Name</th>
-                  <th style={styles.tableHeader}>Total Supply</th>
+                  <th style={styles.tableHeader}>Circulating Supply</th>
                   <th style={styles.tableHeader}>Cap</th>
                   <th style={styles.tableHeader}>Minted</th>
                   <th style={styles.tableHeader}>Mint Amount</th>
@@ -223,15 +223,15 @@ const AlkanesTokensExplorer = () => {
                       })}
                     </td>
                     <td style={styles.tableCell}>
-                      {(token.cap ? (token.cap / 100000000) : 0).toLocaleString(undefined, {
+                      {(token.cap ? token.cap : 0).toLocaleString(undefined, {
                         minimumFractionDigits: 0,
-                        maximumFractionDigits: 8
+                        maximumFractionDigits: 0
                       })}
                     </td>
                     <td style={styles.tableCell}>
-                      {(token.minted ? (token.minted / 100000000) : 0).toLocaleString(undefined, {
+                      {(token.minted ? token.minted : 0).toLocaleString(undefined, {
                         minimumFractionDigits: 0,
-                        maximumFractionDigits: 8
+                        maximumFractionDigits: 0
                       })}
                       {token.percentageMinted ? ` (${token.percentageMinted}%)` : ''}
                     </td>
