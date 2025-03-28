@@ -8,6 +8,7 @@ import ShadowVoutDocs from './pages/ShadowVoutDocs';
 import AlkanesBalanceExplorer from './pages/AlkanesBalanceExplorer';
 import AlkanesTokensExplorer from './pages/AlkanesTokensExplorer';
 import AlkanesTemplatesExplorer from './pages/AlkanesTemplatesExplorer';
+import BitcoinAddressExplorer from './pages/BitcoinAddressExplorer';
 import TraceBlockStatusForm from './components/methods/TraceBlockStatusForm';
 import SimulateForm from './components/methods/SimulateForm';
 import TraceForm from './components/methods/TraceForm';
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: 'explorer/alkanes-balance',
         element: <AlkanesBalanceExplorer />
+      },
+      {
+        path: 'explorer/address',
+        element: <BitcoinAddressExplorer />
       },
       // Not found route
       {

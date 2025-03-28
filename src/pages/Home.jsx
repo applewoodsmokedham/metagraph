@@ -198,6 +198,13 @@ const Home = () => {
                 Explore Alkanes balances across the network
               </p>
             </div>
+            
+            <div style={responsiveStyles.methodItem}>
+              <Link to="/explorer/address" style={responsiveStyles.link}>/explorer/address</Link>
+              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
+                Explore transactions for an address
+              </p>
+            </div>
           </div>
         </div>
       </div>
