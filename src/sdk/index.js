@@ -3,3 +3,4 @@ import './node-shims.js';
 
 export { default as getProvider } from './provider';
 export * from './alkanes';
+export * from './esplora';

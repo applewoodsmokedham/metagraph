@@ -18,7 +18,7 @@ const AlkanesTokensExplorer = () => {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [totalTokens, setTotalTokens] = useState(0);
-  const tokensPerPage = 50;
+  const tokensPerPage = 100;
   
   // Fetch tokens on component mount and when page or endpoint changes
   useEffect(() => {
@@ -74,7 +74,7 @@ const AlkanesTokensExplorer = () => {
   const styles = {
     container: {
       width: '100%',
-      maxWidth: '900px',
+      maxWidth: '1200px',
       margin: '0 auto',
       backgroundColor: '#FFFFFF',
       padding: '20px',
