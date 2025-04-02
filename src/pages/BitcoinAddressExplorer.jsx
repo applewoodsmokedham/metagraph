@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useLaserEyes } from '@omnisat/lasereyes';
-import { 
-  getAddressTransactions, 
-  getTransactionInfo, 
-  getAddressTransactionsWithTrace 
+import {
+  getAddressInfo,
+  getAddressTransactionsChain,
+  getTransactionInfo,
+  getAddressTransactionsWithTrace
 } from '../sdk/esplora';
 import { traceTransaction } from '../sdk/alkanes';
 
@@ -33,6 +34,7 @@ const BitcoinAddressExplorer = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [pageLoading, setPageLoading] = useState(false);
+  const [lastSeenTxid, setLastSeenTxid] = useState(null);
   const transactionsPerPage = 10;
   
   // Helper function to shorten txids
@@ -120,12 +122,18 @@ const BitcoinAddressExplorer = () => {
     try {
       console.log(`Searching for transactions on network ${endpoint} for address ${addressToUse}`);
       
-      // Fetch first page of transactions with pagination
-      const result = await getAddressTransactions(
+      // First get the address info to get the total transaction count
+      const addressInfoResult = await getAddressInfo(addressToUse, endpoint);
+      
+      if (addressInfoResult.status === "error") {
+        throw new Error(addressInfoResult.message);
+      }
+      
+      // Fetch first page of transactions with cursor-based pagination
+      const result = await getAddressTransactionsChain(
         addressToUse,
         endpoint,
-        transactionsPerPage,
-        0
+        null // null for first page
       );
       
       if (result.status === "error") {
@@ -138,14 +146,16 @@ const BitcoinAddressExplorer = () => {
       setAddress(addressToUse);
       
       // Set pagination data
-      if (result.pagination) {
-        setTotalTransactions(result.pagination.total);
-        setTotalPages(Math.max(1, Math.ceil(result.pagination.total / transactionsPerPage)));
-      } else {
-        // Fallback if pagination info is not available
-        setTotalTransactions(txs.length);
-        setTotalPages(Math.max(1, Math.ceil(txs.length / transactionsPerPage)));
+      const totalTxCount = addressInfoResult.totalTxCount;
+      setTotalTransactions(totalTxCount);
+      setTotalPages(Math.max(1, Math.ceil(totalTxCount / transactionsPerPage)));
+      
+      // Store the last seen txid for pagination
+      if (txs.length > 0) {
+        setLastSeenTxid(txs[txs.length - 1].txid);
       }
+      
+      console.log(`Total transactions: ${totalTxCount}, Pages: ${Math.ceil(totalTxCount / transactionsPerPage)}`);
       
     } catch (err) {
       console.error("Error fetching transactions data:", err);
@@ -208,27 +218,86 @@ const BitcoinAddressExplorer = () => {
     setPageLoading(true);
     
     try {
-      const offset = (pageNumber - 1) * transactionsPerPage;
-      
-      // Fetch transactions for the specified page
-      const result = await getAddressTransactions(
-        address,
-        endpoint,
-        transactionsPerPage,
-        offset
-      );
-      
-      if (result.status === "error") {
-        throw new Error(result.message);
-      }
-      
-      // Update transactions
-      setTransactions(result.transactions || []);
-      
-      // Update pagination data if available
-      if (result.pagination) {
-        setTotalTransactions(result.pagination.total);
-        setTotalPages(Math.max(1, Math.ceil(result.pagination.total / transactionsPerPage)));
+      // For page 1, we don't need a lastSeenTxid
+      if (pageNumber === 1) {
+        // Get address info first to get total transaction count
+        const addressInfoResult = await getAddressInfo(address, endpoint);
+        
+        if (addressInfoResult.status === "error") {
+          throw new Error(addressInfoResult.message);
+        }
+        
+        // Fetch first page of transactions
+        const result = await getAddressTransactionsChain(
+          address,
+          endpoint,
+          null // null for first page
+        );
+        
+        if (result.status === "error") {
+          throw new Error(result.message);
+        }
+        
+        // Update transactions
+        const txs = result.transactions || [];
+        setTransactions(txs);
+        
+        // Update pagination data
+        setTotalTransactions(addressInfoResult.totalTxCount);
+        
+        // Store the last seen txid for pagination
+        if (txs.length > 0) {
+          setLastSeenTxid(txs[txs.length - 1].txid);
+        }
+      } else {
+        // For pages > 1, we need to implement a different approach
+        // since we're using cursor-based pagination
+        
+        // This is a simplified implementation - in a real app, you would
+        // need to keep track of the lastSeenTxid for each page
+        
+        // For now, we'll just fetch the first page and then fetch additional
+        // pages one by one until we reach the requested page
+        
+        let currentPage = 1;
+        let currentLastSeenTxid = null;
+        let currentTxs = [];
+        
+        while (currentPage < pageNumber) {
+          const result = await getAddressTransactionsChain(
+            address,
+            endpoint,
+            currentLastSeenTxid
+          );
+          
+          if (result.status === "error" || !result.transactions || !result.transactions.length) {
+            break;
+          }
+          
+          currentTxs = result.transactions;
+          currentLastSeenTxid = result.pagination.lastSeenTxid;
+          currentPage++;
+        }
+        
+        // Now fetch the actual page we want
+        const result = await getAddressTransactionsChain(
+          address,
+          endpoint,
+          currentLastSeenTxid
+        );
+        
+        if (result.status === "error") {
+          throw new Error(result.message);
+        }
+        
+        // Update transactions
+        const txs = result.transactions || [];
+        setTransactions(txs);
+        
+        // Store the last seen txid for pagination
+        if (txs.length > 0) {
+          setLastSeenTxid(txs[txs.length - 1].txid);
+        }
       }
       
       // Scroll to top of results

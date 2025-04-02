@@ -143,44 +143,111 @@ export const getTransactionOutspends = async (txid, endpoint = 'regtest') => {
 };
 
 /**
- * Gets transactions for a specific Bitcoin address with pagination support
+ * Gets address information including transaction count using the Esplora API
  * @param {string} address - Bitcoin address to query
  * @param {string} endpoint - API endpoint to use ('regtest', 'mainnet', 'oylnet')
- * @param {number} limit - Maximum number of transactions to return (default: 10)
- * @param {number} offset - Number of transactions to skip (default: 0)
- * @returns {Promise<Object>} - Transactions for the address with pagination info
+ * @returns {Promise<Object>} - Address information including transaction count
  */
-export const getAddressTransactions = async (address, endpoint = 'regtest', limit = 10, offset = 0) => {
+export const getAddressInfo = async (address, endpoint = 'regtest') => {
   try {
     const provider = getProvider(endpoint);
-    console.log(`Getting transactions for address ${address} with ${endpoint} endpoint (limit: ${limit}, offset: ${offset})`);
+    console.log(`Getting address info for ${address} with ${endpoint} endpoint`);
     
-    // Ensure provider.esplora exists
-    if (!provider.esplora || typeof provider.esplora.getAddressTx !== 'function') {
-      throw new Error('Esplora getAddressTx method not available');
+    // Make a direct fetch request to the Esplora API
+    const url = endpoint === 'mainnet' ? 'https://mainnet.sandshrew.io/v2/lasereyes' :
+                endpoint === 'oylnet' ? 'https://oylnet.oyl.gg/v2/lasereyes' :
+                'http://localhost:18888/v1/lasereyes';
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'esplora_address',
+        params: [address]
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.error) {
+      throw new Error(data.error.message || 'Error fetching address info');
     }
     
-    // Call the getAddressTx method
-    // Note: The underlying API might not support pagination directly,
-    // so we'll get all transactions and then slice them
-    const allTransactions = await provider.esplora.getAddressTx(address);
+    const result = data.result;
     
-    // Get the total count of transactions
-    const totalCount = allTransactions.length;
+    // Calculate total transaction count (chain + mempool)
+    const totalTxCount = result.chain_stats.tx_count + result.mempool_stats.tx_count;
     
-    // Slice the transactions based on limit and offset
-    const paginatedTransactions = allTransactions.slice(offset, offset + limit);
+    return {
+      status: "success",
+      message: "Address info retrieved",
+      address,
+      info: result,
+      totalTxCount
+    };
+  } catch (error) {
+    console.error('Error getting address info:', error);
+    return {
+      status: "error",
+      message: error.message || "Unknown error",
+      address,
+      totalTxCount: 0
+    };
+  }
+};
+
+/**
+ * Gets transactions for a specific Bitcoin address using cursor-based pagination
+ * @param {string} address - Bitcoin address to query
+ * @param {string} endpoint - API endpoint to use ('regtest', 'mainnet', 'oylnet')
+ * @param {string|null} lastSeenTxid - Last transaction ID seen for pagination (null for first page)
+ * @returns {Promise<Object>} - Transactions for the address with pagination info
+ */
+export const getAddressTransactionsChain = async (address, endpoint = 'regtest', lastSeenTxid = null) => {
+  try {
+    const provider = getProvider(endpoint);
+    console.log(`Getting transactions for address ${address} with ${endpoint} endpoint (lastSeenTxid: ${lastSeenTxid || 'null'})`);
+    
+    // Make a direct fetch request to the Esplora API
+    const url = endpoint === 'mainnet' ? 'https://mainnet.sandshrew.io/v2/lasereyes' :
+                endpoint === 'oylnet' ? 'https://oylnet.oyl.gg/v2/lasereyes' :
+                'http://localhost:18888/v1/lasereyes';
+    
+    const params = lastSeenTxid ? [address, lastSeenTxid] : [address];
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'esplora_address::txs:chain',
+        params: params
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.error) {
+      throw new Error(data.error.message || 'Error fetching address transactions');
+    }
+    
+    const result = data.result;
     
     return {
       status: "success",
       message: "Transactions retrieved",
       address,
-      transactions: paginatedTransactions,
+      transactions: result,
       pagination: {
-        total: totalCount,
-        limit: limit,
-        offset: offset,
-        hasMore: offset + limit < totalCount
+        lastSeenTxid: result.length > 0 ? result[result.length - 1].txid : null,
+        hasMore: result.length === 25 // CHAIN_TXS_PER_PAGE is 25 in rest.rs
       }
     };
   } catch (error) {
@@ -188,7 +255,8 @@ export const getAddressTransactions = async (address, endpoint = 'regtest', limi
     return {
       status: "error",
       message: error.message || "Unknown error",
-      address
+      address,
+      transactions: []
     };
   }
 };
@@ -306,8 +374,8 @@ export const getAddressTransactionsWithTrace = async (address, endpoint = 'regte
     const provider = getProvider(endpoint);
     console.log(`Getting and tracing transactions for address ${address} with ${endpoint} endpoint`);
     
-    // Get all transactions for the address
-    const txResult = await getAddressTransactions(address, endpoint);
+    // Get all transactions for the address using the new chain method
+    const txResult = await getAddressTransactionsChain(address, endpoint);
     
     if (txResult.status === "error") {
       throw new Error(txResult.message);

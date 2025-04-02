@@ -205,6 +205,13 @@ const Home = () => {
                 Explore transactions for an address
               </p>
             </div>
+            
+            <div style={responsiveStyles.methodItem}>
+              <Link to="/explorer/transaction-io" style={responsiveStyles.link}>/explorer/transaction-io</Link>
+              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
+                Explore transaction inputs and outputs
+              </p>
+            </div>
           </div>
         </div>
       </div>

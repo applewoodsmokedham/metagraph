@@ -2,7 +2,9 @@
 
 # windsurf rules
 .windsurfrules
-
+./backend
+backend
+mempool
 # Logs
 logs
 *.log
