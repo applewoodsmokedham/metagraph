@@ -473,3 +473,83 @@ export const getAlkanesByHeight = async (height, endpoint = 'regtest') => {
     };
   }
 };
+
+/**
+ * Gets Protorunes by outpoint at a specific block height using direct JSON-RPC call
+ * @param {Object} params - Parameters for the query
+ * @param {string} params.txid - Transaction ID (will be reversed for the API call)
+ * @param {number} params.vout - Output index
+ * @param {string} params.protocolTag - Protocol tag (default: "1")
+ * @param {number} height - Block height to query
+ * @param {string} endpoint - API endpoint to use ('regtest', 'mainnet', 'oylnet')
+ * @returns {Promise<Object>} - Protorunes at the specified outpoint and height
+ */
+export const getProtorunesByOutpoint = async (params, height, endpoint = 'regtest') => {
+  try {
+    console.log(`Getting Protorunes by outpoint ${params.txid}:${params.vout} at height ${height} with ${endpoint} endpoint`);
+    
+    // Validate inputs
+    if (!params.txid || typeof params.txid !== 'string') {
+      throw new Error('Invalid txid: must be a non-empty string');
+    }
+    
+    if (params.vout === undefined || params.vout === null || isNaN(parseInt(params.vout, 10))) {
+      throw new Error('Invalid vout: must be a number');
+    }
+    
+    if (!height || isNaN(parseInt(height, 10))) {
+      throw new Error('Invalid height: must be a number');
+    }
+    
+    // Reverse the txid for the API call
+    // This converts from the standard display format to the internal byte order
+    const reversedTxid = params.txid
+      .match(/.{2}/g)
+      ?.reverse()
+      .join('') || params.txid;
+    
+    // Determine the API URL based on the endpoint
+    const url = endpoint === 'mainnet' ? 'https://mainnet.sandshrew.io/v2/lasereyes' :
+                endpoint === 'oylnet' ? 'https://oylnet.oyl.gg/v2/lasereyes' :
+                'http://localhost:18888/v1/lasereyes';
+    
+    // Make the JSON-RPC request
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 0,
+        method: 'alkanes_protorunesbyoutpoint',
+        params: [
+          {
+            protocolTag: params.protocolTag || '1',
+            txid: reversedTxid,
+            vout: parseInt(params.vout, 10)
+          },
+          parseInt(height, 10)
+        ]
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.error) {
+      throw new Error(data.error.message || 'Error fetching Protorunes by outpoint');
+    }
+    
+    // Return the exact API response format
+    return data;
+  } catch (error) {
+    console.error('Error getting Protorunes by outpoint:', error);
+    return {
+      error: {
+        message: error.message || "Unknown error"
+      },
+      id: 0,
+      jsonrpc: "2.0"
+    };
+  }
+};

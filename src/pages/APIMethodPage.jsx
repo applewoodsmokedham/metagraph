@@ -3,6 +3,7 @@ import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import TraceBlockStatusForm from '../components/methods/TraceBlockStatusForm';
 import SimulateForm from '../components/methods/SimulateForm';
 import TraceForm from '../components/methods/TraceForm';
+import ProtorunesByOutpointForm from '../components/methods/ProtorunesByOutpointForm';
 
 /**
  * APIMethodPage Component
@@ -20,6 +21,7 @@ const APIMethodPage = ({ methodComponent: ProvidedMethodComponent, methodName: p
     'trace': TraceForm,
     'simulate': SimulateForm,
     'traceblockstatus': TraceBlockStatusForm,
+    'protorunesbyoutpoint': ProtorunesByOutpointForm,
     // Add other methods as they are implemented
   };
 

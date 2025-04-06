@@ -9,9 +9,11 @@ import AlkanesBalanceExplorer from './pages/AlkanesBalanceExplorer';
 import AlkanesTokensExplorer from './pages/AlkanesTokensExplorer';
 import AlkanesTemplatesExplorer from './pages/AlkanesTemplatesExplorer';
 import BitcoinAddressExplorer from './pages/BitcoinAddressExplorer';
+import TransactionInputsOutputsExplorer from './pages/TransactionInputsOutputsExplorer';
 import TraceBlockStatusForm from './components/methods/TraceBlockStatusForm';
 import SimulateForm from './components/methods/SimulateForm';
 import TraceForm from './components/methods/TraceForm';
+import ProtorunesByOutpointForm from './components/methods/ProtorunesByOutpointForm';
 
 /**
  * Application Routes
@@ -50,6 +52,10 @@ const router = createBrowserRouter([
         path: 'api-methods/simulate',
         element: <APIMethodPage methodComponent={SimulateForm} methodName="Simulate Transaction" />
       },
+      {
+        path: 'api-methods/protorunesbyoutpoint',
+        element: <APIMethodPage methodComponent={ProtorunesByOutpointForm} methodName="Protorunes By Outpoint" />
+      },
       // Explorer routes
       {
         path: 'explorer/alkanes-tokens',
@@ -66,6 +72,10 @@ const router = createBrowserRouter([
       {
         path: 'explorer/address',
         element: <BitcoinAddressExplorer />
+      },
+      {
+        path: 'explorer/transaction-io',
+        element: <TransactionInputsOutputsExplorer />
       },
       // Not found route
       {

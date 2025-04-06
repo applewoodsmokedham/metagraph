@@ -164,6 +164,13 @@ const Home = () => {
                 Simulate Alkanes operations to preview outcomes without broadcasting to the network
               </p>
             </div>
+            
+            <div style={responsiveStyles.methodItem}>
+              <Link to="/api-methods/protorunesbyoutpoint" style={responsiveStyles.link}>/api-methods/protorunesbyoutpoint</Link>
+              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
+                Query Protorunes by outpoint (txid, vout) at a specific block height
+              </p>
+            </div>
           </div>
         </div>
         
@@ -203,6 +210,13 @@ const Home = () => {
               <Link to="/explorer/address" style={responsiveStyles.link}>/explorer/address</Link>
               <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
                 Explore transactions for an address
+              </p>
+            </div>
+            
+            <div style={responsiveStyles.methodItem}>
+              <Link to="/explorer/transaction-io" style={responsiveStyles.link}>/explorer/transaction-io</Link>
+              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
+                Explore transaction inputs and outputs
               </p>
             </div>
           </div>
