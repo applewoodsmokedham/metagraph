@@ -7,6 +7,7 @@ import {
   getTransactionInfo,
   getTransactionOutspends
 } from '../sdk/esplora';
+import { getProtorunesByOutpoint } from '../sdk/alkanes';
 import getProvider from '../sdk/provider';
 
 /**
@@ -318,11 +319,80 @@ const TransactionInputsOutputsExplorer = () => {
           }));
           
           // Process outputs
-          const outputs = transaction.vout.map((output, index) => {
+          const outputs = await Promise.all(transaction.vout.map(async (output, index) => {
             const isSpent = outspends.status === "success" &&
                            outspends.outspends &&
                            outspends.outspends[index] &&
                            outspends.outspends[index].spent;
+            
+            // Check for Alkanes at this outpoint
+            let alkanes = null;
+            try {
+              // Use the transaction's block height instead of current height
+              const blockHeight = tx.status?.block_height;
+              
+              // If block height is not available, skip Alkanes check
+              if (!blockHeight) {
+                console.log(`Skipping Alkanes check for ${tx.txid}: No block height available`);
+                return null;
+              }
+              
+              // Use the correct vout index
+              const voutIndex = index; // Use the array index to ensure we check all vouts
+              
+              console.log(`Checking for Alkanes at outpoint ${tx.txid}:${voutIndex} (output.n: ${output.n}) at block height ${blockHeight}`);
+              
+              // Call the alkanes_protorunesbyoutpoint function
+              const alkanesResult = await getProtorunesByOutpoint(
+                {
+                  txid: tx.txid,
+                  vout: voutIndex,
+                  protocolTag: '1'
+                },
+                blockHeight,
+                endpoint
+              );
+              
+              console.log(`Alkanes result for ${tx.txid}:${voutIndex}:`, alkanesResult);
+              
+              // Check if we got a valid result with Alkanes
+              if (alkanesResult.result && alkanesResult.result.length > 0) {
+                console.log(`Found Alkanes at outpoint ${tx.txid}:${voutIndex}:`, alkanesResult.result);
+                
+                alkanes = alkanesResult.result.map(item => {
+                  const token = item.token || {};
+                  const id = token.id || {};
+                  
+                  // Convert hex block and tx values to decimal
+                  const blockHex = id.block || "0x0";
+                  const txHex = id.tx || "0x0";
+                  const blockDecimal = parseInt(blockHex, 16);
+                  const txDecimal = parseInt(txHex, 16);
+                  
+                  // Convert hex value to decimal and divide by 10^8 (8 decimals)
+                  const valueHex = item.value || "0x0";
+                  const valueDecimal = parseInt(valueHex, 16);
+                  const valueFormatted = valueDecimal / 100000000; // Divide by 10^8
+                    
+                  return {
+                    token: {
+                      ...token,
+                      id: {
+                        ...id,
+                        blockDecimal,
+                        txDecimal,
+                        formatted: `[${blockDecimal},${txDecimal}]`
+                      }
+                    },
+                    valueHex: item.value,
+                    valueDecimal,
+                    valueFormatted
+                  };
+                });
+              }
+            } catch (error) {
+              console.error(`Error checking for Alkanes at outpoint ${tx.txid}:${output.n}:`, error);
+            }
             
             return {
               n: output.n,
@@ -331,9 +401,10 @@ const TransactionInputsOutputsExplorer = () => {
               valueBTC: (output.value || 0) / 100000000, // Convert satoshis to BTC
               type: output.scriptpubkey_type,
               isOpReturn: output.scriptpubkey_type === 'op_return',
-              spent: isSpent
+              spent: isSpent,
+              alkanes: alkanes // Add Alkanes information if found
             };
-          });
+          }));
           
           // Calculate total input and output values
           const totalInput = inputs.reduce((sum, input) => sum + input.value, 0);
@@ -614,6 +685,22 @@ const TransactionInputsOutputsExplorer = () => {
       marginLeft: '5px',
       fontSize: '12px',
     },
+    alkanes: {
+      backgroundColor: '#FF9800',
+      color: '#FFFFFF',
+      padding: '2px 5px',
+      borderRadius: '4px',
+      marginLeft: '5px',
+      fontSize: '12px',
+    },
+    alkanesDetails: {
+      marginTop: '5px',
+      padding: '5px',
+      backgroundColor: '#FFF3E0',
+      borderRadius: '4px',
+      fontSize: '12px',
+      fontFamily: 'monospace',
+    },
     detailsButton: {
       backgroundColor: '#2196F3',
       color: '#FFFFFF',
@@ -792,18 +879,40 @@ const TransactionInputsOutputsExplorer = () => {
                                 <span style={styles.runestone}>Runestone</span>
                               </div>
                             ) : (
-                              <span 
-                                style={styles.address}
-                                onClick={() => copyToClipboard(output.address)}
-                                title="Click to copy"
-                              >
-                                {shortenAddress(output.address)}
-                              </span>
+                              <div>
+                                <span
+                                  style={styles.address}
+                                  onClick={() => copyToClipboard(output.address)}
+                                  title="Click to copy"
+                                >
+                                  {shortenAddress(output.address)}
+                                </span>
+                                {output.alkanes && (
+                                  <span style={styles.alkanes}>Alkanes</span>
+                                )}
+                              </div>
                             )}
                           </div>
                           <div style={styles.itemValue}>
                             {output.valueBTC.toFixed(8)} BTC
                           </div>
+                          {output.alkanes && (
+                            <div style={styles.alkanesDetails}>
+                              {output.alkanes.map((alkane, j) => (
+                                <div key={j}>
+                                  <div>
+                                    <strong>Token:</strong> {alkane.token.name} ({alkane.token.symbol})
+                                  </div>
+                                  <div>
+                                    <strong>ID:</strong> {alkane.token.id.formatted}
+                                  </div>
+                                  <div>
+                                    <strong>Value:</strong> {alkane.valueFormatted.toFixed(8)}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       ))}
                       <div style={styles.totalRow}>
