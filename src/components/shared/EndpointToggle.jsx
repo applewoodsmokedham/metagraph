@@ -1,47 +1,63 @@
 import React from 'react';
 
 /**
- * EndpointToggle Component
+ * EndpointToggle Component (98.css version)
  *
- * Provides a UI for toggling between different Bitcoin networks (mainnet/regtest/oylnet)
+ * Provides a UI for toggling between different Bitcoin networks using radio buttons
  *
  * @param {Object} props
  * @param {Function} props.onChange - Callback when endpoint is changed
  * @param {string} props.initialEndpoint - Current endpoint value
  */
 const EndpointToggle = ({ onChange, initialEndpoint = 'mainnet' }) => {
-  // Use the parent's state directly, no local state
-  const endpoint = initialEndpoint;
-  
-  const handleToggle = (newEndpoint) => {
-    // Only call the parent onChange, don't maintain local state
+
+  const handleToggle = (event) => {
+    const newEndpoint = event.target.value;
     if (onChange) onChange(newEndpoint);
   };
 
+  // Unique name for the radio group
+  const radioGroupName = "network-toggle";
+
   return (
-    <div className="endpoint-toggle">
-      <h4>Network:</h4>
-      <div className="toggle-buttons">
-        <button 
-          className={`toggle-button ${endpoint === 'regtest' ? 'active' : ''}`} 
-          onClick={() => handleToggle('regtest')}
-        >
-          REGTEST
-        </button>
-        <button 
-          className={`toggle-button ${endpoint === 'mainnet' ? 'active' : ''}`} 
-          onClick={() => handleToggle('mainnet')}
-        >
-          MAINNET
-        </button>
-        <button 
-          className={`toggle-button ${endpoint === 'oylnet' ? 'active' : ''}`}
-          onClick={() => handleToggle('oylnet')}
-        >
-          OYLNET
-        </button>
+    <fieldset className="group-box">
+      <legend>Network</legend>
+      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}> {/* Basic layout for radio buttons */}
+        <div>
+          <input
+            type="radio"
+            id="regtest-radio"
+            name={radioGroupName}
+            value="regtest"
+            checked={initialEndpoint === 'regtest'}
+            onChange={handleToggle}
+          />
+          <label htmlFor="regtest-radio">Regtest</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="mainnet-radio"
+            name={radioGroupName}
+            value="mainnet"
+            checked={initialEndpoint === 'mainnet'}
+            onChange={handleToggle}
+          />
+          <label htmlFor="mainnet-radio">Mainnet</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="oylnet-radio"
+            name={radioGroupName}
+            value="oylnet"
+            checked={initialEndpoint === 'oylnet'}
+            onChange={handleToggle}
+          />
+          <label htmlFor="oylnet-radio">Oylnet</label>
+        </div>
       </div>
-    </div>
+    </fieldset>
   );
 };
 

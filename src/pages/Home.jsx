@@ -2,225 +2,95 @@ import React from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 
 /**
- * Home Page Component
+ * Home Page Component (98.css version)
  *
  * The main landing page for the METAGRAPH application
- * Displays categories of API methods with links to their specific pages
- * Follows industrial aesthetic design guidelines
+ * Displays categories of API methods and explorer links using 98.css group boxes.
  */
 const Home = () => {
-  const { endpoint = 'mainnet' } = useOutletContext() || {};
-  
-  // CSS for inline styling according to design guidelines
-  const styles = {
-    container: {
-      width: '100%',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      backgroundColor: '#FFFFFF',
-      padding: '16px',
-      border: '1px solid #cccccc',
-    },
-    welcome: {
-      fontSize: '24px',
-      fontWeight: 'bold',
-      marginBottom: '16px',
-      textAlign: 'left',
-    },
-    description: {
-      fontSize: '14px',
-      marginBottom: '16px',
-      textAlign: 'left',
-    },
-    contentColumns: {
-      display: 'flex',
-      flexDirection: 'row',
-      gap: '20px',
-      marginTop: '16px',
-    },
-    column: {
-      flex: 1,
-      padding: '16px',
-      backgroundColor: '#FFFFFF',
-      border: '1px solid #cccccc',
-    },
-    playgroundColumn: {
-      flex: 1,
-      padding: '16px',
-      backgroundColor: '#f8f9fa',
-      border: '1px solid #000000',
-      borderLeft: '5px solid #000000',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    },
-    explorerColumn: {
-      flex: 1,
-      padding: '16px',
-      backgroundColor: '#f8f9fa',
-      border: '1px solid #000000',
-      borderLeft: '5px solid #000000',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    },
-    sectionTitle: {
-      fontSize: '24px',
-      fontWeight: 'bold',
-      marginBottom: '16px',
-      textAlign: 'left',
-    },
-    categoryTitle: {
-      fontSize: '16px',
-      fontWeight: 'bold',
-      marginTop: '20px',
-      marginBottom: '8px',
-      textAlign: 'left',
-      color: '#4A4A4A',
-    },
-    methodsList: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '5px',
-      textAlign: 'left',
-    },
-    methodItem: {
-      marginBottom: '8px',
-    },
-    link: {
-      color: '#0000FF',
-      textDecoration: 'none',
-      fontWeight: 'bold',
-      fontSize: '14px',
-    },
-    statusSection: {
-      marginTop: '16px',
-      padding: '16px',
-      backgroundColor: '#F5F5F5',
-      textAlign: 'left',
-    },
-    statusIndicator: {
-      fontSize: '14px',
-      marginBottom: '5px',
-    },
-    helpText: {
-      fontSize: '14px',
-      color: '#4A4A4A',
-    },
-    // Responsive styles
-    '@media (max-width: 768px)': {
-      contentColumns: {
-        flexDirection: 'column',
-      }
-    }
-  };
+  const { endpoint = 'mainnet' } = useOutletContext() || {}; // Endpoint context might be useful later
 
-  // Helper function to apply responsive styles
-  const applyResponsiveStyles = (baseStyles) => {
-    if (window.innerWidth <= 768) {
-      return {
-        ...baseStyles,
-        contentColumns: {
-          ...baseStyles.contentColumns,
-          flexDirection: 'column',
-        },
-        column: {
-          ...baseStyles.column,
-          marginBottom: '16px',
-        },
-        playgroundColumn: {
-          ...baseStyles.playgroundColumn,
-          marginBottom: '16px',
-        },
-        explorerColumn: {
-          ...baseStyles.explorerColumn,
-          marginBottom: '16px',
-        }
-      };
-    }
-    return baseStyles;
-  };
-
-  // Apply responsive styles
-  const responsiveStyles = applyResponsiveStyles(styles);
-  
   return (
-    <div style={responsiveStyles.container} className="container">
-      <h2 style={responsiveStyles.welcome}>Welcome to METAGRAPH</h2>
-      <p style={responsiveStyles.description}>An interactive playground for Alkanes metaprotocol and Sandshrew API methods.</p>
-      
-      <div style={responsiveStyles.contentColumns}>
+    // Main container div (no special styling needed here)
+    <div>
+      <h2>Welcome to METAGRAPH (Win98 Edition)</h2>
+      <p>An interactive playground for Alkanes metaprotocol and Sandshrew API methods, styled with 98.css.</p>
+
+      {/* Use flexbox for simple two-column layout */}
+      <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+
         {/* Left Column - Playground */}
-        <div style={responsiveStyles.playgroundColumn}>
-          <h2 style={responsiveStyles.sectionTitle}>Playground</h2>
-          
-          <div style={responsiveStyles.methodsList}>
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/api-methods/trace" style={responsiveStyles.link}>/api-methods/trace</Link>
-              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
-                Explore and debug transaction execution with detailed trace output
-              </p>
-            </div>
-            
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/api-methods/simulate" style={responsiveStyles.link}>/api-methods/simulate</Link>
-              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
-                Simulate Alkanes operations to preview outcomes without broadcasting to the network
-              </p>
-            </div>
-            
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/api-methods/protorunesbyoutpoint" style={responsiveStyles.link}>/api-methods/protorunesbyoutpoint</Link>
-              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
-                Query Protorunes by outpoint (txid, vout) at a specific block height
-              </p>
-            </div>
+        <fieldset className="group-box" style={{ flex: 1 }}>
+          <legend>Playground</legend>
+          {/* List of methods */}
+          <div style={{ marginBottom: '8px' }}>
+            <Link to="/api-methods/trace">/api-methods/trace</Link>
+            <p style={{ marginTop: '2px', fontSize: '11px', color: '#555' }}>
+              Explore and debug transaction execution with detailed trace output
+            </p>
           </div>
-        </div>
-        
+
+          <div style={{ marginBottom: '8px' }}>
+            <Link to="/api-methods/simulate">/api-methods/simulate</Link>
+            <p style={{ marginTop: '2px', fontSize: '11px', color: '#555' }}>
+              Simulate Alkanes operations to preview outcomes without broadcasting
+            </p>
+          </div>
+
+          <div style={{ marginBottom: '8px' }}>
+            <Link to="/api-methods/protorunesbyoutpoint">/api-methods/protorunesbyoutpoint</Link>
+            <p style={{ marginTop: '2px', fontSize: '11px', color: '#555' }}>
+              Query Protorunes by outpoint (txid, vout) at a specific block height
+            </p>
+          </div>
+        </fieldset>
+
         {/* Right Column - Explorer */}
-        <div style={responsiveStyles.explorerColumn}>
-          <h2 style={responsiveStyles.sectionTitle}>Explorer</h2>
-          
-          <div style={responsiveStyles.methodsList}>
-            <div style={responsiveStyles.methodItem}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Link to="/explorer/alkanes-tokens" style={responsiveStyles.link}>/explorer/alkanes-tokens</Link>
-                <span style={{ fontSize: '12px', color: '#666666', fontWeight: 'bold' }}>[2,n]</span>
-              </div>
-              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
-                View all <strong>initialized</strong> Alkanes tokens
-              </p>
-            </div>
-            
-            <div style={responsiveStyles.methodItem}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Link to="/explorer/alkanes-templates" style={responsiveStyles.link}>/explorer/alkanes-templates</Link>
-                <span style={{ fontSize: '12px', color: '#666666', fontWeight: 'bold' }}>[4,n]</span>
-              </div>
-              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
-                View all deployed Alkanes factory templates
-              </p>
-            </div>
-            
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/explorer/alkanes-balance" style={responsiveStyles.link}>/explorer/alkanes-balance</Link>
-              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
-                Explore Alkanes balances across the network
-              </p>
-            </div>
-            
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/explorer/address" style={responsiveStyles.link}>/explorer/address</Link>
-              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
-                Explore transactions for an address
-              </p>
-            </div>
-            
-            <div style={responsiveStyles.methodItem}>
-              <Link to="/explorer/transaction-io" style={responsiveStyles.link}>/explorer/transaction-io</Link>
-              <p style={{marginTop: '4px', fontSize: '12px', color: '#666666'}}>
-                Explore transaction inputs and outputs
-              </p>
-            </div>
+        <fieldset className="group-box" style={{ flex: 1 }}>
+          <legend>Explorer</legend>
+          {/* List of explorer links */}
+          <div style={{ marginBottom: '8px' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Link to="/explorer/alkanes-tokens">/explorer/alkanes-tokens</Link>
+                <span style={{ fontSize: '11px', color: '#555' }}>[2,n]</span>
+             </div>
+            <p style={{ marginTop: '2px', fontSize: '11px', color: '#555' }}>
+              View all <strong>initialized</strong> Alkanes tokens
+            </p>
           </div>
-        </div>
+
+          <div style={{ marginBottom: '8px' }}>
+             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Link to="/explorer/alkanes-templates">/explorer/alkanes-templates</Link>
+                <span style={{ fontSize: '11px', color: '#555' }}>[4,n]</span>
+             </div>
+            <p style={{ marginTop: '2px', fontSize: '11px', color: '#555' }}>
+              View all deployed Alkanes factory templates
+            </p>
+          </div>
+
+          <div style={{ marginBottom: '8px' }}>
+            <Link to="/explorer/alkanes-balance">/explorer/alkanes-balance</Link>
+            <p style={{ marginTop: '2px', fontSize: '11px', color: '#555' }}>
+              Explore Alkanes balances across the network
+            </p>
+          </div>
+
+          <div style={{ marginBottom: '8px' }}>
+            <Link to="/explorer/address">/explorer/address</Link>
+            <p style={{ marginTop: '2px', fontSize: '11px', color: '#555' }}>
+              Explore transactions for an address
+            </p>
+          </div>
+
+          <div style={{ marginBottom: '8px' }}>
+            <Link to="/explorer/transaction-io">/explorer/transaction-io</Link>
+            <p style={{ marginTop: '2px', fontSize: '11px', color: '#555' }}>
+              Explore transaction inputs and outputs
+            </p>
+          </div>
+        </fieldset>
+
       </div>
     </div>
   );

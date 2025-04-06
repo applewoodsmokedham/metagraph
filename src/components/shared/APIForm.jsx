@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import Terminal from './Terminal';
-import TerminalCodeBlock from './TerminalCodeBlock';
 
 /**
- * Generic APIForm Component
+ * Generic APIForm Component (98.css version)
  *
- * A reusable form component for API method calls
- * Handles form submission, validation, and displaying results
+ * A reusable form component for API methods, styled with 98.css and accessibility enhancements.
+ * Handles form state, submission, loading, error display, and results.
  *
  * @param {Object} props
  * @param {string} props.methodName - Name of the API method
@@ -30,11 +28,22 @@ const APIForm = ({
   examples = {},
   notes = ''
 }) => {
-  const [formValues, setFormValues] = useState({});
+  const [formValues, setFormValues] = useState(() => {
+    // Initialize form values with default placeholders if available
+    const initialValues = {};
+    parameters.forEach(param => {
+      if (param.placeholder && !param.required) {
+        // Use placeholder as default only if not required, to avoid accidental submission
+        // Adjust logic if specific default values are needed
+      } else if (param.defaultValue) {
+        initialValues[param.name] = param.defaultValue;
+      }
+    });
+    return initialValues;
+  });
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('request');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,18 +54,14 @@ const APIForm = ({
     e.preventDefault();
     setLoading(true);
     setError(null);
-    
+    setResults(null); // Clear previous results
+
     try {
       if (onSubmit) {
         const result = await onSubmit(formValues, endpoint);
         setResults(result);
       } else {
-        // Sample result if no onSubmit provided
-        setResults({
-          status: 'success',
-          message: 'API call successful (placeholder)',
-          data: { ...formValues, endpoint }
-        });
+        setResults({ message: 'onSubmit handler not provided.' });
       }
     } catch (err) {
       console.error('Error submitting form:', err);
@@ -66,142 +71,124 @@ const APIForm = ({
     }
   };
 
-  // Render the LoadingSpinner component when API is loading
-  const LoadingSpinner = () => (
-    <div className="terminal-loading-container">
-      <div className="terminal-spinner">
-        <span className="terminal-text">Loading</span>
-        <span className="terminal-dots">
-          <span className="dot">.</span>
-          <span className="dot">.</span>
-          <span className="dot">.</span>
-        </span>
-      </div>
-    </div>
-  );
+  // Helper to render code/JSON in a textarea within a sunken panel
+  const renderCodeBlock = (title, code) => {
+    if (!code) return null;
+    const content = typeof code === 'string' ? code : JSON.stringify(code, null, 2);
+    const rows = Math.min(20, content.split('\n').length + 1); // Limit rows
 
-  return (
-    <div className="api-form">
-      {/* Combined header and details section */}
-      <div className="method-header-section">
-        <h2>{methodName} <span className="method-type">{methodType}</span></h2>
-        <p className="method-description">{description}</p>
-        
-        <div className="method-details">
-          {Object.entries(methodDetails).map(([key, value]) => (
-            <div className="detail-item" key={key}>
-              <h3>{key}:</h3>
-              <div className="detail-value">{value}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {examples && Object.keys(examples).length > 0 && (
-        <div className="examples-section">
-          <h3>Examples</h3>
-          <Terminal
-            examples={examples}
-            languages={{
-              request: 'json',
-              response: 'json',
-              curl: 'bash'
-            }}
-            animate={false}
+    return (
+      <div style={{ marginBottom: '10px' }}>
+        <strong>{title}:</strong>
+        <div className="sunken-panel" style={{ marginTop: '5px' }}>
+          <textarea
+            readOnly
+            value={content}
+            rows={rows}
+            style={{ width: '100%', height: 'auto', boxSizing: 'border-box' }}
           />
         </div>
+      </div>
+    );
+  };
+
+  return (
+    <div>
+      {/* Method Title and Description */}
+      <h2>{methodName} {methodType && <span style={{ fontSize: '0.8em', fontWeight: 'normal' }}>({methodType})</span>}</h2>
+      <p>{description}</p>
+
+      {/* Method Details Group Box */}
+      {Object.keys(methodDetails).length > 0 && (
+        <fieldset className="group-box" style={{ marginBottom: '15px' }}>
+          <legend>Details</legend>
+          {Object.entries(methodDetails).map(([key, value]) => (
+            <div key={key} style={{ marginBottom: '5px' }}>
+              <strong>{key}:</strong> {typeof value === 'function' ? value() : value}
+            </div>
+          ))}
+        </fieldset>
       )}
 
-      {/* Combined Try It and Results section */}
-      <div className="try-it-results-section">
-        <div className="form-container">
-          <h3>Try It</h3>
+      {/* Examples Group Box */}
+      {examples && Object.keys(examples).length > 0 && (
+        <fieldset className="group-box" style={{ marginBottom: '15px' }}>
+          <legend>Examples</legend>
+          {renderCodeBlock('JSON-RPC Request', examples.request)}
+          {renderCodeBlock('Example Response', examples.response)}
+          {renderCodeBlock('cURL Command', examples.curl)}
+        </fieldset>
+      )}
+
+      {/* Combined Try It & Results Layout */}
+      <div style={{ display: 'flex', gap: '15px' }}>
+
+        {/* Try It Form Group Box */}
+        <fieldset className="group-box" style={{ flex: 1 }}>
+          <legend>Try It</legend>
           <form onSubmit={handleSubmit}>
             {parameters.map((param) => (
-              <div className="form-group" key={param.name}>
-                <label htmlFor={param.name}>{param.label}:</label>
+              <div key={param.name} style={{ marginBottom: '10px' }}>
+                <label htmlFor={`param-${param.name}`} style={{ display: 'block', marginBottom: '3px' }}>
+                  {param.label || param.name}:
+                </label>
                 <input
-                  type={param.type || 'text'}
-                  id={param.name}
+                  type={param.type || 'text'} // Use type if specified (e.g., 'number')
+                  id={`param-${param.name}`}
                   name={param.name}
                   value={formValues[param.name] || ''}
                   onChange={handleInputChange}
-                  placeholder={param.placeholder}
+                  placeholder={param.placeholder || ''}
                   required={param.required !== false}
+                  style={{ width: '100%', marginTop: '3px' }} // Ensure input takes full width
                 />
                 {param.description && (
-                  <div className="param-description">
+                  <p style={{ fontSize: '11px', color: '#555', marginTop: '3px', marginBottom: 0 }}>
                     {typeof param.description === 'function' ? param.description() : param.description}
-                  </div>
+                  </p>
                 )}
               </div>
             ))}
-
-            <div className="form-actions">
-              <button
-                type="submit"
-                className="execute-button"
-                disabled={loading}
-              >
-                {loading ? 'Executing...' : `Execute ${methodName}`}
-              </button>
-            </div>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Executing...' : `Execute ${methodName}`}
+            </button>
           </form>
-        </div>
+        </fieldset>
 
-        {/* Results section */}
-        <div className="results-section">
-          <h3>Results</h3>
-          
+        {/* Results Group Box */}
+        <div 
+          aria-live="polite" 
+          aria-busy={loading}
+          style={{ marginTop: '20px' }} 
+          role="status" // Role status implicitly has aria-live polite
+        >
+          {loading && (
+            <p className="status-message">Loading...</p>
+          )}
           {error && (
-            <TerminalCodeBlock
-              code={error}
-              language="text"
-              title="Error"
-              showLineNumbers={false}
-            />
+            <p className="status-message error">Error: {error}</p>
           )}
-
-          {loading && !error && (
-            <div className="terminal-container" style={{ backgroundColor: '#1E1E1E', border: '1px solid #454545', borderRadius: '6px' }}>
-              <div className="terminal-header" style={{ backgroundColor: '#323233', padding: '6px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #454545' }}>
-                <div className="terminal-title" style={{ color: '#D4D4D4', fontSize: '12px', fontFamily: "'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace" }}>
-                  Processing Request
-                </div>
+          {results && (
+            <fieldset className="group-box">
+              <legend>Result</legend>
+              {/* Apply the result box style from index.css */}    
+              <div className="api-result-box">
+                <pre>
+                  {JSON.stringify(results, null, 2)}
+                </pre> 
               </div>
-              <div style={{ padding: '16px' }}>
-                <LoadingSpinner />
-              </div>
-            </div>
-          )}
-
-          {results && !loading && !error && (
-            <TerminalCodeBlock
-              code={JSON.stringify(results, null, 2)}
-              language="json"
-              title="API Response"
-              showLineNumbers={false}
-            />
-          )}
-
-          {!results && !loading && !error && examples && examples.response && (
-            <div className="results-json example-placeholder">
-              <TerminalCodeBlock
-                code={examples.response}
-                language="json"
-                title="Example Response"
-                showLineNumbers={false}
-              />
-            </div>
+            </fieldset>
           )}
         </div>
+
       </div>
 
+      {/* Notes Group Box */}
       {notes && (
-        <div className="notes-section">
-          <h3>Notes</h3>
-          <div className="notes-content">{notes}</div>
-        </div>
+        <fieldset className="group-box" style={{ marginTop: '15px' }}>
+          <legend>Notes</legend>
+          <p>{notes}</p>
+        </fieldset>
       )}
     </div>
   );

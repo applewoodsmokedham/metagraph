@@ -1,69 +1,186 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Reset some browser defaults that might interfere */
+body,
+h1, h2, h3, h4, h5, h6,
+p,
+fieldset,
+legend,
+form,
+label,
+input,
+button,
+select,
+textarea,
+table,
+th, td {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Use border-box for easier sizing */
+  font-family: "Pixelated MS Sans Serif", "Tahoma"; /* Ensure 98.css font is primary */
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+/* Global Styles for Metagraph Win98 Reskin - Accessibility/Legibility Pass */
 
 body {
-  margin: 0;
-  /* Removing these properties that are causing layout issues */
-  /* display: flex; */
-  /* place-items: center; */
-  min-width: 320px;
-  min-height: 100vh;
+  /* Increase base font size for better legibility */
+  /* Using 16px as a base might be more compatible with 98.css rem units */
+  /* Or try 18px if 16px is still too small */
+  font-size: 16px; 
+  line-height: 1.5; /* Improve line spacing */
+  background-color: #008080; /* Win95/98 Teal background */
+  color: #000000; /* Standard black text */
+  padding: 10px; /* Add padding around the body */
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Ensure links are distinguishable */
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: purple;
 }
 
+/* General heading adjustments */
+h1, h2, h3 {
+    margin-bottom: 0.75em; /* Add space below headings */
+    font-weight: bold;
+}
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+
+/* Make form elements larger and more touch-friendly */
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+textarea,
+select,
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  padding: 5px 8px; /* Adjusted padding for 98.css look */
+  font-size: 1rem;   /* Use relative unit based on body font-size */
+  min-height: 28px; /* Ensure minimum height */
+  vertical-align: middle; /* Align better with labels */
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Style labels for better association */
+label {
+    display: inline-block; /* Allow margin */
+    margin-bottom: 5px; /* Space below label */
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+/* Add vertical space between form rows/elements */
+form > div, /* Target common div wrappers for form rows */
+form > p,   /* Target paragraphs used for spacing */
+form > fieldset {
+    margin-bottom: 15px;
+}
+
+/* Improve spacing within group boxes */
+fieldset.group-box {
+    padding: 15px; /* Add padding *around* the content */
+    margin-bottom: 20px; /* Space below group boxes */
+}
+
+fieldset.group-box > legend {
+    font-size: 1.1rem; /* Make legends slightly larger */
+    font-weight: bold;
+    padding: 0 6px; /* Add horizontal padding */
+    margin-left: 5px; /* Align with padding */
+}
+
+/* Make tables more readable */
+table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse; /* Ensure borders work correctly */
+}
+
+thead {
+    background-color: #c0c0c0; /* Classic grey header */
+    font-weight: bold;
+}
+
+th, td {
+    padding: 8px 10px; /* Increase padding in table cells */
+    text-align: left;
+    vertical-align: middle; /* Align vertically */
+    border: 1px solid #808080; /* Add subtle borders */
+}
+
+/* Add hover effect for table rows */
+tbody tr:hover {
+    background-color: #e0e0e0; /* Slight highlight on hover */
+}
+
+/* Ensure sufficient contrast for common elements */
+button {
+    cursor: pointer; /* Ensure pointer cursor */
+    min-width: 75px; /* Standard Win98 button width */
+}
+
+button:disabled {
+    cursor: not-allowed; /* Standard disabled cursor */
+    /* 98.css handles disabled visual state */
+}
+
+/* Basic accessibility focus outline (use 98.css default) */
+/* *:focus { */
+  /* Let 98.css handle focus styles for consistency */
+/* } */
+
+/* Adjustments for specific components if needed */
+
+/* Make the main App window larger */
+.app-window {
+    width: 95%;
+    max-width: 1000px; /* Limit max width */
+    min-height: 80vh; /* Ensure it takes up significant height */
+    margin: 10px auto; /* Center it with some margin */
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column;
+}
+
+.app-window > .window-body {
+    flex-grow: 1; /* Allow body to fill available space */
+    padding: 15px; /* Add padding inside the window body */
+    overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+.app-window > .status-bar {
+    flex-shrink: 0; /* Prevent status bar from shrinking */
+}
+
+/* Ensure textareas are reasonably sized */
+textarea {
+    min-height: 100px;
+    width: 100%; /* Make textareas take full width */
+}
+
+/* Style for APIForm results/code */
+.api-result-box {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px inset #808080;
+    background-color: #ffffff; /* White background for readability */
+    max-height: 400px;
+    overflow: auto;
+    white-space: pre-wrap; /* Allow wrapping */
+    word-wrap: break-word;
+    font-family: monospace; /* Use monospace font for code/JSON */
+    font-size: 0.9rem; /* Slightly smaller font for density */
+}
+
+/* Style for loading/error messages */
+.status-message {
+    text-align: center;
+    padding: 15px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+.status-message.error {
+    color: red;
+    border: 1px solid red;
+    background-color: #ffe0e0;
 }

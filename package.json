@@ -12,6 +12,7 @@
   "dependencies": {
     "@omnisat/lasereyes": "^0.0.141",
     "@oyl/sdk": "https://github.com/Oyl-Wallet/oyl-sdk",
+    "98.css": "^0.1.20",
     "assert": "^2.1.0",
     "bitcoinjs-lib": "^6.1.7",
     "browserify-fs": "^1.0.0",

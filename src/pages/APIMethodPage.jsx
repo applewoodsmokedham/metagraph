@@ -6,10 +6,12 @@ import TraceForm from '../components/methods/TraceForm';
 import ProtorunesByOutpointForm from '../components/methods/ProtorunesByOutpointForm';
 
 /**
- * APIMethodPage Component
+ * APIMethodPage Component (98.css Integration)
  *
- * Template page for all API method pages
- * Dynamically loads the correct form component based on the route parameter or props
+ * Template page for API method forms.
+ * Dynamically loads the correct form component based on the route parameter or props.
+ * Passes down the endpoint context.
+ * Basic styling for the not-found case.
  */
 const APIMethodPage = ({ methodComponent: ProvidedMethodComponent, methodName: providedMethodName }) => {
   const { methodId } = useParams();
@@ -26,31 +28,29 @@ const APIMethodPage = ({ methodComponent: ProvidedMethodComponent, methodName: p
   };
 
   // Get method name from either route param or prop
-  const currentMethodId = methodId || providedMethodName?.toLowerCase();
-  
+  // Ensure consistency in matching (lowercase)
+  const currentMethodId = methodId?.toLowerCase() || providedMethodName?.toLowerCase().replace(/\s+/g, '');
+
   // Find the appropriate component - use provided component or look up by method ID
   const MethodComponent = ProvidedMethodComponent || methodComponents[currentMethodId];
 
-  // If method doesn't exist, show error
+  // If method doesn't exist, show error message with a standard button
   if (!currentMethodId || !MethodComponent) {
     return (
-      <div className="api-method-page">
-        <div className="method-header">
-          <h1>Method Not Found</h1>
-          <p>The API method "{currentMethodId}" does not exist or is not yet implemented.</p>
-          <button onClick={() => navigate('/')} className="back-button">
-            Back to Home
-          </button>
-        </div>
+      <div>
+        <h1>Method Not Found</h1>
+        <p>The API method "{methodId || providedMethodName}" does not exist or is not yet implemented.</p>
+        <button onClick={() => navigate('/')}>
+          Back to Home
+        </button>
       </div>
     );
   }
 
+  // Render the specific method form component, passing the endpoint
   return (
-    <div className="api-method-page">
-      <div className="method-content">
-        <MethodComponent endpoint={endpoint} />
-      </div>
+    <div>
+       <MethodComponent endpoint={endpoint} />
     </div>
   );
 };

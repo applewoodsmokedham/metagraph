@@ -1,109 +1,121 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useLaserEyes } from '@omnisat/lasereyes';
 import { getAlkanesByAddress, getAlkanesTokenImage } from '../sdk/alkanes';
 
 /**
- * AlkanesBalanceExplorer Component
+ * AlkanesBalanceExplorer Component (98.css version)
  * 
- * Page for exploring Alkanes balances by address
+ * Page for exploring Alkanes balances by address, styled with 98.css.
  * Allows users to view token balances using connected wallet or manual address entry
  */
 const AlkanesBalanceExplorer = () => {
   const { endpoint = 'mainnet' } = useOutletContext() || {};
   const { connected, address: walletAddress } = useLaserEyes();
   
-  const [address, setAddress] = useState('');
-  const [manualAddress, setManualAddress] = useState('');
+  const [address, setAddress] = useState(''); // Current address being searched
+  const [manualAddress, setManualAddress] = useState(''); // User input field value
   const [alkanes, setAlkanes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showCopied, setShowCopied] = useState(false);
-  const [tokenImages, setTokenImages] = useState({});
-  const [imageLoading, setImageLoading] = useState({});
+  const [tokenImages, setTokenImages] = useState({}); // Store fetched image URIs
+  const [imageLoading, setImageLoading] = useState({}); // Track image loading state
   
-  // Helper function to shorten addresses
+  // Helper function to shorten addresses (optional, can remove if not used)
   const shortenAddress = (addr) => {
     if (!addr) return 'N/A';
     if (addr.length <= 9) return addr;
     return `${addr.substring(0, 4)}...${addr.substring(addr.length - 5)}`;
   };
   
-  // Helper function to format AlkaneId
+  // Helper function to format AlkaneId (block:tx)
   const formatAlkaneId = (tokenId) => {
-    if (!tokenId) return 'N/A';
-    
-    // Format as block:tx
-    const blockPart = tokenId.block ? tokenId.block.substring(0, 6) : '------';
-    const txPart = tokenId.tx ? tokenId.tx.substring(0, 6) : '------';
-    
-    return `${blockPart}:${txPart}`;
+    if (!tokenId || !tokenId.block || !tokenId.tx) return 'N/A';
+    return `${tokenId.block}:${tokenId.tx}`;
   };
   
-  // Function to copy text to clipboard
+  // Function to copy text to clipboard (simple version)
   const copyToClipboard = (text) => {
     if (!text) return;
     navigator.clipboard.writeText(text)
       .then(() => {
-        setShowCopied(true);
-        setTimeout(() => setShowCopied(false), 2000);
+        console.log('Address copied to clipboard'); // Simple console feedback
       })
       .catch(err => {
         console.error('Failed to copy text: ', err);
       });
   };
   
-  // Reset component state when endpoint/network changes
-  useEffect(() => {
-    // Reset the state to prevent issues when switching networks
-    setAlkanes([]);
-    setTokenImages({});
-    setImageLoading({});
+  // Memoize fetchBalances to avoid re-creating it on every render
+  // unless endpoint or other dependencies change.
+  const fetchBalances = useCallback(async (addrToFetch) => {
+    setLoading(true);
     setError(null);
-    
-    // Don't automatically set the address or manual address
-    // This prevents overriding manually entered addresses when switching networks
-    
-    console.log(`Network switched to ${endpoint}`);
-  }, [endpoint]);
-  
-  // Only populate the address field when both wallet connects and no address is already entered
-  useEffect(() => {
-    if (connected && walletAddress && !address && !manualAddress) {
-      // Only set the wallet address when both address and manualAddress are empty
-      // This prevents overriding any user input
-      setAddress(walletAddress);
+    setAlkanes([]); // Clear previous results
+
+    try {
+      const result = await getAlkanesByAddress(addrToFetch, endpoint);
+
+      if (result.status === 'error') {
+        throw new Error(result.message || 'Failed to fetch balances');
+      }
+      
+      // Filter out any tokens without a valid tokenId before setting state
+      const validAlkanes = (result.alkanes || []).filter(token => token.tokenId && token.tokenId.block && token.tokenId.tx);
+
+      setAlkanes(validAlkanes);
+
+    } catch (err) {
+      console.error("Error in fetchBalances:", err); // Log the detailed error
+      // Check if it's the specific SDK error
+      if (err.message && err.message.includes('Error processing UTXO')) {
+        setError(`Failed to process token data from the SDK. Please try again later or check the address. Details: ${err.message}`);
+      } else {
+        setError(err.message || 'An unknown error occurred while fetching balances.');
+      }
+    } finally {
+      setLoading(false);
     }
-  }, [connected, walletAddress, address, manualAddress]);
-  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [endpoint]); // Re-create fetchBalances if endpoint changes
+
+  // Effect to handle wallet connection changes
+  useEffect(() => {
+    if (connected && walletAddress) {
+      setManualAddress(walletAddress); // Populate input field
+      setAddress(walletAddress);       // Set address to fetch
+      fetchBalances(walletAddress);
+    } else {
+      setError('Wallet not connected.');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, [address, endpoint]); // Dependency on address and endpoint is correct
+
   // Fetch token images when alkanes are loaded
   useEffect(() => {
     if (alkanes.length > 0) {
       fetchTokenImages(alkanes);
     }
   }, [alkanes]);
-  
-  // Function to fetch token images
+
+  // Function to fetch token images (remains mostly the same)
   const fetchTokenImages = async (tokens) => {
     const newImageLoading = { ...imageLoading };
-    
-    // For each token with a tokenId, fetch its image if not already loaded
     for (const token of tokens) {
-      if (!token.tokenId) continue;
+      // Ensure tokenId and its properties exist
+      if (!token.tokenId || !token.tokenId.block || !token.tokenId.tx) {
+        console.warn('Skipping token due to missing ID:', token);
+        continue;
+      }
       
-      // Create a network-specific cache key
       const cacheKey = `${endpoint}:${token.tokenId.tx}`;
-      
-      if (!tokenImages[cacheKey]) {
+      if (!tokenImages[cacheKey] && !newImageLoading[cacheKey]) { // Check loading state too
         try {
-          // Set loading state for this token
           newImageLoading[cacheKey] = true;
-          setImageLoading(newImageLoading);
+          setImageLoading(prev => ({ ...prev, [cacheKey]: true })); // Update loading state immutably
           
-          // Fetch the image for the specific network
           const result = await getAlkanesTokenImage(token.tokenId, endpoint);
           
-          // Update the image state with network-specific key
           if (result.status === "success" && result.imageUri) {
             setTokenImages(prev => ({
               ...prev,
@@ -113,464 +125,210 @@ const AlkanesBalanceExplorer = () => {
         } catch (error) {
           console.error(`Error fetching image for token ${token.name} on ${endpoint}:`, error);
         } finally {
-          // Update loading state
-          setImageLoading(prev => ({
-            ...prev,
-            [cacheKey]: false
-          }));
+          setImageLoading(prev => ({ ...prev, [cacheKey]: false })); // Update loading state immutably
         }
       }
     }
   };
-  
-  // Validate Bitcoin address (basic validation)
+
+  // Validate Bitcoin address (simple checks)
   const isValidBitcoinAddress = (addr) => {
-    // Basic validation - check if it starts with valid prefixes
-    return addr && (
-      addr.startsWith('bc1') || 
-      addr.startsWith('1') || 
-      addr.startsWith('3') ||
-      addr.startsWith('bcr') || //regtest
-      addr.startsWith('tb1') || // testnet
-      addr.startsWith('m') || // testnet
-      addr.startsWith('n') || // testnet
-      addr.startsWith('2') // testnet
-    );
+    if (!addr) return false;
+    // Basic checks for common address types (P2PKH, P2SH, Bech32)
+    if (/^(1|3)[a-zA-HJ-NP-Z0-9]{25,34}$/.test(addr)) return true; // P2PKH, P2SH
+    if (/^bc1[ac-hj-np-z02-9]{11,71}$/i.test(addr)) return true; // Bech32 (P2WPKH, P2WSH)
+    if (/^tb1[ac-hj-np-z02-9]{11,71}$/i.test(addr)) return true; // Testnet Bech32
+    // Add more checks if needed (e.g., Taproot - bc1p...)
+    return false;
   };
-  
-  // Handle form submission
+
+  // Handle form submission for manual address
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Reset all states before making a new request
-    setError(null);
-    setTokenImages({});
-    setImageLoading({});
-    
-    // Validate address
-    const addressToUse = manualAddress || address;
-    if (!addressToUse) {
-      setError("Please enter an address");
+    if (!manualAddress) {
+      setError('Please enter a Bitcoin address.');
       return;
     }
-    
-    if (!isValidBitcoinAddress(addressToUse)) {
-      setError("Please enter a valid Bitcoin address");
+    if (!isValidBitcoinAddress(manualAddress)) {
+      setError('Invalid Bitcoin address format.');
       return;
     }
-    
-    // Set loading state
-    setLoading(true);
-    setAlkanes([]); // Clear previous results
-    
-    try {
-      console.log(`Searching for Alkanes on network ${endpoint} for address ${addressToUse}`);
-      
-      // Fetch alkanes data for the current endpoint
-      const result = await getAlkanesByAddress(addressToUse, endpoint);
-      
-      if (result.status === "error") {
-        throw new Error(result.message);
-      }
-      
-      // Set data
-      setAlkanes(result.alkanes || []);
-      setAddress(addressToUse);
-      
-      // Don't clear manual address if the user entered one
-      // This ensures we don't revert to the wallet address on search
-    } catch (err) {
-      console.error("Error fetching Alkanes data:", err);
-      setError(err.message || "Failed to fetch Alkanes data");
-      setAlkanes([]);
-    } finally {
-      setLoading(false);
-    }
+    setAddress(manualAddress); // Set the address to fetch
+    fetchBalances(manualAddress);
   };
-  
-  // Handle using connected wallet
+
+  // Handle using connected wallet address
   const useConnectedWallet = () => {
     if (connected && walletAddress) {
-      setManualAddress('');
-      setAddress(walletAddress);
+      setManualAddress(walletAddress); // Populate input field
+      setAddress(walletAddress);       // Set address to fetch
+      fetchBalances(walletAddress);
+    } else {
+      setError('Wallet not connected.');
     }
   };
-  
-  // CSS for inline styling according to design guidelines
-  const styles = {
-    container: {
-      width: '100%',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      backgroundColor: '#FFFFFF',
-      padding: '20px',
-      border: '1px solid #E0E0E0',
-    },
-    title: {
-      fontSize: '24px',
-      fontWeight: 'bold',
-      marginBottom: '16px',
-      textAlign: 'left',
-      fontFamily: 'Roboto Mono, monospace',
-    },
-    description: {
-      fontSize: '14px',
-      marginBottom: '20px',
-      textAlign: 'left',
-      fontFamily: 'Roboto Mono, monospace',
-    },
-    section: {
-      marginBottom: '20px',
-      padding: '20px',
-      backgroundColor: '#FFFFFF',
-      border: '1px solid #E0E0E0',
-    },
-    form: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '16px',
-    },
-    formRow: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '10px',
-      flexWrap: 'wrap',
-    },
-    label: {
-      fontWeight: 'bold',
-      marginBottom: '8px',
-      display: 'block',
-      fontFamily: 'Roboto Mono, monospace',
-      fontSize: '14px',
-    },
-    input: {
-      padding: '8px',
-      border: '1px solid #E0E0E0',
-      borderRadius: '4px',
-      width: '100%',
-      fontFamily: 'Roboto Mono, monospace',
-      fontSize: '14px',
-    },
-    helpText: {
-      fontSize: '12px',
-      color: '#666666',
-      marginTop: '4px',
-      fontFamily: 'Roboto Mono, monospace',
-    },
-    warningText: {
-      fontSize: '12px',
-      color: '#FF9800',
-      marginTop: '4px',
-      fontFamily: 'Roboto Mono, monospace',
-    },
-    button: {
-      backgroundColor: '#000000',
-      color: '#FFFFFF',
-      border: 'none',
-      padding: '8px 16px',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      fontFamily: 'Roboto Mono, monospace',
-      fontSize: '14px',
-      fontWeight: 'bold',
-    },
-    secondaryButton: {
-      backgroundColor: '#FFFFFF',
-      color: '#000000',
-      border: '1px solid #000000',
-      padding: '8px 16px',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      fontFamily: 'Roboto Mono, monospace',
-      fontSize: '14px',
-    },
-    disabledButton: {
-      backgroundColor: '#CCCCCC',
-      color: '#666666',
-      border: 'none',
-      padding: '8px 16px',
-      borderRadius: '4px',
-      cursor: 'not-allowed',
-      fontFamily: 'Roboto Mono, monospace',
-      fontSize: '14px',
-    },
-    addressDisplay: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      border: '1px solid #E0E0E0',
-      padding: '8px',
-      borderRadius: '4px',
-      backgroundColor: '#F5F5F5',
-    },
-    copyButton: {
-      backgroundColor: 'transparent',
-      border: 'none',
-      color: '#000000',
-      cursor: 'pointer',
-      padding: '2px 6px',
-      fontSize: '12px',
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    copiedPopup: {
-      position: 'absolute',
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      color: 'white',
-      padding: '4px 8px',
-      borderRadius: '4px',
-      fontSize: '12px',
-      animation: 'fadeOut 2s forwards',
-      zIndex: 10,
-    },
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse',
-      marginTop: '20px',
-      fontFamily: 'Roboto Mono, monospace',
-    },
-    tableHead: {
-      backgroundColor: '#F5F5F5',
-      textAlign: 'left',
-    },
-    tableRow: {
-      borderBottom: '1px solid #E0E0E0',
-    },
-    tableCell: {
-      padding: '12px 8px',
-      textAlign: 'left',
-      fontSize: '14px',
-    },
-    tableHeaderCell: {
-      padding: '12px 8px',
-      fontWeight: 'bold',
-      textAlign: 'left',
-      fontSize: '14px',
-    },
-    loadingContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: '40px 0',
-    },
-    spinner: {
-      border: '4px solid #f3f3f3',
-      borderTop: '4px solid #000000',
-      borderRadius: '50%',
-      width: '30px',
-      height: '30px',
-      animation: 'spin 1s linear infinite',
-    },
-    errorContainer: {
-      padding: '16px',
-      backgroundColor: '#FFEBEE',
-      border: '1px solid #FFCDD2',
-      borderRadius: '4px',
-      marginTop: '20px',
-    },
-    errorMessage: {
-      color: '#B71C1C',
-      fontSize: '14px',
-      fontFamily: 'Roboto Mono, monospace',
-    },
-    emptyStateContainer: {
-      padding: '40px 16px',
-      textAlign: 'center',
-      backgroundColor: '#F5F5F5',
-      borderRadius: '4px',
-      marginTop: '20px',
-    },
-    emptyStateMessage: {
-      color: '#666666',
-      fontSize: '16px',
-      fontFamily: 'Roboto Mono, monospace',
-      marginBottom: '16px',
-    },
-    tokenImage: {
-      width: '40px',
-      height: '40px',
-      objectFit: 'contain',
-      borderRadius: '4px',
-      backgroundColor: '#F5F5F5',
-    },
-    tokenImageContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '50px',
-      height: '50px',
-    },
-    tokenImagePlaceholder: {
-      width: '40px',
-      height: '40px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: '#F5F5F5',
-      borderRadius: '4px',
-      fontSize: '20px',
-      color: '#666666',
-    },
-  };
-  
-  // Add CSS animations for fadeout and spinner
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @keyframes fadeOut {
-        0% { opacity: 1; }
-        70% { opacity: 1; }
-        100% { opacity: 0; }
-      }
-      
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    `;
-    document.head.appendChild(style);
-    
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
-  
+
   return (
-    <div style={styles.container} className="container">
-      <h2 style={styles.title}>Alkanes Balance Explorer</h2>
-      <p style={styles.description}>
-        Explore Alkanes balances across the {endpoint.toUpperCase()} network.
-      </p>
-      
-      <div style={styles.section}>
-        <form style={styles.form} onSubmit={handleSubmit}>
-          <div>
-            <label style={styles.label}>Bitcoin Address</label>
-            
-            {/* Address display removed as requested */}
-            
-            {/* Input for manual address entry */}
-            <div style={styles.formRow}>
-              <input
-                type="text"
-                style={styles.input}
-                placeholder="Enter a Bitcoin address containing Alkanes"
-                value={manualAddress}
-                onChange={(e) => setManualAddress(e.target.value)}
+    // Add role="region" and aria-labelledby for context
+    <div role="region" aria-labelledby="balance-explorer-title">
+      <h2 id="balance-explorer-title">Alkanes Balance Explorer</h2>
+      <p>Enter a Bitcoin address or use your connected wallet to view Alkanes token balances.</p>
+
+      {/* Search Form Group Box */}
+      <fieldset className="group-box" aria-labelledby="search-legend">
+        <legend id="search-legend">Search Balances</legend>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '10px' }}>
+            {/* Associate label and add aria-describedby for errors */}
+            <label htmlFor="bitcoinAddress">Bitcoin Address:</label> 
+            <input 
+              type="text" 
+              id="bitcoinAddress" 
+              value={manualAddress} 
+              onChange={(e) => setManualAddress(e.target.value)}
+              placeholder="Enter Bitcoin address (e.g., bc1...)"
+              style={{ width: '100%', marginTop: '3px' }}
+              disabled={loading} 
+              aria-required="true"
+              aria-invalid={!!error} // Mark as invalid if there's an error related to input
+              aria-describedby="address-error-message" // Link to potential error message
+            />
+          </div>
+          
+          <div style={{ marginTop: '10px' }}>
+            <button type="submit" disabled={loading || !manualAddress} aria-busy={loading}>
+              {loading ? 'Loading...' : 'Search by Address'}
+            </button>
+            {connected && (
+              <button 
+                type="button" 
+                onClick={useConnectedWallet}
                 disabled={loading}
-              />
-              
-              {/* "Use Wallet" button removed as requested */}
-              
-              <button
-                type="submit"
-                style={loading ? styles.disabledButton : styles.button}
-                disabled={loading}
+                aria-busy={loading}
+                style={{ marginLeft: '10px' }} // Add some space
               >
-                {loading ? 'Loading...' : 'Search'}
+                Use Connected Wallet ({shortenAddress(walletAddress)})
               </button>
-            </div>
-            
-            {/* Warning text removed as requested */}
+            )}
           </div>
         </form>
-      </div>
+      </fieldset>
       
-      {/* Results section */}
-      <div style={styles.section}>
-        <h3 style={styles.title}>Results</h3>
-        
-        {/* Show loading state */}
-        {loading && (
-          <div style={styles.loadingContainer}>
-            <div style={styles.spinner}></div>
-          </div>
-        )}
-        
-        {/* Show error state */}
-        {error && (
-          <div style={styles.errorContainer}>
-            <p style={styles.errorMessage}>{error}</p>
-            <button 
-              style={{...styles.secondaryButton, marginTop: '10px'}}
-              onClick={() => setError(null)}
-            >
-              Try Again
-            </button>
-          </div>
-        )}
-        
-        {/* Show empty state */}
-        {!loading && !error && alkanes.length === 0 && (
-          <div style={styles.emptyStateContainer}>
-            <p style={styles.emptyStateMessage}>No Alkanes tokens found for this address</p>
-          </div>
-        )}
-        
-        {/* Show results table */}
-        {!loading && !error && alkanes.length > 0 && (() => {
-          // Aggregate tokens by AlkaneId
-          const aggregatedTokens = {};
+      {/* Results Group Box with ARIA live region */}
+      <div 
+        aria-live="polite"
+        aria-busy={loading}
+        role="region"
+        aria-labelledby="results-legend" 
+      >
+        <fieldset className="group-box" style={{ marginTop: '20px' }}>
+          <legend id="results-legend">Results {address ? `for ${shortenAddress(address)}` : ''}</legend>
           
-          alkanes.forEach(token => {
-            if (!token.tokenId) return;
+          {/* Status Messages */}        
+          {loading && (
+            <p className="status-message">Loading balances...</p>
+          )}
+          
+          {/* Link error message id to input's aria-describedby */}
+          {error && (
+            <div className="status-message error" id="address-error-message">
+              <p>Error: {error}</p>
+              <button onClick={() => fetchBalances(address)} disabled={!address || loading}>
+                Retry
+              </button>
+            </div>
+          )}
+          
+          {!loading && !error && !address && (
+              <p className="status-message">Enter an address or connect wallet to search.</p>
+          )}
+          
+          {!loading && !error && address && alkanes.length === 0 && (
+            <p className="status-message">No Alkanes tokens found for this address.</p>
+          )}
+          
+          {/* Results Table */}    
+          {!loading && !error && alkanes.length > 0 && (() => {
+            // Aggregate tokens by AlkaneId (handles potential duplicates from API)
+            const aggregatedTokens = {};
             
-            const id = `${token.tokenId.block}:${token.tokenId.tx}`;
-            if (!aggregatedTokens[id]) {
-              aggregatedTokens[id] = {
-                tokenId: token.tokenId,
-                name: token.name,
-                symbol: token.symbol || '-',
-                amount: 0,
-                // Store raw amount (with 8 decimal places)
-                rawAmount: 0
-              };
-            }
+            alkanes.forEach(token => {
+              // Ensure tokenId and its properties exist
+              if (!token.tokenId || !token.tokenId.block || !token.tokenId.tx) {
+                console.warn('Skipping token due to missing ID:', token);
+                return;
+              }
+              
+              const id = formatAlkaneId(token.tokenId);
+              if (!aggregatedTokens[id]) {
+                aggregatedTokens[id] = {
+                  tokenId: token.tokenId,
+                  name: token.name,
+                  symbol: token.symbol || '-',
+                  // Store raw amount (integer)
+                  rawAmount: 0
+                };
+              }
+              // Add to the existing balance (raw value)
+              aggregatedTokens[id].rawAmount += token.amount || 0;
+            });
             
-            // Add to the existing balance (keeping raw value)
-            aggregatedTokens[id].rawAmount += token.amount;
-            // Divide by 10^8 to get the actual balance with proper decimal places
-            aggregatedTokens[id].amount = aggregatedTokens[id].rawAmount / 100000000;
-          });
-          
-          // Convert to array for rendering
-          const tokenList = Object.values(aggregatedTokens);
-          
-          return (
-            <table style={styles.table}>
-              <thead style={styles.tableHead}>
-                <tr style={styles.tableRow}>
-                  <th style={styles.tableHeaderCell}>AlkaneId</th>
-                  <th style={styles.tableHeaderCell}>Symbol</th>
-                  <th style={styles.tableHeaderCell}>Token Name</th>
-                  <th style={styles.tableHeaderCell}>Balance</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tokenList.map((token, index) => (
-                  <tr key={index} style={{
-                    ...styles.tableRow,
-                    backgroundColor: index % 2 === 0 ? '#FFFFFF' : '#F5F5F5'
-                  }}>
-                    <td style={styles.tableCell} title={token.tokenId ? `Block: ${token.tokenId.block}, TX: ${token.tokenId.tx}` : 'No ID available'}>
-                      {formatAlkaneId(token.tokenId)}
-                    </td>
-                    <td style={styles.tableCell}>{token.symbol}</td>
-                    <td style={styles.tableCell}>{token.name}</td>
-                    <td style={styles.tableCell}>
-                      {token.amount ? token.amount.toLocaleString(undefined, {
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 8
-                      }) : '0'}
-                    </td>
+            // Convert to array for rendering and calculate display amount
+            const tokenList = Object.values(aggregatedTokens).map(token => ({
+              ...token,
+              // Calculate display amount with 8 decimals
+              amount: token.rawAmount / 100000000 
+            }));
+            
+            return (
+              <table>
+                <thead>
+                  {/* Add scope="col" to table headers */}                  
+                  <tr>
+                    <th scope="col">AlkaneId (Block:TX)</th>
+                    <th scope="col">Symbol</th>
+                    <th scope="col">Token Name</th>
+                    <th scope="col">Balance</th>
+                    {/* Add header for image if needed */}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          );
-        })()}
-      </div>
+                </thead>
+                <tbody>
+                  {tokenList.map((token) => {
+                    const idString = formatAlkaneId(token.tokenId);
+                    const imageCacheKey = `${endpoint}:${token.tokenId.tx}`;
+                    const isLoadingImage = imageLoading[imageCacheKey];
+                    const imageUri = tokenImages[imageCacheKey];
+                    
+                    return (
+                      <tr key={idString}>
+                        <td title={`Block: ${token.tokenId.block}, TX: ${token.tokenId.tx}`}>
+                          {idString}
+                        </td>
+                        <td>{token.symbol}</td>
+                        <td>{token.name}</td>
+                        <td>
+                          {token.amount ? token.amount.toLocaleString(undefined, {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 8
+                          }) : '0'}
+                        </td>
+                        {/* Optional: Display image if available */}
+                        {/* 
+                        <td>
+                          {isLoadingImage ? 'Loading...' : 
+                            imageUri ? <img src={imageUri} alt={token.name} style={{width: '32px', height: '32px'}} /> : 'No Image'
+                          }
+                        </td>
+                        */}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            );
+          })()}
+        </fieldset>
+      </div> 
     </div>
   );
 };

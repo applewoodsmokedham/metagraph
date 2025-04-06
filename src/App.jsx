@@ -1,7 +1,6 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Outlet, useNavigate, Link } from 'react-router-dom';
 import { LaserEyesProvider } from '@omnisat/lasereyes';
-import './App.css';
 import EndpointToggle from './components/shared/EndpointToggle';
 import WalletConnector from './components/shared/WalletConnector';
 import { mapNetworkToLaserEyes } from './utils/networkMapping';
@@ -35,11 +34,7 @@ class ErrorBoundary extends React.Component {
 }
 
 /**
- * App Component - With Safe Component Loading
- *
- * This version adds components safely with error boundaries
- * to prevent blank page issues
- * Follows industrial aesthetic design guidelines
+ * App Component - Reskinned with 98.css
  */
 function App() {
   const [network, setNetwork] = useState('mainnet');
@@ -55,93 +50,79 @@ function App() {
     setNetwork(newNetwork);
   };
 
-  // CSS for inline styling according to design guidelines
-  const styles = {
-    app: {
-      fontFamily: 'Roboto Mono, monospace',
-      color: '#000000',
-      backgroundColor: '#F5F5F5',
-    },
-    header: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '16px',
-      backgroundColor: '#FFFFFF',
-      borderBottom: '1px solid #cccccc',
-      width: '100%',
-      maxWidth: '1200px',
-      margin: '0 auto',
-    },
-    headerTitle: {
-      display: 'flex',
-      flexDirection: 'column',
-      textAlign: 'left',
-    },
-    headerControls: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '16px',
-    },
-    title: {
-      fontSize: '24px',
-      fontWeight: 'bold',
-      marginBottom: '4px',
-      letterSpacing: '0.05em',
-      fontFamily: 'var(--font-mono)',  // Use original font
-    },
-    subtitle: {
-      fontSize: '14px',
-      color: '#4A4A4A',
-    },
-    mainContent: {
-      flex: 1,
-      padding: '16px',
-    },
+  // Basic inline style for the main window positioning
+  const windowStyle = {
+    width: 'calc(100% - 40px)', // Adjust width as needed
+    margin: '20px auto'          // Center the window with margins
   };
 
   return (
     <>
       {isClient ? (
         <LaserEyesProvider config={{ network: mapNetworkToLaserEyes(network) }}>
-          <div style={styles.app} className="app">
-            <header style={styles.header} className="header">
-              <div style={styles.headerTitle} className="header-title">
-                <h1 style={styles.title}>METAGRAPH</h1>
-                <span style={styles.subtitle} className="subtitle">Method Exploration, Tool And Graph Renderer for Alkanes Protocol Handling</span>
-                <Link
-                  to="/"
-                  style={{
-                    color: '#0000FF',
-                    textDecoration: 'none',
-                    fontWeight: 'bold',
-                    fontSize: '14px',
-                    marginTop: '4px',
-                    display: 'block',
-                    textAlign: 'left'
-                  }}
-                >
-                  /home
-                </Link>
+          {/* Apply 98.css window structure */}
+          <div className="window app-window" style={windowStyle}>
+            <div className="title-bar">
+              <div className="title-bar-text">Metagraph - Windows 98 Edition</div>
+              {/* Standard window controls (non-functional placeholders) */}
+              <div className="title-bar-controls">
+                <button aria-label="Minimize"></button>
+                <button aria-label="Maximize"></button>
+                <button aria-label="Close"></button>
               </div>
-              <div style={styles.headerControls} className="header-controls">
-                <EndpointToggle
-                  onChange={handleNetworkChange}
-                  initialEndpoint={network}
-                />
-                <WalletConnector />
-                <ErrorBoundary fallback={<div className="block-height">Height: Unavailable</div>}>
-                  <Suspense fallback={<div className="block-height">Loading height...</div>}>
-                    <BlockHeight network={network} refreshInterval={10000} />
-                  </Suspense>
-                </ErrorBoundary>
+            </div>
+
+            <div className="window-body">
+              {/* Original Header Content - Needs further styling */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: '10px', borderBottom: '1px solid silver', marginBottom: '10px' }}>
+                 {/* Left side: Title, Subtitle, Home Link */}
+                <div>
+                  <h1>METAGRAPH</h1>
+                  <span>Method Exploration, Tool And Graph Renderer for Alkanes Protocol Handling</span>
+                  <div>
+                    <Link
+                      to="/"
+                      style={{ color: 'blue', textDecoration: 'underline', fontSize: '12px', marginTop: '4px' }}
+                    >
+                      /home
+                    </Link>
+                   </div>
+                </div>
+                 {/* Right side: Controls */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  {/* These components will need internal styling updates */}
+                  <EndpointToggle
+                    onChange={handleNetworkChange}
+                    initialEndpoint={network}
+                  />
+                  <WalletConnector />
+                  <ErrorBoundary fallback={<div className="status-bar-field">Height: Err</div>}>
+                    <Suspense fallback={<div className="status-bar-field">Loading...</div>}>
+                       {/* Wrap BlockHeight in a field for potential status bar look */}
+                       <div className="status-bar-field">
+                         <BlockHeight network={network} refreshInterval={10000} />
+                       </div>
+                    </Suspense>
+                  </ErrorBoundary>
+                </div>
               </div>
-            </header>
-            <main style={styles.mainContent} className="main-content">
-              {/* This is where we render the current route's component */}
-              <Outlet context={{ endpoint: network }} />
-            </main>
-          </div>
+
+              {/* Main Content Area */}
+              <main>
+                {/* Renders the current route's component */}
+                <Outlet context={{ endpoint: network }} />
+              </main>
+
+            </div> {/* End window-body */}
+
+             {/* Optional: Add a status bar */}
+             <div className="status-bar">
+               <p className="status-bar-field">Network: {network}</p>
+               <p className="status-bar-field">Ready</p>
+               <p className="status-bar-field">CPU: 5%</p> {/* Example field */}
+             </div>
+
+          </div> {/* End window */}
         </LaserEyesProvider>
       ) : null}
     </>

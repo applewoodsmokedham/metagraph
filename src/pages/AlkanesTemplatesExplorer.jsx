@@ -2,54 +2,61 @@ import React from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 /**
- * AlkanesTemplatesExplorer Component
+ * AlkanesTemplatesExplorer Component (98.css version)
  * 
- * Page for exploring all deployed Alkanes factory templates
+ * Page for exploring Alkanes factory templates, styled with 98.css.
  */
 const AlkanesTemplatesExplorer = () => {
   const { endpoint = 'mainnet' } = useOutletContext() || {};
   
-  // CSS for inline styling according to design guidelines
-  const styles = {
-    container: {
-      width: '100%',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      backgroundColor: '#FFFFFF',
-      padding: '20px',
-      border: '1px solid #E0E0E0',
-    },
-    title: {
-      fontSize: '24px',
-      fontWeight: 'bold',
-      marginBottom: '16px',
-      textAlign: 'left',
-      fontFamily: 'Roboto Mono, monospace',
-    },
-    description: {
-      fontSize: '14px',
-      marginBottom: '20px',
-      textAlign: 'left',
-      fontFamily: 'Roboto Mono, monospace',
-    },
-    section: {
-      marginBottom: '20px',
-      padding: '20px',
-      backgroundColor: '#FFFFFF',
-      border: '1px solid #E0E0E0',
+  // Helper function to format Alkane ID (Block:TX)
+  const formatAlkaneId = (tokenId) => {
+    if (!tokenId || typeof tokenId.block === 'undefined' || typeof tokenId.tx === 'undefined') {
+      return 'Invalid ID';
+    }
+    return `${tokenId.block}:${shortenTx(tokenId.tx)}`;
+  };
+
+  // Helper function to format large numbers
+  const formatLargeNumber = (num) => {
+    if (typeof num !== 'number' || isNaN(num)) {
+      return '-'; // Return dash for non-numbers or NaN
+    }
+    const numStr = String(num);
+    if (numStr.length > 15) {
+      return num.toExponential(2); // Use scientific notation with 2 decimal places
+    } else {
+      return num.toLocaleString(); // Use standard locale string with commas
     }
   };
-  
+
   return (
-    <div style={styles.container} className="container">
-      <h2 style={styles.title}>Alkanes Templates Explorer</h2>
-      <p style={styles.description}>
-        Explore all deployed Alkanes factory templates on the {endpoint.toUpperCase()} network.
+    <div>
+      <h2>Alkanes Templates Explorer</h2>
+      <p>
+        Explore deployed Alkanes factory templates on the {endpoint.toUpperCase()} network.
       </p>
       
-      <div style={styles.section}>
-        <p>This page will display all deployed Alkanes factory templates.</p>
-      </div>
+      {/* Content Area */}
+      <fieldset className="group-box">
+        <legend>Templates</legend>
+        <table>
+          <tbody>
+            {results.map((template, index) => (
+              <tr key={`${template.tokenId?.tx}-${index}`}>
+                <td>{formatAlkaneId(template.tokenId)}</td>
+                <td>{template.name || '-'}</td>
+                <td>{template.symbol || '-'}</td>
+                <td>{template.description || '-'}</td>
+                <td>{formatLargeNumber(template.cap)}</td>
+                <td>{template.mint?.toLocaleString() || '-'}</td>
+                <td>{template.limit?.toLocaleString() || '-'}</td>
+                <td>{template.height_start || '-'} : {template.height_end || '-'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </fieldset>
     </div>
   );
 };

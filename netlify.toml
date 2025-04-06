@@ -1,0 +1,16 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[context.production.environment]
+  # Set environment variables for production if needed
+  # EXAMPLE_VAR = "production_value"
+
+[context.deploy-preview.environment]
+  # Set environment variables for deploy previews if needed
+  # EXAMPLE_VAR = "preview_value"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
