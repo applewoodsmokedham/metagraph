@@ -61,7 +61,6 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: var(--color-text);
-  background-color: var(--color-bg-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -908,17 +907,15 @@ pre[class*="language-"],
   }
 }
 
-html, body {
-  background-image: url('/background-ocean.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-attachment: fixed;
-  background-color: #0099cc;
-  height: 100%;
-}
-
-.window {
-  background-color: transparent !important;
-  backdrop-filter: blur(4px);
+html, body, #root {
+  background-image: url('/background-ocean.jpg') !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-color: #0099cc !important;
+  height: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
