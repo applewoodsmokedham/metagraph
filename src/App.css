@@ -1,3 +1,13 @@
+/* Frutiger Aero Background */
+body {
+  background-image: url('/background-ocean.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-color: #0099cc; /* fallback color */
+}
+
 /* App.css - METAGRAPH Application Style Guide */
 
 /* Import developer fonts */
