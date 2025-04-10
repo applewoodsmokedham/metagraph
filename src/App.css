@@ -917,3 +917,8 @@ html, body {
   background-color: #0099cc;
   height: 100%;
 }
+
+.window {
+  background-color: transparent !important;
+  backdrop-filter: blur(4px);
+}
